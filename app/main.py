@@ -70,3 +70,7 @@ FRONTEND_FILE = Path(__file__).resolve().parent.parent / "frontend" / "index.htm
 @app.get("/")
 async def serve_index():
     return FileResponse(FRONTEND_FILE)
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health_check():
+    return {"status": "ok"}
