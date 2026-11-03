@@ -25,3 +25,5 @@ async def close_db_pool():
 
 def get_db():
     return db_pool
+def get_db_pool():
+    return db_pool
