@@ -1,0 +1,267 @@
+[
+  {
+    "question_id": "CBSE_2024_CH01_01",
+    "chapter_id": "M10_CH01",
+    "concept_name": "Irrationality Proof",
+    "math_track": "Standard (041)",
+    "question_text": "Prove that $\\sqrt{5}$ is an irrational number by the method of contradiction.",
+    "marking_rubric": [
+      {"step": "Assume $\\sqrt{5} = a/b$ where $a, b$ are coprime integers ($b \\neq 0$)", "marks": 0.5},
+      {"step": "$5b^2 = a^2 \\implies 5$ divides $a^2 \\implies 5$ divides $a$", "marks": 1.0},
+      {"step": "Substitute $a = 5c \\implies 5b^2 = 25c^2 \\implies b^2 = 5c^2 \\implies 5$ divides $b$", "marks": 1.0},
+      {"step": "Contradiction to coprimality of $a$ and $b$; conclude $\\sqrt{5}$ is irrational", "marks": 0.5}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024 (Set 30/1/1)", "CBSE Board 2023"],
+    "ideal_solution": "Assume $\\sqrt{5} = \\frac{a}{b}$ where $a, b \\in \\mathbb{Z}$, $b \\neq 0$, and $\\gcd(a, b) = 1$. Squaring gives $5b^2 = a^2$. Since $5$ divides $a^2$, by the Fundamental Theorem of Arithmetic $5$ divides $a$. Let $a = 5c$ for some integer $c$. Then $5b^2 = 25c^2 \\implies b^2 = 5c^2$, which means $5$ divides $b$. Hence $5$ is a common factor of both $a$ and $b$, contradicting the assumption that $a$ and $b$ are coprime. Thus, $\\sqrt{5}$ is irrational."
+  },
+  {
+    "question_id": "CBSE_2024_CH02_01",
+    "chapter_id": "M10_CH02",
+    "concept_name": "Relationship Between Zeroes and Coefficients",
+    "math_track": "Standard (041)",
+    "question_text": "Find the zeroes of the quadratic polynomial $p(x) = 6x^2 - 3 - 7x$ and verify the relationship between the zeroes and the coefficients.",
+    "marking_rubric": [
+      {"step": "Rearrange as $6x^2 - 7x - 3 = (2x - 3)(3x + 1) = 0$", "marks": 1.0},
+      {"step": "Determine zeroes: $\\alpha = 3/2$ and $\\beta = -1/3$", "marks": 0.5},
+      {"step": "Verify $\\alpha + \\beta = 7/6 = -b/a$", "marks": 0.75},
+      {"step": "Verify $\\alpha \\cdot \\beta = -3/6 = -1/2 = c/a$", "marks": 0.75}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "NCERT Exemplar"],
+    "ideal_solution": "Rearrange: $6x^2 - 7x - 3 = 6x^2 - 9x + 2x - 3 = 3x(2x - 3) + 1(2x - 3) = (2x - 3)(3x + 1)$. Zeroes are $\\alpha = \\frac{3}{2}$ and $\\beta = -\\frac{1}{3}$. Here $a = 6, b = -7, c = -3$. Sum of zeroes: $\\alpha + \\beta = \\frac{3}{2} - \\frac{1}{3} = \\frac{7}{6} = -\\frac{b}{a}$. Product of zeroes: $\\alpha\\beta = \\frac{3}{2} \\left(-\\frac{1}{3}\\right) = -\\frac{1}{2} = \\frac{c}{a}$. Verified."
+  },
+  {
+    "question_id": "CBSE_2024_CH03_01",
+    "chapter_id": "M10_CH03",
+    "concept_name": "System of Linear Equations Condition",
+    "math_track": "Standard (041)",
+    "question_text": "Determine the value of $k$ for which the following system of linear equations has infinitely many solutions:\n$$kx + 3y = k - 3$$\n$$12x + ky = k$$",
+    "marking_rubric": [
+      {"step": "Condition for infinite solutions: $a_1/a_2 = b_1/b_2 = c_1/c_2$", "marks": 0.5},
+      {"step": "Set up equality: $k/12 = 3/k = (k-3)/k$", "marks": 1.0},
+      {"step": "Solve $k^2 = 36 \\implies k = \\pm 6$", "marks": 0.5},
+      {"step": "Substitute into $(k-3)/k$ to select common consistent root $k = 6$", "marks": 1.0}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Problem Solving",
+    "source_tags": ["CBSE Board 2024 (Set 30/2/1)", "CBSE Board 2020"],
+    "ideal_solution": "For infinitely many solutions: $\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2} \\implies \\frac{k}{12} = \\frac{3}{k} = \\frac{k-3}{k}$. From $\\frac{k}{12} = \\frac{3}{k}$, $k^2 = 36 \\implies k = \\pm 6$. From $\\frac{3}{k} = \\frac{k-3}{k}$, $3 = k - 3 \\implies k = 6$. The value satisfying both conditions is $k = 6$."
+  },
+  {
+    "question_id": "CBSE_2024_CH04_01",
+    "chapter_id": "M10_CH04",
+    "concept_name": "Speed Time Distance Quadratic Formulation",
+    "math_track": "Standard (041)",
+    "question_text": "A motor boat whose speed is $18\\text{ km/h}$ in still water takes $1\\text{ hour}$ more to go $24\\text{ km}$ upstream than to return downstream to the same spot. Find the speed of the stream.",
+    "marking_rubric": [
+      {"step": "Define upstream speed $(18-x)$ and downstream speed $(18+x)$", "marks": 1.0},
+      {"step": "Form equation: $\\frac{24}{18-x} - \\frac{24}{18+x} = 1$", "marks": 1.5},
+      {"step": "Simplify to quadratic equation: $x^2 + 48x - 324 = 0$", "marks": 1.5},
+      {"step": "Solve $(x + 54)(x - 6) = 0$, reject negative root, stream speed $= 6\\text{ km/h}$", "marks": 1.0}
+    ],
+    "total_marks": 5,
+    "question_category": "PYQ",
+    "difficulty_tier": "HOTS",
+    "cognitive_type": "Problem Solving",
+    "source_tags": ["CBSE Board 2024", "Official SQP 2024-25"],
+    "ideal_solution": "Let the stream speed be $x\\text{ km/h}$. Upstream speed $= (18 - x)\\text{ km/h}$, Downstream speed $= (18 + x)\\text{ km/h}$. Time difference: $\\frac{24}{18-x} - \\frac{24}{18+x} = 1 \\implies 24\\left[\\frac{18+x - 18+x}{324 - x^2}\\right] = 1 \\implies 48x = 324 - x^2 \\implies x^2 + 48x - 324 = 0$. Factoring gives $(x + 54)(x - 6) = 0$. Since speed cannot be negative, discard $x = -54$. Thus, speed of stream $= 6\\text{ km/h}$."
+  },
+  {
+    "question_id": "CBSE_2024_CH05_01",
+    "chapter_id": "M10_CH05",
+    "concept_name": "Arithmetic Progressions Sum Formula",
+    "math_track": "Standard (041)",
+    "question_text": "If the sum of the first $14$ terms of an A.P. is $1050$ and its first term is $10$, find the $20^{\\text{th}}$ term.",
+    "marking_rubric": [
+      {"step": "State formula $S_n = \\frac{n}{2}[2a + (n-1)d]$ with $n=14, a=10, S_{14}=1050$", "marks": 1.0},
+      {"step": "Solve $1050 = 7[20 + 13d] \\implies 150 = 20 + 13d \\implies d = 10$", "marks": 1.0},
+      {"step": "Calculate $a_{20} = a + 19d = 10 + 19(10) = 200$", "marks": 1.0}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "CBSE Board 2019"],
+    "ideal_solution": "Given $a = 10$, $n = 14$, $S_{14} = 1050$. $S_{14} = \\frac{14}{2}[2(10) + (14-1)d] \\implies 1050 = 7(20 + 13d) \\implies 150 = 20 + 13d \\implies 13d = 130 \\implies d = 10$. The $20^{\\text{th}}$ term is $a_{20} = a + 19d = 10 + 19(10) = 200$."
+  },
+  {
+    "question_id": "CBSE_2024_CH06_01",
+    "chapter_id": "M10_CH06",
+    "concept_name": "Basic Proportionality Theorem",
+    "math_track": "Standard (041)",
+    "question_text": "State and prove Basic Proportionality Theorem (Thales Theorem).",
+    "marking_rubric": [
+      {"step": "Correct statement and labeled geometric diagram with $DE \\parallel BC$", "marks": 1.0},
+      {"step": "Auxiliary construction: Join $BE, CD$ and draw altitudes $EF \\perp AB, DG \\perp AC$", "marks": 1.0},
+      {"step": "Express ratio of areas: $\\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta BDE)} = \\frac{AD}{DB}$ and $\\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta CDE)} = \\frac{AE}{EC}$", "marks": 1.5},
+      {"step": "Establish equality between same parallels: $\\text{Area}(\\Delta BDE) = \\text{Area}(\\Delta CDE) \\implies \\frac{AD}{DB} = \\frac{AE}{EC}$", "marks": 1.5}
+    ],
+    "total_marks": 5,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Recall & Proof",
+    "source_tags": ["CBSE Board 2024", "Official SQP 2024-25"],
+    "ideal_solution": "Statement: If a line is drawn parallel to one side of a triangle intersecting the other two sides in distinct points, the other two sides are divided in the same ratio.\nProof: Let $\\Delta ABC$ have line $DE \\parallel BC$. Join $BE$ and $CD$. Draw $EF \\perp AB$ and $DG \\perp AC$.\n$\\text{Area}(\\Delta ADE) = \\frac{1}{2} \\cdot AD \\cdot EF$, $\\text{Area}(\\Delta BDE) = \\frac{1}{2} \\cdot DB \\cdot EF \\implies \\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta BDE)} = \\frac{AD}{DB}$.\nSimilarly, $\\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta CDE)} = \\frac{AE}{EC}$.\nSince $\\Delta BDE$ and $\\Delta CDE$ are on the same base $DE$ and between the same parallels $DE$ and $BC$, $\\text{Area}(\\Delta BDE) = \\text{Area}(\\Delta CDE)$.\nTherefore, $\\frac{AD}{DB} = \\frac{AE}{EC}$."
+  },
+  {
+    "question_id": "CBSE_2024_CH07_01",
+    "chapter_id": "M10_CH07",
+    "concept_name": "Section Formula",
+    "math_track": "Standard (041)",
+    "question_text": "Find the ratio in which the $y$-axis divides the line segment joining the points $A(5, -6)$ and $B(-1, -4)$. Also find the point of intersection.",
+    "marking_rubric": [
+      {"step": "Assume ratio is $k:1$ and point on $y$-axis is $P(0, y)$", "marks": 0.5},
+      {"step": "Apply section formula for $x$-coordinate: $0 = \\frac{k(-1) + 1(5)}{k+1}$", "marks": 1.0},
+      {"step": "Solve for $k$: $-k + 5 = 0 \\implies k = 5$, ratio is $5:1$", "marks": 0.5},
+      {"step": "Calculate $y = \\frac{5(-4) + 1(-6)}{5+1} = -\\frac{13}{3}$, point is $(0, -13/3)$", "marks": 1.0}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "CBSE Board 2023"],
+    "ideal_solution": "Let the point of division on the $y$-axis be $P(0, y)$, and let it divide segment $AB$ in the ratio $k:1$. By section formula: $x = \\frac{k(-1) + 1(5)}{k+1} = 0 \\implies -k + 5 = 0 \\implies k = 5$. Thus the ratio is $5:1$. Now find the $y$-coordinate: $y = \\frac{5(-4) + 1(-6)}{5+1} = \\frac{-20 - 6}{6} = -\\frac{26}{6} = -\\frac{13}{3}$. The point of intersection is $(0, -\\frac{13}{3})$."
+  },
+  {
+    "question_id": "CBSE_2024_CH08_01",
+    "chapter_id": "M10_CH08",
+    "concept_name": "Trigonometric Identity Proof",
+    "math_track": "Standard (041)",
+    "question_text": "Prove that: $\\frac{\\sin\\theta - 2\\sin^3\\theta}{2\\cos^3\\theta - \\cos\\theta} = \\tan\\theta$.",
+    "marking_rubric": [
+      {"step": "Factor numerator and denominator: $\\frac{\\sin\\theta(1 - 2\\sin^2\\theta)}{\\cos\\theta(2\\cos^2\\theta - 1)}$", "marks": 1.0},
+      {"step": "Substitute $1 = \\sin^2\\theta + \\cos^2\\theta$ or convert $\\sin^2\\theta = 1 - \\cos^2\\theta$", "marks": 1.0},
+      {"step": "Show $(1 - 2\\sin^2\\theta) = (2\\cos^2\\theta - 1)$ cancel each other out", "marks": 0.5},
+      {"step": "Conclude LHS $= \\frac{\\sin\\theta}{\\cos\\theta} = \\tan\\theta = \\text{RHS}$", "marks": 0.5}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Recall & Proof",
+    "source_tags": ["CBSE Board 2024", "Official SQP 2024-25"],
+    "ideal_solution": "$\\text{LHS} = \\frac{\\sin\\theta(1 - 2\\sin^2\\theta)}{\\cos\\theta(2\\cos^2\\theta - 1)}$. Using identity $\\sin^2\\theta = 1 - \\cos^2\\theta$ in numerator: $1 - 2\\sin^2\\theta = 1 - 2(1 - \\cos^2\\theta) = 1 - 2 + 2\\cos^2\\theta = 2\\cos^2\\theta - 1$. Substitute back: $\\text{LHS} = \\frac{\\sin\\theta(2\\cos^2\\theta - 1)}{\\cos\\theta(2\\cos^2\\theta - 1)} = \\frac{\\sin\\theta}{\\cos\\theta} = \\tan\\theta = \\text{RHS}$. Hence proved."
+  },
+  {
+    "question_id": "CBSE_2024_CH09_01",
+    "chapter_id": "M10_CH09",
+    "concept_name": "Heights and Distances Double Angle",
+    "math_track": "Standard (041)",
+    "question_text": "As observed from the top of a $75\\text{ m}$ high lighthouse from the sea-level, the angles of depression of two ships are $30^\\circ$ and $45^\\circ$. If one ship is exactly behind the other on the same side of the lighthouse, find the distance between the two ships. (Take $\\sqrt{3} = 1.732$)",
+    "marking_rubric": [
+      {"step": "Accurate diagram with observer altitude $75\\text{ m}$ and angles $30^\\circ, 45^\\circ$", "marks": 1.0},
+      {"step": "In $\\Delta ABC$: $\\tan 45^\\circ = 75/x \\implies x = 75\\text{ m}$", "marks": 1.0},
+      {"step": "In $\\Delta ABD$: $\\tan 30^\\circ = 75/(x + d) \\implies x + d = 75\\sqrt{3}$", "marks": 1.5},
+      {"step": "Compute distance $d = 75(\\sqrt{3} - 1) = 75(0.732) = 54.9\\text{ m}$", "marks": 1.5}
+    ],
+    "total_marks": 5,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Problem Solving",
+    "source_tags": ["CBSE Board 2024", "CBSE Board 2023"],
+    "ideal_solution": "Let $AB = 75\\text{ m}$ be the lighthouse. Let the two ships be at $C$ and $D$ on the same horizontal line from base $B$. In right $\\Delta ABC$: $\\tan 45^\\circ = \\frac{AB}{BC} \\implies 1 = \\frac{75}{BC} \\implies BC = 75\\text{ m}$. In right $\\Delta ABD$: $\\tan 30^\\circ = \\frac{AB}{BD} \\implies \\frac{1}{\\sqrt{3}} = \\frac{75}{BC + CD} \\implies 75 + CD = 75\\sqrt{3} \\implies CD = 75(\\sqrt{3} - 1)$. Using $\\sqrt{3} = 1.732$: $CD = 75(0.732) = 54.9\\text{ m}$. The distance between the ships is $54.9\\text{ m}$."
+  },
+  {
+    "question_id": "CBSE_2024_CH10_01",
+    "chapter_id": "M10_CH10",
+    "concept_name": "Tangents from an External Point",
+    "math_track": "Standard (041)",
+    "question_text": "Prove that the lengths of tangents drawn from an external point to a circle are equal.",
+    "marking_rubric": [
+      {"step": "Correct diagram with circle $(O, r)$, external point $P$, and contact points $A, B$", "marks": 0.5},
+      {"step": "Given, To Prove, and Construction (join $OA, OB, OP$)", "marks": 0.5},
+      {"step": "Prove $\\Delta OAP \\cong \\Delta OBP$ using RHS criterion ($OA=OB=r$, $OP=OP$, $\\angle OAP = \\angle OBP = 90^\\circ$)", "marks": 1.5},
+      {"step": "Conclude $PA = PB$ by CPCTC", "marks": 0.5}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Recall & Proof",
+    "source_tags": ["CBSE Board 2024", "Official SQP 2024-25"],
+    "ideal_solution": "Given: A circle with centre $O$ and tangents $PA$ and $PB$ from external point $P$.\nTo Prove: $PA = PB$.\nConstruction: Join $OA, OB$, and $OP$.\nProof: Since tangent is perpendicular to radius at the point of contact, $\\angle OAP = \\angle OBP = 90^\\circ$.\nIn right $\\Delta OAP$ and right $\\Delta OBP$:\n$OA = OB$ (Radii of the same circle)\n$OP = OP$ (Common hypotenuse)\n$\\angle OAP = \\angle OBP = 90^\\circ$\nBy RHS Congruence Criterion, $\\Delta OAP \\cong \\Delta OBP$.\nTherefore, $PA = PB$ (by CPCTC)."
+  },
+  {
+    "question_id": "CBSE_2024_CH11_01",
+    "chapter_id": "M10_CH11",
+    "concept_name": "Area of Segment of a Circle",
+    "math_track": "Standard (041)",
+    "question_text": "A chord of a circle of radius $10\\text{ cm}$ subtends a right angle at the centre. Find the area of the corresponding minor segment. (Use $\\pi = 3.14$)",
+    "marking_rubric": [
+      {"step": "Formula: $\\text{Area of sector} = \\frac{\\theta}{360^\\circ} \\pi r^2$", "marks": 0.5},
+      {"step": "Compute sector area $= \\frac{90^\\circ}{360^\\circ} \\cdot 3.14 \\cdot 100 = 78.5\\text{ cm}^2$", "marks": 1.0},
+      {"step": "Compute $\\Delta AOB$ area $= \\frac{1}{2} \\cdot 10 \\cdot 10 = 50\\text{ cm}^2$", "marks": 0.5},
+      {"step": "Segment area $= 78.5 - 50 = 28.5\\text{ cm}^2$", "marks": 1.0}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "CBSE Board 2022"],
+    "ideal_solution": "Radius $r = 10\\text{ cm}$, $\\theta = 90^\\circ$. $\\text{Area of minor sector} = \\frac{90^\\circ}{360^\\circ} \\cdot \\pi r^2 = \\frac{1}{4} \\cdot 3.14 \\cdot 100 = 78.5\\text{ cm}^2$. $\\text{Area of } \\Delta AOB = \\frac{1}{2} \\cdot r \\cdot r \\cdot \\sin 90^\\circ = \\frac{1}{2} \\cdot 10 \\cdot 10 = 50\\text{ cm}^2$. $\\text{Area of minor segment} = \\text{Sector Area} - \\text{Triangle Area} = 78.5 - 50 = 28.5\\text{ cm}^2$."
+  },
+  {
+    "question_id": "CBSE_2024_CH12_01",
+    "chapter_id": "M10_CH12",
+    "concept_name": "Combination of Solids Surface Area",
+    "math_track": "Standard (041)",
+    "question_text": "A solid toy is in the form of a hemisphere surmounted by a right circular cone. The height of the cone is $2\\text{ cm}$ and the diameter of the base is $4\\text{ cm}$. Determine the total volume of the toy. (Take $\\pi = 3.14$)",
+    "marking_rubric": [
+      {"step": "Determine radius $r = 2\\text{ cm}$ and cone height $h = 2\\text{ cm}$", "marks": 0.5},
+      {"step": "Cone volume: $\\frac{1}{3}\\pi r^2 h = \\frac{1}{3} \\cdot 3.14 \\cdot 4 \\cdot 2 = 8.37\\text{ cm}^3$", "marks": 1.0},
+      {"step": "Hemisphere volume: $\\frac{2}{3}\\pi r^3 = \\frac{2}{3} \\cdot 3.14 \\cdot 8 = 16.75\\text{ cm}^3$", "marks": 1.0},
+      {"step": "Total volume $= 25.12\\text{ cm}^3$", "marks": 0.5}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "Official SQP 2024-25"],
+    "ideal_solution": "Radius $r = 4/2 = 2\\text{ cm}$. Height of cone $h = 2\\text{ cm}$. Volume of toy $= \\text{Volume of cone} + \\text{Volume of hemisphere} = \\frac{1}{3}\\pi r^2 h + \\frac{2}{3}\\pi r^3 = \\frac{1}{3}\\pi r^2(h + 2r) = \\frac{1}{3}(3.14)(4)(2 + 4) = \\frac{1}{3}(3.14)(4)(6) = 25.12\\text{ cm}^3$."
+  },
+  {
+    "question_id": "CBSE_2024_CH13_01",
+    "chapter_id": "M10_CH13",
+    "concept_name": "Missing Frequencies in Grouped Median",
+    "math_track": "Standard (041)",
+    "question_text": "The median of the following data is $525$. Find the values of $x$ and $y$, if the total frequency is $100$:\nClasses: $0\\text{-}100, 100\\text{-}200, 200\\text{-}300, 300\\text{-}400, 400\\text{-}500, 500\\text{-}600, 600\\text{-}700, 700\\text{-}800, 800\\text{-}900, 900\\text{-}1000$.\nFrequencies: $2, 5, x, 12, 17, 20, y, 9, 7, 4$.",
+    "marking_rubric": [
+      {"step": "Cumulative frequency table calculation and sum equation $x + y = 24$", "marks": 1.5},
+      {"step": "Identify median class $500\\text{-}600$ since median is $525$", "marks": 0.5},
+      {"step": "Apply median formula: $525 = 500 + \\left(\\frac{50 - (36+x)}{20}\\right) \\cdot 100$", "marks": 1.5},
+      {"step": "Solve: $x = 9$ and $y = 15$", "marks": 1.5}
+    ],
+    "total_marks": 5,
+    "question_category": "PYQ",
+    "difficulty_tier": "HOTS",
+    "cognitive_type": "Problem Solving",
+    "source_tags": ["CBSE Board 2024", "NCERT Exemplar"],
+    "ideal_solution": "Total frequency $N = 100 \\implies 76 + x + y = 100 \\implies x + y = 24$. Since median is $525$, the median class is $500\\text{-}600$. Here $l = 500, f = 20, cf = 36 + x, h = 100$. $\\text{Median} = l + \\left(\\frac{N/2 - cf}{f}\\right) \\cdot h \\implies 525 = 500 + \\left(\\frac{50 - (36 + x)}{20}\\right) \\cdot 100 \\implies 25 = (14 - x) \\cdot 5 \\implies 5 = 14 - x \\implies x = 9$. Since $x + y = 24$, $y = 24 - 9 = 15$."
+  },
+  {
+    "question_id": "CBSE_2024_CH14_01",
+    "chapter_id": "M10_CH14",
+    "concept_name": "Playing Cards Probability",
+    "math_track": "Standard (041)",
+    "question_text": "One card is drawn from a well-shuffled deck of $52$ cards. Find the probability of getting:\n(i) A king of red colour\n(ii) A face card\n(iii) A red face card",
+    "marking_rubric": [
+      {"step": "Total outcomes $n(S) = 52$", "marks": 0.5},
+      {"step": "(i) Number of red kings $= 2 \\implies P = 2/52 = 1/26$", "marks": 0.75},
+      {"step": "(ii) Total face cards $= 12 \\implies P = 12/52 = 3/13$", "marks": 1.0},
+      {"step": "(iii) Red face cards $= 6 \\implies P = 6/52 = 3/26$", "marks": 0.75}
+    ],
+    "total_marks": 3,
+    "question_category": "PYQ",
+    "difficulty_tier": "Board Standard",
+    "cognitive_type": "Procedural",
+    "source_tags": ["CBSE Board 2024", "CBSE Board 2021"],
+    "ideal_solution": "Total number of possible outcomes $= 52$.\n(i) Red kings: Hearts king and Diamonds king $= 2$. $P(\\text{red king}) = \\frac{2}{52} = \\frac{1}{26}$.\n(ii) Face cards: $4\\text{ Kings} + 4\\text{ Queens} + 4\\text{ Jacks} = 12$. $P(\\text{face card}) = \\frac{12}{52} = \\frac{3}{13}$.\n(iii) Red face cards: $6$ (Kings, Queens, Jacks of Hearts and Diamonds). $P(\\text{red face card}) = \\frac{6}{52} = \\frac{3}{26}$."
+  }
+]

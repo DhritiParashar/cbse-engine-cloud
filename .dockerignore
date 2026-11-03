@@ -1,0 +1,7 @@
+﻿__pycache__
+*.pyc
+.git
+.env
+.vscode
+venv
+cbse_full_backup.sql
