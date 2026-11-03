@@ -8,3 +8,4 @@ python-multipart==0.0.17
 
 bcrypt
 PyJWT
+email-validator
