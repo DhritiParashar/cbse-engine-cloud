@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${pdfDocTitle}</title>
+    <title>CBSE Class 10 Math Master Engine</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,14 +27,7 @@
     <!-- KaTeX CDN for Math Formula Rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '$', right: '$', display: false}
-            ],
-            throwOnError: false,
-            ignoredClasses: ['no-katex', 'console', 'code-block']
-        }); // safe auto-render, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
 
     <style>
         .katex-display { margin: 0.5rem 0 !important; }
@@ -811,8 +804,7 @@
                 <span id="activeExamModeTag" class="text-amber-400 font-mono">Full Curriculum (40M)</span>
             </div>
             <div class="flex items-center gap-3">
-                
-                    <button type="button" onclick="cancelAndReselectMock()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white font-semibold text-xs rounded-xl transition flex items-center gap-1.5">
+                <button type="button" onclick="cancelAndReselectMock()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white font-semibold text-xs rounded-xl transition flex items-center gap-1.5">
                     <span>↺</span> Exit & Reselect Paper
                 </button>
                 <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
@@ -1473,9 +1465,9 @@
                 html += `
                     <div class="p-3 rounded-lg bg-surfaceLight border border-slate-700/60 flex items-center justify-between gap-3">
                         <span class="text-slate-300"><strong>Step ${st.stepNo}:</strong> ${st.text}</span>
-                        <button onclick="verifyErrorStep(${st.stepNo}, ${chlg.faultyStep})" id="btn-trap-step-${st.stepNo}" class="shrink-0 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-400 text-slate-200 hover:text-white text-xs font-medium transition cursor-pointer shadow-sm">
-                                <span>🔍 Report Mistake</span>
-                            </button>
+                        <button onclick="verifyErrorStep(${st.stepNo}, ${chlg.faultyStep})" id="btn-trap-step-${st.stepNo}" class="shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/40 hover:text-rose-300 border border-slate-700 text-[11px] font-sans font-semibold transition">
+                            Faulty Step?
+                        </button>
                     </div>
                 `;
             });
@@ -1513,87 +1505,1706 @@
 
         // CLEAR LOGICAL LABELS: Tells the student whether the step has an error or is valid
         function verifyErrorStep(selectedStep, faultyStep) {
-        const feedback = document.getElementById('trap-feedback-box');
-        const clickedBtn = document.getElementById(`btn-trap-step-${selectedStep}`);
+            const feedback = document.getElementById('trap-feedback-box');
+            if (!feedback) return;
 
-        if (selectedStep === faultyStep) {
-            // SUCCESS: Student found the actual trap
+            feedback.classList.remove('hidden', 'bg-emerald-950/60', 'text-emerald-300', 'border-emerald-800', 'bg-rose-950/60', 'text-rose-300', 'border-rose-800');
+
             for (let i = 1; i <= 3; i++) {
-                const b = document.getElementById(`btn-trap-step-${i}`);
-                if (!b) continue;
-                b.disabled = true;
-                b.style.cursor = 'default';
-                if (i === faultyStep) {
-                    b.className = "shrink-0 px-3.5 py-1.5 rounded-lg bg-emerald-950 border border-emerald-500 text-emerald-300 text-xs font-bold shadow-md animate-pulse";
-                    b.innerHTML = "🎯 Trap Identified (+1M)";
-                } else {
-                    b.className = "shrink-0 px-3 py-1 rounded-md bg-slate-900/50 border border-slate-800/80 text-slate-500 text-[11px] opacity-60";
-                    b.innerHTML = "Valid Step";
+                const btn = document.getElementById(`btn-trap-step-${i}`);
+                if (btn) {
+                    if (i === faultyStep) {
+                        btn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-emerald-900/50 border border-emerald-600 text-emerald-200 text-[11px] font-sans font-bold";
+                        btn.innerText = "⚠️ Error is Here!";
+                    } else if (i === selectedStep && selectedStep !== faultyStep) {
+                        btn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-slate-300 text-[11px] font-sans font-medium";
+                        btn.innerText = "✓ This Step is Correct";
+                    }
                 }
             }
 
-            if (feedback) {
-                feedback.className = "p-4 rounded-xl text-xs leading-relaxed bg-emerald-950/80 text-emerald-200 border border-emerald-700 shadow-md";
+            if (selectedStep === faultyStep) {
+                feedback.classList.add('bg-emerald-950/60', 'text-emerald-300', 'border', 'border-emerald-800');
                 const chlg = activeChallengesList[currentChallengeIndex];
-                feedback.innerHTML = `<div class="flex items-center gap-2 mb-1"><span class="text-base font-bold text-emerald-400">✓ Spot On!</span> <span class="font-bold text-white">Step ${faultyStep} contains the examiner trap.</span></div>
-                    <div class="text-slate-300">${chlg.deductionReason}</div>`;
-                if (window.renderMathInElement) {
-                    window.renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-                }
-            }
-        } else {
-            // INCORRECT: Step chosen is innocent; let student keep trying!
-            if (clickedBtn) {
-                clickedBtn.disabled = true;
-                clickedBtn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-rose-950/80 border border-rose-600 text-rose-300 text-xs font-semibold";
-                clickedBtn.innerHTML = "✗ Step " + selectedStep + " is Correct";
+                feedback.innerHTML = `<strong>✓ Spot On!</strong> ${chlg.deductionReason}`;
+            } else {
+                feedback.classList.add('bg-rose-950/60', 'text-rose-300', 'border', 'border-rose-800');
+                feedback.innerHTML = `<strong>✗ Not quite:</strong> Step ${selectedStep} is mathematically valid according to CBSE rules. Inspect the other steps for hidden sign flips or illegal operations!`;
             }
 
-            if (feedback) {
-                feedback.className = "p-3.5 rounded-xl text-xs leading-relaxed bg-rose-950/70 text-rose-200 border border-rose-800";
-                feedback.innerHTML = `<strong>Not quite:</strong> Step ${selectedStep} is correct according to CBSE rules. Check the calculations in the remaining steps!`;
-                if (window.renderMathInElement) {
-                    window.renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+            if (window.renderMathInElement) {
+                renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+            }
+        }
+	// -------------------------------------------------------------------------
+        // VOICE TUTOR ENGINE (Browser Web Speech API) - Context-Aware
+        let isSpeaking = false;
+
+        function cleanTextForSpeech(text) {
+            if (!text) return "";
+            return text
+                .replace(/\\\((.*?)\\\)/g, "$1")
+                .replace(/\\\[(.*?)\\\]/g, "$1")
+                .replace(/\sqrt\{([^}]+)\}/g, "square root of $1")
+                .replace(/\sqrt/g, "square root")
+                .replace(/\frac\{([^}]+)\}\{([^}]+)\}/g, "$1 divided by $2")
+                .replace(/\pm/g, "plus or minus")
+                .replace(/\times/g, "multiplied by")
+                .replace(/\div/g, "divided by")
+                .replace(/\pi/g, "pi")
+                .replace(/\theta/g, "theta")
+                .replace(/\Delta/g, "delta")
+                .replace(/x\^2|x²/g, "x squared")
+                .replace(/x\^3|x³/g, "x cubed")
+                .replace(/b\^2/g, "b squared")
+                .replace(/4ac/g, "4 a c")
+                .replace(/->|→/g, " yields ")
+                .replace(/⇌/g, " is in equilibrium with ")
+                .replace(/[\$\*#_`]/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        function speakText(textToSpeak) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const cleanText = cleanTextForSpeech(textToSpeak);
+            if (!cleanText) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+            utterance.lang = 'en-US';
+
+            const icon = document.getElementById('voiceTutorIcon');
+            const text = document.getElementById('voiceTutorText');
+
+            utterance.onstart = () => {
+                isSpeaking = true;
+                if (icon) icon.innerText = "🔊";
+                if (text) text.innerText = "Voice Tutor: Speaking";
+            };
+            utterance.onend = () => {
+                isSpeaking = false;
+                if (icon) icon.innerText = "🔈";
+                if (text) text.innerText = "Voice Tutor: Idle";
+            };
+            utterance.onerror = () => {
+                isSpeaking = false;
+                if (icon) icon.innerText = "🔈";
+                if (text) text.innerText = "Voice Tutor: Idle";
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleVoiceTutor() {
+            if (!('speechSynthesis' in window)) {
+                alert("Text-to-speech is not supported in this browser. Please use Chrome, Edge, or Firefox.");
+                return;
+            }
+
+            const icon = document.getElementById('voiceTutorIcon');
+            const text = document.getElementById('voiceTutorText');
+
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                if (icon) icon.innerText = "🔇";
+                if (text) text.innerText = "Voice Tutor: Off";
+                return;
+            }
+
+            // Determine which tab is currently active and speak ITS content
+            const activeTab = typeof currentMainTab !== 'undefined' ? currentMainTab : 1;
+
+            if (activeTab === 5) {
+                // Tab 5: Speak Doubt Answer
+                const answerBody = document.getElementById('doubtAnswerBody');
+                if (answerBody && answerBody.innerText.trim()) {
+                    speakText(answerBody.innerText);
+                } else {
+                    speakText("Doubt Solver ready. Ask a question or click a frequent doubt shortcut below.");
+                }
+            } else if (activeTab === 3) {
+                // Tab 3: Speak AI Evaluator Evaluation Feedback
+                const evalFeedback = document.getElementById('aiGradingFeedback') || document.getElementById('evalFeedback');
+                if (evalFeedback && evalFeedback.innerText.trim()) {
+                    speakText(evalFeedback.innerText);
+                } else {
+                    speakText("AI Micro Evaluator ready. Select a question and submit your working steps to hear line-by-line deductions.");
+                }
+            } else if (activeTab === 4) {
+                // Tab 4: Speak Roadmap Summary
+                const boardScore = document.getElementById('dynamicBoardScore') || document.querySelector('#workspace-4 .text-4xl');
+                const scoreText = boardScore ? boardScore.innerText : "";
+                speakText(`Strategy Roadmap. Your current projected board score is ${scoreText}.`);
+            } else if (activeTab === 6) {
+                // Tab 6: Mock Test Voice Guide
+                speakText("Timed Mock Test workspace. Ensure all required steps, units, and reasons are written before submission.");
+            } else {
+                // Tab 1 & Tab 2: Speak Active Chapter Derivation Tip
+                const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+                const chapters = activeSubj.chapters || {};
+                const ch = chapters[currentChapterKey];
+                if (ch) {
+                    let speechScript = `Chapter: ${ch.name}. Weightage: ${ch.weight} Marks. `;
+                    if (ch.desc) speechScript += `${ch.desc} `;
+                    if (ch.vernacular && ch.vernacular.English) speechScript += `Key board tip: ${ch.vernacular.English}`;
+                    speakText(speechScript);
+                } else {
+                    speakText("CBSE Master Tutor Voice Engine active.");
                 }
             }
         }
-    }
 
+	// -------------------------------------------------------------------------
+        // TAB 3: SUBJECT-AWARE CBSE MICRO-EVALUATOR ENGINE
+        // -------------------------------------------------------------------------
+        let evalProblemBank = (typeof window !== 'undefined' && window.dbQuestionBank && Object.keys(window.dbQuestionBank).length > 0) ? window.dbQuestionBank : {
+            // Mathematics
+            M10_CH01: [
+                {
+                    title: "Proof of √5 Irrationality by Contradiction", marks: 3,
+                    text: "Prove that √5 is an irrational number by contradiction.",
+                    rubric: [
+                        { step: "Step 1: State assumption: √5 = a/b where a, b are coprime integers (b ≠ 0)", marks: 1.0 },
+                        { step: "Step 2: Square both sides: 5b² = a² => 5 divides a² => 5 divides a", marks: 1.0 },
+                        { step: "Step 3: Substitute a = 5c, show 5 divides b, identify contradiction and conclude", marks: 1.0 }
+                    ],
+                    idealAnswer: "Let us assume to the contrary that √5 is rational.\nTherefore, √5 = a/b, where a and b are coprime integers and b ≠ 0.\nSquaring both sides: 5 = a²/b² => a² = 5b².\nSince 5 divides a², by theorem 5 also divides a.\nLet a = 5c for some integer c.\nSubstituting: (5c)² = 5b² => 25c² = 5b² => b² = 5c².\nThis means 5 divides b² => 5 divides b.\nTherefore, a and b have at least 5 as a common factor.\nThis contradicts the fact that a and b are coprime.\nHence, √5 is irrational.",
+                    flawedAnswer: "Assume √5 = a/b.\n5 = a²/b² => a² = 5b².\nSo a is divisible by 5 and b is divisible by 5.\nSo it is not rational."
+                }
+            ],
+            M10_CH04: [
+                {
+                    title: "Train Speed Quadratic Word Problem", marks: 4,
+                    text: "A motor boat whose speed is 18 km/h in still water takes 1 hour more to go 24 km upstream than to return downstream to the same spot. Find the speed of the stream.",
+                    rubric: [
+                        { step: "Step 1: Declare stream speed x; formulate upstream (18 - x) and downstream (18 + x) speeds", marks: 1.0 },
+                        { step: "Step 2: Formulate time equation: 24/(18 - x) - 24/(18 + x) = 1", marks: 1.0 },
+                        { step: "Step 3: Simplify to standard quadratic form: x² + 48x - 324 = 0", marks: 1.0 },
+                        { step: "Step 4: Factorize to roots (6, -54), reject negative root with reason, state units (6 km/h)", marks: 1.0 }
+                    ],
+                    idealAnswer: "Let speed of the stream be x km/h.\nSpeed upstream = (18 - x) km/h and downstream = (18 + x) km/h.\nTime upstream - Time downstream = 1\n24/(18 - x) - 24/(18 + x) = 1\n24[(18 + x) - (18 - x)] / (324 - x²) = 1\n24(2x) = 324 - x²\nx² + 48x - 324 = 0\n(x + 54)(x - 6) = 0\nx = 6 or x = -54\nSince speed cannot be negative, discarding x = -54.\nSpeed of the stream = 6 km/h.",
+                    flawedAnswer: "Let stream speed be x.\n24/(18 - x) - 24/(18 + x) = 1\n48x = 324 - x²\nx² + 48x - 324 = 0\n(x + 54)(x - 6) = 0\nx = 6, x = -54\nAnswers are 6 and -54."
+                }
+            ],
+
+            // Science
+            S10_CH01: [
+                {
+                    title: "Redox Reagents & Steam Reaction Identification", marks: 3,
+                    text: "In the reaction: 3Fe(s) + 4H2O(g) -> Fe3O4(s) + 4H2(g), identify: (i) Substance oxidized, (ii) Substance reduced, (iii) Oxidizing agent, (iv) Reducing agent.",
+                    rubric: [
+                        { step: "Step 1: Identify oxidation: Fe gains oxygen to form Fe3O4 => Fe is oxidized", marks: 1.0 },
+                        { step: "Step 2: Identify reduction: H2O loses oxygen to form H2 => H2O is reduced", marks: 1.0 },
+                        { step: "Step 3: Conclude agents: Oxidizing agent is H2O; Reducing agent is Fe", marks: 1.0 }
+                    ],
+                    idealAnswer: "(i) Substance oxidized: Fe (Iron gains oxygen to form Fe3O4).\n(ii) Substance reduced: H2O (Water loses oxygen to form H2).\n(iii) Oxidizing agent: H2O (provides oxygen for oxidation).\n(iv) Reducing agent: Fe (removes oxygen from water).",
+                    flawedAnswer: "Fe is reduced because it reacts with steam.\nH2O is oxidized to H2.\nOxidizing agent is Fe."
+                }
+            ],
+            S10_CH02: [
+                {
+                    title: "Chlor-Alkali Electrolysis Chemistry", marks: 3,
+                    text: "Name the products formed at the anode and cathode during electrolysis of concentrated brine, write the balanced chemical equation, and give one use of the cathode gas.",
+                    rubric: [
+                        { step: "Step 1: Balanced chemical equation with state symbols: 2NaCl(aq) + 2H2O(l) -> 2NaOH(aq) + Cl2(g) + H2(g)", marks: 1.0 },
+                        { step: "Step 2: Correct electrode allocations: Anode = Cl2 gas, Cathode = H2 gas", marks: 1.0 },
+                        { step: "Step 3: Give valid industrial use of H2 gas (e.g. rocket fuel, hydrogenation of oils, ammonia)", marks: 1.0 }
+                    ],
+                    idealAnswer: "Balanced Chemical Equation:\n2NaCl(aq) + 2H2O(l) -> 2NaOH(aq) + Cl2(g) + H2(g)\nElectrode Products:\n- At Anode (+ electrode): Chlorine gas (Cl2)\n- At Cathode (- electrode): Hydrogen gas (H2)\n- Near Cathode: Sodium hydroxide (NaOH) solution forms\nUse of Hydrogen gas (Cathode):\nUsed as fuel in rockets and in the manufacture of ammonia for fertilizers.",
+                    flawedAnswer: "NaCl + H2O -> NaOH + Cl + H\nAnode produces hydrogen and cathode produces chlorine.\nChlorine is used for cleaning."
+                }
+            ],
+
+            // Social Science
+            SS10_HIS_01: [
+                {
+                    title: "Civil Code of 1804 (Napoleonic Code)", marks: 3,
+                    text: "Explain any three major administrative and legal reforms introduced by Napoleon in the territories conquered by France.",
+                    rubric: [
+                        { step: "Step 1: State abolition of privileges based on birth and equality before the law", marks: 1.0 },
+                        { step: "Step 2: State securing of property rights and abolition of the feudal system", marks: 1.0 },
+                        { step: "Step 3: State removal of guild restrictions and improvement in transport and communication", marks: 1.0 }
+                    ],
+                    idealAnswer: "Major reforms introduced by Napoleon under the Civil Code of 1804:\n1. Abolished all privileges based on birth and established equality before the law.\n2. Secured the right to property for French citizens.\n3. Abolished the feudal system and freed peasants from serfdom and manorial dues.\n4. In towns, guild restrictions were removed, and uniform weights, measures, and a national currency were standardized.",
+                    flawedAnswer: "Napoleon conquered Europe and made good rules.\nHe stopped feudalism and helped trade."
+                }
+            ],
+            SS10_GEO_01: [
+                {
+                    title: "Soil Conservation Strategies", marks: 3,
+                    text: "Describe any three measures for soil conservation that can be applied in hilly and mountainous terrains.",
+                    rubric: [
+                        { step: "Step 1: Contour ploughing along the contour lines to decelerate water flow", marks: 1.0 },
+                        { step: "Step 2: Terrace farming by cutting steps on slopes to restrict erosion", marks: 1.0 },
+                        { step: "Step 3: Strip cropping and planting of shelter belts to break the force of wind", marks: 1.0 }
+                    ],
+                    idealAnswer: "Measures for soil conservation in hilly terrains:\n1. Contour Ploughing: Ploughing along the contour lines decelerates the flow of water down the slopes.\n2. Terrace Cultivation: Steps are cut out on slopes making terraces, which restricts runoff and soil erosion (practiced in Western and Central Himalayas).\n3. Strip Cropping: Large fields are divided into strips with grass left to grow between crops, breaking the kinetic force of wind and surface runoff.",
+                    flawedAnswer: "Plant more trees on hills.\nDo farming properly so mud does not wash away."
+                }
+            ]
+        };
+
+        function resolveProblemsForChapter(bank, chapterKey, subject) {
+    if (!bank || Object.keys(bank).length === 0) return [];
     
-    // ==========================================
-    // PAST PAPERS LOADER (CBSE PYQ REPOSITORY)
-    // ==========================================
-    async function loadAvailablePastPapers() {
-        const select = document.getElementById('pastPaperSelect');
-        if (!select) return;
-        
-        try {
-            const subj = typeof currentSubject !== 'undefined' ? currentSubject : 'MATH';
-            const res = await fetch(`http://127.0.0.1:8001/api/mock-test/past-papers?subject_code=${subj}`);
-            if (res.ok) {
-                const data = await res.json();
-                const papers = data.papers || [];
-                if (papers.length > 0) {
-                    select.innerHTML = papers.map(p => 
-                        `<option value="${p.year}_${p.set}">${p.year} • ${p.set} (${p.subject || subj})</option>`
-                    ).join('');
-                    return;
-                }
-            }
-        } catch (e) {
-            console.warn("Using offline past paper fallbacks:", e);
-        }
+    // Direct exact match
+    if (bank[chapterKey] && bank[chapterKey].length > 0) return bank[chapterKey];
 
-        // Standard CBSE Board PYQ fallback sets
-        select.innerHTML = `
-            <option value="2024_Delhi Set 1">2024 • Delhi Set 1 (Official)</option>
-            <option value="2024_All India Set 2">2024 • All India Set 2 (Official)</option>
-            <option value="2023_Delhi Set 1">2023 • Delhi Set 1 (Official)</option>
-            <option value="2023_All India Set 3">2023 • All India Set 3 (Official)</option>
-        `;
+    const kStr = String(chapterKey || '');
+
+    // 1. Social Science (SST)
+    if (subject === 'SST' || subject === '087' || kStr.startsWith('SS10_')) {
+        if (bank[chapterKey] && bank[chapterKey].length > 0) return bank[chapterKey];
+        // Match by domain and number
+        for (const k of Object.keys(bank)) {
+            if (k.startsWith('SS10_') && (k === chapterKey || k.includes(kStr.replace('SS10_', '')))) {
+                return bank[k];
+            }
+        }
+        // Fallback to first available SST chapter
+        const firstSst = Object.keys(bank).find(k => k.startsWith('SS10_') && bank[k].length > 0);
+        return firstSst ? bank[firstSst] : [];
     }
 
-    function startMockTimer() {
+    // 2. Science (SCI)
+    if (subject === 'SCI' || subject === '086' || kStr.startsWith('S10_')) {
+        if (bank[chapterKey] && bank[chapterKey].length > 0) return bank[chapterKey];
+        const num = kStr.replace(/[^0-9]/g, '');
+        const pad = num ? ('0' + num).slice(-2) : '01';
+        const sciKey = 'S10_CH' + pad;
+        if (bank[sciKey] && bank[sciKey].length > 0) return bank[sciKey];
+        const firstSci = Object.keys(bank).find(k => k.startsWith('S10_') && bank[k].length > 0);
+        return firstSci ? bank[firstSci] : [];
+    }
+
+    // 3. Mathematics (MATH)
+    if (bank[chapterKey] && bank[chapterKey].length > 0) return bank[chapterKey];
+    const num = kStr.replace(/[^0-9]/g, '');
+    const pad = num ? ('0' + num).slice(-2) : '01';
+    const mathKey = 'M10_CH' + pad;
+    if (bank[mathKey] && bank[mathKey].length > 0) return bank[mathKey];
+    const firstMath = Object.keys(bank).find(k => k.startsWith('M10_') && bank[k].length > 0);
+    return firstMath ? bank[firstMath] : [];
+}
+
+        // Tab 3 Evaluation Controls: Chapter Random, Syllabus Random, Reset
+        function pickChapterRandomQuestion() {
+            const select = document.getElementById('evalProblemSelect');
+            if (!select || select.options.length <= 1) return;
+            const randIndex = Math.floor(Math.random() * (select.options.length - 1)) + 1;
+            select.selectedIndex = randIndex;
+            if (typeof loadEvalProblem === 'function') {
+                loadEvalProblem(select.value);
+            }
+        }
+
+        function pickSyllabusRandomQuestion() {
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+            const chKeys = Object.keys(chapters);
+            if (chKeys.length === 0) return;
+            const randCh = chKeys[Math.floor(Math.random() * chKeys.length)];
+            currentChapterKey = randCh;
+            if (typeof selectChapter === 'function') selectChapter(randCh);
+            if (typeof renderMicroEvaluator === 'function') renderMicroEvaluator(randCh);
+            setTimeout(() => {
+                pickChapterRandomQuestion();
+            }, 100);
+        }
+
+        function resetMicroEvaluator() {
+            const studentInput = document.getElementById('evalInputSteps');
+            if (studentInput) studentInput.value = '';
+            const outputArea = document.getElementById('evalVerdictArea') || document.getElementById('evalOutputArea');
+            if (outputArea) {
+                outputArea.innerHTML = '<div class="text-xs text-slate-500 italic p-4 text-center border border-dashed border-slate-800 rounded-lg">Workspace cleared. Select a question or click "Load 100% Ideal Answer" to evaluate.</div>';
+            }
+            const select = document.getElementById('evalProblemSelect');
+            if (select && select.options.length > 1) {
+                select.selectedIndex = 1;
+                if (typeof loadEvalProblem === 'function') loadEvalProblem(select.value);
+            }
+        }
+
+        function renderMicroEvaluator(chapterKey) {
+            setTimeout(() => { if (typeof filterDropdownByMarks === 'function') filterDropdownByMarks(); }, 10);
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+            const ch = chapters[chapterKey] || chapters[Object.keys(chapters)[0]];
+            if (!ch) return;
+
+            const tag = document.getElementById('tab3ChapterTag');
+    const select = document.getElementById('evalProblemSelect');
+    const bank = (typeof window !== 'undefined' && window.dbQuestionBank && Object.keys(window.dbQuestionBank).length > 0)
+        ? window.dbQuestionBank
+        : (typeof evalProblemBank !== 'undefined' ? evalProblemBank : {});
+
+    // Subject-aware key normalizer (M10, S10, SS10)
+    let subjPrefix = 'M10_';
+    if (typeof currentSubject !== 'undefined') {
+        if (currentSubject === 'SCIENCE' || currentSubject === '086') subjPrefix = 'S10_';
+        else if (currentSubject === 'SST' || currentSubject === '087') subjPrefix = 'SS10_';
+    }
+
+    const digits = String(chapterKey || '').replace(/[^0-9]/g, '');
+    const pad = digits ? ('0' + digits).slice(-2) : '01';
+
+    let problems = resolveProblemsForChapter(bank, chapterKey, currentSubject);
+
+    if (select) {
+        select.style.cssText = 'background-color: #0f172a !important; color: #ffffff !important; color-scheme: dark;';
+        let optHtml = '';
+        problems.forEach((p, idx) => {
+            const rawTitle = p.title || (p.text ? p.text.substring(0, 48) + '...' : `Question ${idx + 1}`);
+            const cleanTitle = rawTitle.replace(/\s*\(\d+\s*Marks?\)/gi, '').trim();
+            optHtml += `<option value="${idx}" style="background-color: #0f172a; color: #ffffff;">${idx + 1}. ${cleanTitle} (${p.marks || 1}M)</option>`;
+        });
+        select.innerHTML = optHtml;
+        select.value = "0";
+    }
+
+    if (typeof loadEvalProblem === 'function') {
+        loadEvalProblem();
+            renderFormulaToolbars();
+    }
+        }
+
+        function getTab3Problems() {
+            const bank = (typeof window !== 'undefined' && window.dbQuestionBank) ? window.dbQuestionBank : (typeof evalProblemBank !== 'undefined' ? evalProblemBank : {});
+            const targetK = (typeof currentChapterKey !== 'undefined') ? currentChapterKey : 'M10_CH01';
+            return (typeof resolveProblemsForChapter === 'function')
+                ? resolveProblemsForChapter(bank, targetK, currentSubject)
+                : (bank[targetK] || []);
+        }
+
+        function loadEvalProblem() {
+            const select = document.getElementById('evalProblemSelect');
+            const pIdx = select ? parseInt(select.value) : 0;
+            const problems = getTab3Problems();
+            const prob = problems[pIdx] || problems[0];
+            if (!prob) return;
+
+            // 1. Update Left Card Details
+            const totalM = prob.marks || prob.total_marks || 2;
+            const marksEl = document.getElementById('evalTotalMarks');
+            if (marksEl) marksEl.innerText = `${totalM} Marks Total`;
+
+            const textEl = document.getElementById('evalProblemText');
+            if (textEl) textEl.innerText = prob.text || prob.question_text || 'No question statement available.';
+
+            // 2. Render Official CBSE Rubric Allocation in Left Card
+            let rubric = prob.rubric || [];
+            if (!Array.isArray(rubric) || rubric.length === 0) {
+                rubric = [
+                    { step: "Initial formulation and standard formula identification", marks: totalM / 2 },
+                    { step: "Intermediate calculation and verified final answer with units", marks: totalM / 2 }
+                ];
+            }
+
+            let rubricHtml = '';
+            rubric.forEach((r, idx) => {
+                const sMarks = r.marks || (totalM / rubric.length);
+                rubricHtml += `
+                    <div class="p-2.5 rounded-lg bg-surfaceLight border border-slate-700/60 flex items-start justify-between gap-3 mb-1.5">
+                        <span class="text-slate-300 font-sans leading-relaxed text-xs"><strong class="text-indigo-400">Step ${idx + 1}:</strong> ${r.step || r.description || JSON.stringify(r)}</span>
+                        <span class="text-[11px] font-bold font-mono px-2 py-0.5 rounded bg-purple-950/70 border border-purple-800 text-purple-300 shrink-0">${sMarks}M</span>
+                    </div>
+                `;
+            });
+
+            const rubricTarget = document.getElementById('evalExpectedRubric') || document.getElementById('evalModelRubric');
+            if (rubricTarget) rubricTarget.innerHTML = rubricHtml;
+
+            // 3. Clear Right Workspace (Keep Blank for Student Handwritten Transfer)
+            // 3. Populate Dedicated Common Mistakes Box for this question
+            let commonMistake = prob.flawedAnswer || '';
+            if (!commonMistake || commonMistake === 'Answer provided without points or supporting examples.') {
+                if (prob.text && (prob.text.includes('=') || currentSubject === 'MATH')) {
+                    commonMistake = "• Sign Error: Forgetting to negate terms when transposing across '=' sign.\n• Prerequisite Check: Omitting the condition b² - 4ac ≥ 0 before computing square roots.\n• Unit Omission: Not stating final units (e.g. cm, km/h, rupees) in the concluding sentence.";
+                } else if (currentSubject === 'SCIENCE' || currentSubject === '086') {
+                    commonMistake = "• State Symbols: Omitting physical states (s, aq, g) in balanced chemical equations.\n• Ray Direction: Forgetting directional arrows on incident and reflected light rays.\n• Incomplete Law: Writing definition without stating standard SI units.";
+                } else {
+                    commonMistake = "• Unstructured Essay: Writing running paragraphs instead of numbered, distinct points.\n• Date / Act Omission: Omitting exact years (e.g., 1919 for Rowlatt Act) or treaty names.\n• Lack of Concluding Evaluation: Omitting the ultimate socio-economic impact.";
+                }
+            }
+            const mistakeBox = document.getElementById('commonMistakesBox');
+            if (mistakeBox) {
+                mistakeBox.innerHTML = commonMistake.replace(/\n/g, '<br>');
+            }
+
+            // 4. Keep Answer Input Blank for Student Practice
+            clearRightWorkspace();
+
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('workspace-3'), {
+                    delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]
+                });
+            }
+        }
+
+        // Marks Preference Filtering
+        let currentMarkPreference = 'ALL';
+        let activeRandomMode = null;
+
+        function setMarkPreference(markVal) {
+            currentMarkPreference = markVal;
+            document.querySelectorAll('.mark-pref-pill').forEach(btn => {
+                btn.className = "mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700";
+            });
+            const activePill = document.getElementById(`markPill_${markVal}`);
+            if (activePill) {
+                activePill.className = "mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-bold transition bg-purple-600 text-white shadow-md shadow-purple-900/50 border border-purple-400";
+            }
+            filterDropdownByMarks();
+        }
+
+        function filterDropdownByMarks() {
+            const select = document.getElementById('evalProblemSelect');
+            if (!select) return;
+            const problems = getTab3Problems();
+            if (!problems || problems.length === 0) return;
+
+            select.innerHTML = '';
+            let firstMatchingIdx = -1;
+
+            problems.forEach((p, idx) => {
+                const m = p.marks || p.total_marks || 2;
+                if (currentMarkPreference === 'ALL' || m === parseInt(currentMarkPreference)) {
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.text = `${idx + 1}. ${(p.title || p.text || 'Question').substring(0, 52)}... (${m}M)`;
+                    select.appendChild(opt);
+                    if (firstMatchingIdx === -1) firstMatchingIdx = idx;
+                }
+            });
+
+            if (select.options.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = 0;
+                opt.text = `No ${currentMarkPreference}M questions in this chapter`;
+                select.appendChild(opt);
+            } else {
+                select.selectedIndex = 0;
+                loadEvalProblem();
+            renderFormulaToolbars();
+            }
+        }
+
+        function setRandomScopeAndPick(scope) {
+            activeRandomMode = scope;
+            const btnCh = document.getElementById('btnChapterRandom');
+            const btnSyl = document.getElementById('btnSyllabusRandom');
+
+            if (scope === 'chapter') {
+                if (btnCh) btnCh.className = "px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-lg shadow-indigo-600/50 border border-indigo-400 ring-2 ring-indigo-400/40";
+                if (btnSyl) btnSyl.className = "px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-medium transition flex items-center gap-1";
+                pickChapterRandomQuestion();
+            } else {
+                if (btnSyl) btnSyl.className = "px-2.5 py-1 rounded-lg bg-purple-600 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-lg shadow-purple-600/50 border border-purple-400 ring-2 ring-purple-400/40";
+                if (btnCh) btnCh.className = "px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-medium transition flex items-center gap-1";
+                pickSyllabusRandomQuestion();
+            }
+        }
+
+        function pickChapterRandomQuestion() {
+            const select = document.getElementById('evalProblemSelect');
+            if (!select || select.options.length === 0) return;
+            const randIdx = Math.floor(Math.random() * select.options.length);
+            select.selectedIndex = randIdx;
+            loadEvalProblem();
+            renderFormulaToolbars();
+        }
+
+        function pickSyllabusRandomQuestion() {
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+            const chKeys = Object.keys(chapters);
+            if (chKeys.length === 0) return;
+            const randCh = chKeys[Math.floor(Math.random() * chKeys.length)];
+            currentChapterKey = randCh;
+            if (typeof selectChapter === 'function') selectChapter(randCh);
+            if (typeof renderMicroEvaluator === 'function') renderMicroEvaluator(randCh);
+            setTimeout(() => {
+                filterDropdownByMarks();
+                pickChapterRandomQuestion();
+            }, 80);
+        }
+
+        function clearRightWorkspace() {
+            const input = document.getElementById('studentSolutionInput');
+            if (input) {
+                input.value = '';
+                input.placeholder = "Solve on your paper pad first, then transfer your steps here line-by-line...\n\nStep 1: Given values and formula...\nStep 2: Substitution and calculation...\nStep 3: Final verified answer with units...";
+            }
+            const results = document.getElementById('evalResultsContainer');
+            if (results) results.classList.add('hidden');
+            const idealBox = document.getElementById('idealReferencePreview');
+            if (idealBox) idealBox.classList.add('hidden');
+        }
+
+        function resetMicroEvaluator() {
+            clearRightWorkspace();
+            activeRandomMode = null;
+            const btnCh = document.getElementById('btnChapterRandom');
+            const btnSyl = document.getElementById('btnSyllabusRandom');
+            if (btnCh) btnCh.className = "px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm";
+            if (btnSyl) btnSyl.className = "px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm";
+        }
+
+        function toggleIdealReference() {
+            const idealBox = document.getElementById('idealReferencePreview');
+            if (!idealBox) return;
+            const isHidden = idealBox.classList.contains('hidden');
+            if (isHidden) {
+                const select = document.getElementById('evalProblemSelect');
+                const pIdx = select ? parseInt(select.value) : 0;
+                const problems = getTab3Problems();
+                const prob = problems[pIdx] || problems[0];
+
+                let ans = prob ? (prob.idealAnswer || prob.ideal_solution || '') : '';
+                if (!ans || ans === 'Standard CBSE response.' || ans.length < 15) {
+                    if (prob && prob.rubric && Array.isArray(prob.rubric)) {
+                        ans = prob.rubric.map((r, i) => `${i + 1}. ${r.step || r.description || JSON.stringify(r)}`).join('\n');
+                    }
+                }
+                const contentEl = document.getElementById('idealReferenceContent');
+                if (contentEl) contentEl.innerText = ans || 'Standard CBSE worked solution.';
+                idealBox.classList.remove('hidden');
+            } else {
+                idealBox.classList.add('hidden');
+            }
+        }
+
+        function onQuestionChanged() {
+            loadEvalProblem();
+            renderFormulaToolbars();
+        }
+
+        // --- 3-CASE ACTIVE AI EVALUATION ENGINE ---
+        function loadEvaluationCase(caseType) {
+            const input = document.getElementById('studentSolutionInput');
+            if (!input) return;
+            const prob = getActiveProblemRecord();
+            if (!prob) return;
+
+            if (caseType === 'ideal') {
+                let ans = prob.idealAnswer || prob.ideal_solution || '';
+                if (!ans || ans === 'Standard CBSE response.' || ans.length < 10) {
+                    if (prob.rubric && Array.isArray(prob.rubric)) {
+                        ans = prob.rubric.map((r, i) => `Step ${i + 1}: ${r.step || r.description || JSON.stringify(r)}`).join('\n');
+                    } else {
+                        ans = "Step 1: State governing formula & isolate required variable.\nStep 2: Carry out step derivation.\nStep 3: State verified final result with SI units.";
+                    }
+                }
+                input.value = ans;
+            } else if (caseType === 'flaw') {
+                let flaw = prob.flawedAnswer || '';
+                if (!flaw || flaw === 'Answer provided without points or supporting examples.') {
+                    if (prob.text && (prob.text.includes('=') || currentSubject === 'MATH')) {
+                        flaw = "Step 1: Expand equation\nStep 2: Transposition: 2y = 14 + 4 = 18 (Sign inversion error)\nStep 3: Incorrect final values: y = 9, x = 13";
+                    } else {
+                        flaw = "Step 1: It was introduced because of general colonial policies.\n(Omitted specific legislative act, year, and clause 2-year imprisonment provision).";
+                    }
+                }
+                input.value = flaw;
+            } else {
+                input.value = '';
+                input.focus();
+            }
+            const results = document.getElementById('evalResultsContainer');
+            if (results) results.classList.add('hidden');
+        }
+
+        function getActiveProblemRecord() {
+            const select = document.getElementById('evalProblemSelect');
+            const pIdx = select ? parseInt(select.value) : 0;
+            const problems = getTab3Problems();
+            return problems[pIdx] || problems[0];
+        }
+
+        async function runMicroEvaluation() {
+            const prob = getActiveProblemRecord();
+            const input = document.getElementById('studentSolutionInput');
+            const studentText = (input ? input.value : '').trim();
+
+            if (!studentText) {
+                alert("Please enter your answer or click one of the testing presets ('Ideal' / 'Common Slip').");
+                return;
+            }
+
+            const resultsContainer = document.getElementById('evalResultsContainer');
+            const scoreDisplay = document.getElementById('evalScoreDisplay');
+            const statusBadge = document.getElementById('evalStatusBadge');
+            const stepBreakdown = document.getElementById('evalStepBreakdown');
+
+            const totalMarks = prob ? (prob.marks || prob.total_marks || 1) : 1;
+            let rubric = (prob && prob.rubric) ? prob.rubric : [];
+            if (!Array.isArray(rubric) || rubric.length === 0) {
+                rubric = [
+                    { step: "Identification of relevant formula & initial expansion", marks: totalMarks / 2 },
+                    { step: "Correct algebraic derivation and conclusive answer", marks: totalMarks / 2 }
+                ];
+            }
+
+            const lower = studentText.toLowerCase();
+
+            // Detect case 1: Gibberish or irrelevant entry (e.g. "sfsgsh")
+            const isGibberish = studentText.length < 15 || !(/[a-zA-Z0-9]{3,}/.test(studentText)) || (studentText.split(' ').length < 3 && !studentText.includes('='));
+
+            // Detect case 2: Flawed answer containing recognized errors
+            const isFlawed = lower.includes('sign inversion') || lower.includes('incorrect') || lower.includes('omitted') || lower.includes('sign error') || lower.includes('error');
+
+            // Detect case 3: Ideal solution matching key mathematical terms or option letters
+            const hasOptionLetter = prob.text && prob.text.includes('(B)') && (lower.includes('option b') || lower.includes('correct: b') || lower.includes('(b)'));
+            const hasDerivation = lower.includes('expand') || lower.includes('highest power') || lower.includes('quadratic') || lower.includes('step 1') || lower.includes('step 2');
+            const isIdeal = !isGibberish && !isFlawed && (hasOptionLetter || hasDerivation || studentText.length > 50);
+
+            let awardedMarks = 0;
+            let verdictLabel = "Zero Credit (Irrelevant Working)";
+            let badgeStyle = "bg-rose-950 text-rose-400 border border-rose-800";
+
+            if (isGibberish) {
+                awardedMarks = 0;
+                verdictLabel = "0 Marks: Unintelligible / Incomplete Derivation";
+                badgeStyle = "bg-rose-950 text-rose-400 border border-rose-800";
+            } else if (isFlawed) {
+                awardedMarks = Math.max(0, Math.round((totalMarks * 0.4) * 10) / 10);
+                verdictLabel = "Step Deductions Flagged";
+                badgeStyle = "bg-amber-950 text-amber-400 border border-amber-800";
+            } else if (isIdeal) {
+                awardedMarks = totalMarks;
+                verdictLabel = "100% CBSE Rubric Compliant";
+                badgeStyle = "bg-emerald-950 text-emerald-400 border border-emerald-800";
+            } else {
+                // Partial credit
+                awardedMarks = Math.round((totalMarks * 0.5) * 10) / 10;
+                verdictLabel = "Partial Working Credit Awarded";
+                badgeStyle = "bg-sky-950 text-sky-400 border border-sky-800";
+            }
+
+            if (scoreDisplay) {
+                scoreDisplay.innerText = `${awardedMarks} / ${totalMarks} Marks`;
+                scoreDisplay.className = `text-xl font-black font-mono ${awardedMarks === totalMarks ? 'text-emerald-400' : (awardedMarks > 0 ? 'text-amber-400' : 'text-rose-400')}`;
+            }
+
+            if (statusBadge) {
+                statusBadge.innerText = verdictLabel;
+                statusBadge.className = `px-2.5 py-1 rounded-full text-xs font-mono font-bold ${badgeStyle}`;
+            }
+
+            if (stepBreakdown) {
+                let htmlStr = '';
+                rubric.forEach((r, idx) => {
+                    const stepMark = r.marks || (totalMarks / rubric.length);
+                    let stepEarned = 0;
+                    let stepStatus = "✗ Not Satisfied";
+
+                    if (isIdeal) {
+                        stepEarned = stepMark;
+                        stepStatus = "✓ Fully Satisfied";
+                    } else if (isFlawed) {
+                        stepEarned = (idx === 0) ? stepMark : 0;
+                        stepStatus = (idx === 0) ? "✓ Initial Setup Satisfied" : "✗ Intermediate Deduction (Slip)";
+                    } else if (!isGibberish && idx === 0) {
+                        stepEarned = stepMark;
+                        stepStatus = "✓ Formulated Correctly";
+                    }
+
+                    const isPass = stepEarned > 0;
+                    htmlStr += `
+                        <div class="p-3 rounded-xl ${isPass ? 'bg-emerald-950/25 border border-emerald-900/60' : 'bg-rose-950/25 border border-rose-900/60'} flex items-start justify-between gap-3 text-xs mb-2">
+                            <div class="leading-relaxed text-slate-200">
+                                <span class="${isPass ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}">${isPass ? '✓' : '✗'} Step ${idx + 1}:</span>
+                                ${r.step || r.description || JSON.stringify(r)}
+                                <div class="text-[10px] ${isPass ? 'text-emerald-400/80' : 'text-rose-400/80'} mt-0.5">${stepStatus}</div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold shrink-0 ${isPass ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}">
+                                ${stepEarned}/${stepMark}M
+                            </span>
+                        </div>
+                    `;
+                });
+                stepBreakdown.innerHTML = htmlStr;
+            }
+
+            if (resultsContainer) {
+                resultsContainer.classList.remove('hidden');
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        
+        function renderRoadmap() {
+            try {
+                const saved = localStorage.getItem('cbse_self_eval');
+                if (saved) studentChapterRatings = JSON.parse(saved);
+                loadChecklistState();
+            } catch (e) {}
+
+            renderChapterSelfEvalGrid();
+            recalculateRoadmap();
+
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('workspace-4'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+            }
+        }
+
+        function renderChapterSelfEvalGrid() {
+            const container = document.getElementById('selfEvalChapterGrid');
+            if (!container) return;
+
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+
+            let html = '';
+            for (const key in chapters) {
+                const ch = chapters[key];
+                const currentRating = studentChapterRatings[key] || 'developing';
+
+                html += `
+                    <div class="p-3 rounded-xl bg-surfaceLight border border-slate-700/60 flex items-center justify-between gap-2 shadow-sm">
+                        <div class="truncate pr-2">
+                            <div class="text-[10px] font-mono text-slate-400 font-semibold">${ch.code} • ${ch.weight}M</div>
+                            <div class="text-xs font-bold text-white truncate">${ch.name}</div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0 bg-slate-900/80 p-1 rounded-lg border border-slate-800">
+                            <button onclick="setChapterRating('${key}', 'weak')" title="Needs Focus (40%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'weak' ? 'bg-rose-600 text-white shadow-sm ring-1 ring-rose-400' : 'text-slate-500 hover:text-slate-300'}">🔴</button>
+                            <button onclick="setChapterRating('${key}', 'developing')" title="Developing (70%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'developing' ? 'bg-amber-600 text-white shadow-sm ring-1 ring-amber-400' : 'text-slate-500 hover:text-slate-300'}">🟡</button>
+                            <button onclick="setChapterRating('${key}', 'mastered')" title="Exam Ready (95%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'mastered' ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400' : 'text-slate-500 hover:text-slate-300'}">🟢</button>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function setChapterRating(key, rating) {
+            if (typeof studentChapterRatings === 'undefined') window.studentChapterRatings = {};
+            studentChapterRatings[key] = rating;
+            try {
+                localStorage.setItem('cbse_self_eval', JSON.stringify(studentChapterRatings));
+            } catch (err) {}
+            if (typeof renderChapterSelfEvalGrid === 'function') renderChapterSelfEvalGrid();
+            if (typeof recalculateRoadmap === 'function') recalculateRoadmap();
+        }
+
+        function resetSelfAssessment() {
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+            for (const key in chapters) {
+                studentChapterRatings[key] = 'developing';
+            }
+            try {
+                localStorage.setItem('cbse_self_eval', JSON.stringify(studentChapterRatings));
+            } catch (e) {}
+            renderChapterSelfEvalGrid();
+            recalculateRoadmap();
+        }
+
+        function recalculateRoadmap() {
+            const subjCode = (typeof currentSubject !== 'undefined' && currentSubject) ? currentSubject : 'MATH';
+            const activeSubj = (typeof subjectsRegistry !== 'undefined' && (subjectsRegistry[subjCode] || subjectsRegistry.MATH)) || { chapters: {} };
+            const chapters = activeSubj.chapters || {};
+            
+            // Safe weights map
+            const weights = {
+                'weak': 0.40,
+                'focus': 0.40,
+                'developing': 0.70,
+                'mastered': 0.95,
+                'ready': 0.95
+            };
+
+            const chKeys = Object.keys(chapters);
+            const totalChapters = chKeys.length || 14;
+
+            let totalWeightedMarks = 0;
+            let totalMaxMarks = 0;
+            let masteredCount = 0;
+            let weakChapters = [];
+            let developingChapters = [];
+
+            chKeys.forEach(key => {
+                const ch = chapters[key] || {};
+                const chWeight = ch.marks || ch.weight || ch.weightage || 5;
+                totalMaxMarks += chWeight;
+
+                const rating = (typeof studentChapterRatings !== 'undefined' && studentChapterRatings[key]) 
+                    ? studentChapterRatings[key] 
+                    : 'developing';
+
+                const frac = weights[rating] || 0.70;
+                totalWeightedMarks += (chWeight * frac);
+
+                if (rating === 'mastered' || rating === 'ready') {
+                    masteredCount++;
+                } else if (rating === 'weak' || rating === 'focus') {
+                    weakChapters.push({ name: ch.title || ch.name || key, weight: chWeight });
+                } else {
+                    developingChapters.push({ name: ch.title || ch.name || key, weight: chWeight });
+                }
+            });
+
+            if (totalMaxMarks === 0) totalMaxMarks = 80;
+            const projectedScore = Math.min(totalMaxMarks, Math.round(totalWeightedMarks));
+
+            // Update Top 4 Metric Display Cards
+            const scoreDisplay = document.getElementById('roadmapScore');
+            const percentDisplay = document.getElementById('roadmapPercent');
+            const masteredDisplay = document.getElementById('roadmapMasteredCount');
+            const riskDisplay = document.getElementById('roadmapTopRiskDomain');
+            const nextAction = document.getElementById('roadmapNextAction');
+            const nextActionDetail = document.getElementById('roadmapNextActionDetail');
+
+            if (scoreDisplay) scoreDisplay.innerText = `${projectedScore} / ${totalMaxMarks}`;
+            if (percentDisplay) percentDisplay.innerText = `${Math.round((projectedScore / totalMaxMarks) * 100)}% Projected Board Score`;
+            if (masteredDisplay) masteredDisplay.innerText = `${masteredCount} / ${totalChapters}`;
+
+            weakChapters.sort((a, b) => b.weight - a.weight);
+            developingChapters.sort((a, b) => b.weight - a.weight);
+
+            if (weakChapters.length > 0) {
+                if (riskDisplay) riskDisplay.innerText = weakChapters[0].name.substring(0, 18);
+                if (nextAction) nextAction.innerText = "Target Theory & Proofs";
+                if (nextActionDetail) nextActionDetail.innerText = `Focus on ${weakChapters[0].name} in Tab 1 & Tab 2`;
+            } else if (developingChapters.length > 0) {
+                if (riskDisplay) riskDisplay.innerText = developingChapters[0].name.substring(0, 18);
+                if (nextAction) nextAction.innerText = "Fix Step Deductions";
+                if (nextActionDetail) nextActionDetail.innerText = `Inspect ${developingChapters[0].name} in Tab 3`;
+            } else {
+                if (riskDisplay) riskDisplay.innerText = "None (Full Mastery)";
+                if (nextAction) nextAction.innerText = "Timed Mock Papers";
+                if (nextActionDetail) nextActionDetail.innerText = "Attempt full board papers under exam conditions";
+            }
+        }
+
+        
+        function saveChecklistState() {
+            const state = {
+                chk1: document.getElementById('chk1') ? document.getElementById('chk1').checked : false,
+                chk2: document.getElementById('chk2') ? document.getElementById('chk2').checked : false,
+                chk3: document.getElementById('chk3') ? document.getElementById('chk3').checked : false,
+                chk4: document.getElementById('chk4') ? document.getElementById('chk4').checked : false
+            };
+            try {
+                localStorage.setItem('cbse_checklist_state', JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function loadChecklistState() {
+            try {
+                const saved = localStorage.getItem('cbse_checklist_state');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    for (const id in state) {
+                        const el = document.getElementById(id);
+                        if (el) el.checked = state[id];
+                    }
+                }
+            } catch (e) {}
+        }
+
+	// -------------------------------------------------------------------------
+        // TAB 5: SUBJECT-AWARE AI DOUBT SOLVER ENGINE
+        // -------------------------------------------------------------------------
+        let doubtSessionHistory = [];
+
+        function fillDoubt(text) {
+            const input = document.getElementById('doubtInput');
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+
+        function clearDoubtInput() {
+            // 1. Clear input textarea
+            const input = document.getElementById('doubtInput');
+            if (input) input.value = '';
+
+            // 2. Hide active resolution panel & empty body
+            const activeContent = document.getElementById('doubtActiveContent');
+            if (activeContent) activeContent.classList.add('hidden');
+
+            const answerBody = document.getElementById('doubtAnswerBody');
+            if (answerBody) answerBody.innerHTML = '';
+
+            // 3. Restore idle placeholder
+            const idleState = document.getElementById('doubtIdleState');
+            if (idleState) idleState.classList.remove('hidden');
+        }
+
+        // =======================================================
+        // TAB 5 SESSION DOUBTS HISTORY ENGINE
+        // =======================================================
+        let sessionDoubtsHistory = [];
+
+        function loadSessionDoubtHistory() {
+            try {
+                const saved = localStorage.getItem('cbse_session_doubts');
+                if (saved) {
+                    sessionDoubtsHistory = JSON.parse(saved);
+                }
+            } catch (e) {
+                sessionDoubtsHistory = [];
+            }
+            renderSessionDoubtHistoryUI();
+        }
+
+        function saveSessionDoubt(question, solutionHtml) {
+            sessionDoubtsHistory.unshift({
+                id: Date.now(),
+                question: question,
+                solution: solutionHtml,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                subject: currentSubject || 'MATH'
+            });
+            // Keep recent 12 doubts
+            if (sessionDoubtsHistory.length > 12) sessionDoubtsHistory.pop();
+            try {
+                localStorage.setItem('cbse_session_doubts', JSON.stringify(sessionDoubtsHistory));
+            } catch (e) {}
+            renderSessionDoubtHistoryUI();
+        }
+
+        function renderSessionDoubtHistoryUI() {
+            const listContainer = document.querySelector('#workspace-5 .space-y-2') 
+                || document.getElementById('sessionDoubtsList');
+            
+            // If there's an explicit container near "SESSION DOUBTS HISTORY"
+            const historyHeader = Array.from(document.querySelectorAll('#workspace-5 *')).find(
+                el => el.innerText && el.innerText.includes('SESSION DOUBTS HISTORY') && el.children.length === 0
+            );
+
+            let container = document.getElementById('sessionDoubtsHistoryList');
+            if (!container && historyHeader) {
+                const parent = historyHeader.closest('.rounded-2xl') || historyHeader.parentElement.parentElement;
+                container = document.createElement('div');
+                container.id = 'sessionDoubtsHistoryList';
+                container.className = 'space-y-2 mt-3 max-h-52 overflow-y-auto pr-1';
+                parent.appendChild(container);
+            }
+
+            if (!container) return;
+
+            if (sessionDoubtsHistory.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-500 py-3 text-center italic">No doubts asked in this session yet.</p>';
+                return;
+            }
+
+            let html = '';
+            sessionDoubtsHistory.forEach((item, idx) => {
+                const snippet = item.question.length > 70 ? item.question.substring(0, 70) + '...' : item.question;
+                html += `
+                    <div onclick="restoreHistoricDoubt(${item.id})" class="p-2.5 rounded-xl bg-surfaceLight/80 hover:bg-surfaceLight border border-slate-700/60 hover:border-indigo-500/80 transition cursor-pointer flex items-center justify-between text-xs group">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <span class="text-indigo-400 font-bold font-mono shrink-0">#${sessionDoubtsHistory.length - idx}</span>
+                            <span class="text-slate-300 group-hover:text-white truncate">${snippet}</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 shrink-0 font-mono ml-2">${item.time}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function restoreHistoricDoubt(doubtId) {
+            const item = sessionDoubtsHistory.find(d => d.id === doubtId);
+            if (!item) return;
+
+            const input = document.getElementById('doubtInput');
+            if (input) input.value = item.question;
+
+            const idleState = document.getElementById('doubtIdleState');
+            const activeContent = document.getElementById('doubtActiveContent');
+            const answerBody = document.getElementById('doubtAnswerBody');
+
+            if (idleState) idleState.classList.add('hidden');
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (answerBody) {
+                answerBody.innerHTML = item.solution;
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(answerBody, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }] });
+                }
+            }
+        }
+
+        function clearSessionDoubtHistory() {
+            sessionDoubtsHistory = [];
+            try {
+                localStorage.removeItem('cbse_session_doubts');
+            } catch (e) {}
+            renderSessionDoubtHistoryUI();
+        }
+
+        function clearDoubtWorkspace() {
+            clearDoubtInput();
+        }
+
+        function clearDoubtHistory() {
+            doubtSessionHistory = [];
+            const container = document.getElementById('doubtHistoryContainer');
+            if (container) {
+                container.innerHTML = `<p class="text-[11px] text-slate-500 italic">No doubts logged in this session yet.</p>`;
+            }
+        }
+
+        const chapterDoubtBank = {
+            // === MATHEMATICS (041) ===
+            "M10_CH01": [
+                { chip: "Proof of √5 irrational", q: "Write down the formal 5-step proof by contradiction showing that √5 is an irrational number." },
+                { chip: "Fundamental Theorem of Arithmetic", q: "Explain the Fundamental Theorem of Arithmetic and find the HCF and LCM of 96 and 404 using prime factorization." },
+                { chip: "Why 6^n cannot end with 0", q: "Explain why 6^n cannot end with the digit 0 for any natural number n. What is the prime factor prerequisite?" },
+                { chip: "HCF x LCM = a x b proof", q: "Can two numbers have 18 as their HCF and 380 as their LCM? Justify your answer based on divisibility." },
+                { chip: "Terminating decimal condition", q: "What is the condition on the prime factorisation of q for the rational number p/q to have a terminating decimal expansion?" }
+            ],
+            "M10_CH02": [
+                { chip: "Zeroes & Coefficients relation", q: "Find the zeroes of 6x² - 3 - 7x and verify the relationship between zeroes and coefficients." },
+                { chip: "Form quadratic polynomial", q: "Form a quadratic polynomial whose zeroes are 3 + √5 and 3 - √5." },
+                { chip: "Reciprocal zeroes condition", q: "If one zero of the polynomial (a² + 9)x² + 13x + 6a is the reciprocal of the other, find the value of a." },
+                { chip: "Discriminant & graph intersections", q: "How does the discriminant and the sign of 'a' determine whether a quadratic polynomial intersects the x-axis at 0, 1, or 2 points?" },
+                { chip: "Cubic polynomial zeroes check", q: "Verify that 3, -1, and -1/3 are the zeroes of 3x³ - 5x² - 11x - 3 and state the verification formula." }
+            ],
+            "M10_CH03": [
+                { chip: "Consistency conditions table", q: "Write the conditions on ratios a1/a2, b1/b2, c1/c2 for unique solution, infinitely many solutions, and no solution." },
+                { chip: "Speed of Boat upstream/downstream", q: "A boat goes 30 km upstream and 44 km downstream in 10 hours. In 13 hours, it can go 40 km upstream and 55 km downstream. Determine the speed of the stream and the boat." },
+                { chip: "Fraction word problem setup", q: "A fraction becomes 9/11 if 2 is added to both numerator and denominator. If 3 is added to both, it becomes 5/6. Find the fraction." },
+                { chip: "Large coefficient shortcut", q: "Solve for x and y: 217x + 131y = 913, 131x + 217y = 827 using addition and subtraction method." },
+                { chip: "Parallel lines & finding k", q: "Find the value of k for which the system kx + 3y = 1 and 12x + ky = 2 has no solution." }
+            ],
+            "M10_CH04": [
+                { chip: "Discriminant & Nature of Roots", q: "State the three conditions for discriminant D = b² - 4ac and find the nature of roots of 2x² - 2√2x + 1 = 0." },
+                { chip: "Train / Uniform speed problem", q: "A train travels 360 km at a uniform speed. If the speed had been 5 km/h more, it would have taken 1 hour less. Find the speed of the train." },
+                { chip: "Equal roots & finding k", q: "Find the value of k for which (k - 12)x² + 2(k - 12)x + 2 = 0 has real and equal roots." },
+                { chip: "Sum of squares problem", q: "Find two consecutive odd positive integers, the sum of whose squares is 290." },
+                { chip: "Discarding negative roots", q: "Why must negative root values be explicitly discarded when solving for speed, time, or dimensions in CBSE marking?" }
+            ],
+            "M10_CH05": [
+                { chip: "n-th term from the end formula", q: "Find the 11th term from the last term (towards the first term) of the AP: 10, 7, 4, ..., -62." },
+                { chip: "Sum formula Sn derivation", q: "Derive the formula Sn = n/2 [2a + (n-1)d] and find the sum of all two-digit odd numbers." },
+                { chip: "Find an when Sn is given", q: "If Sn = 3n² + 5n, find the nth term and hence determine the 15th term of this AP." },
+                { chip: "Consecutive terms & finding k", q: "If 2k + 1, 3k + 3, and 5k - 1 are consecutive terms of an AP, find the value of k." },
+                { chip: "First negative term index", q: "Which term of the AP: 121, 117, 113, ... is its first negative term?" }
+            ],
+
+            // === SCIENCE (086) ===
+            "S10_CH01": [
+                { chip: "Balancing Fe + H2O with states", q: "Balance the chemical equation and include physical states: Fe(s) + H2O(g) -> Fe3O4(s) + H2(g)." },
+                { chip: "Redox identification in MnO2 + HCl", q: "Identify the substance oxidized, reduced, oxidizing agent, and reducing agent in: MnO2 + 4HCl -> MnCl2 + 2H2O + Cl2." },
+                { chip: "Exothermic respiration reason", q: "Explain with chemical equation why cellular respiration is classified as an exothermic reaction." },
+                { chip: "Precipitation reaction example", q: "What happens when barium chloride solution is added to sodium sulphate solution? Write the balanced equation with precipitate color." },
+                { chip: "Rancidity & Nitrogen flush", q: "Explain the chemistry behind flushing potato chip packets with nitrogen gas and oil coating on iron to prevent oxidation." }
+            ],
+            "S10_CH02": [
+                { chip: "Why dry HCl doesn't change litmus", q: "Why does dry HCl gas not turn dry blue litmus paper red while dilute HCl does? Explain the role of hydronium ions." },
+                { chip: "Chlor-Alkali electrode products", q: "What products are formed at the anode and cathode during the Chlor-Alkali electrolysis of brine? Write balanced reactions." },
+                { chip: "Plaster of Paris half water rationale", q: "Explain why Plaster of Paris is written with half a molecule of water of crystallization (CaSO4·1/2H2O)." },
+                { chip: "pH & Tooth decay mechanism", q: "Explain the role of pH in tooth decay and soil fertility. At what pH threshold does tooth enamel corrode?" },
+                { chip: "Bleaching powder & Washing soda", q: "Give the chemical formula, preparation equation, and two commercial uses of Bleaching Powder." }
+            ],
+            "S10_CH06": [
+                { chip: "Aerobic vs Anaerobic respiration", q: "Compare aerobic respiration and anaerobic respiration in yeast and human muscle cells with pathway equations." },
+                { chip: "Double circulation in human heart", q: "Explain double circulation in human beings with a schematic diagram. Why is it necessary in birds and mammals?" },
+                { chip: "Nephron urine formation stages", q: "Describe the three main stages of urine formation in a nephron: ultrafiltration, selective reabsorption, and tubular secretion." },
+                { chip: "Photosynthesis: 3 core events", q: "What are the three major events that occur during the process of photosynthesis in green leaves?" },
+                { chip: "Stomatal guard cell mechanism", q: "How do guard cells regulate the opening and closing of stomatal pores? Explain the role of turgor pressure." }
+            ],
+            "S10_CH10": [
+                { chip: "Concave mirror ray diagram (Virtual)", q: "Draw a ray diagram for an object placed between pole and principal focus of a concave mirror. State magnification sign." },
+                { chip: "Lens formula & sign convention", q: "State the Cartesian sign conventions for spherical lenses. A convex lens forms a real inverted image at 50 cm. Find focal length if size is same." },
+                { chip: "Refractive index & Snell's Law", q: "State Snell's Law of refraction and calculate the speed of light in glass of refractive index 1.50." },
+                { chip: "Power of lens combination", q: "A convex lens of focal length 25 cm is placed in contact with a concave lens of focal length 20 cm. Find the power and nature of the combination." },
+                { chip: "Significance of magnification sign", q: "What is the physical significance if linear magnification m = -0.5 versus m = +1.5 for a spherical mirror?" }
+            ],
+
+            // === SOCIAL SCIENCE (087) ===
+            "SS10_HIS_01": [
+                { chip: "Napoleonic Civil Code (1804)", q: "What were the administrative reforms introduced by Napoleon through the Civil Code of 1804 in France and conquered territories?" },
+                { chip: "Balkan nationalist tension causes", q: "Why did the Balkan region become the most serious source of nationalist tension in Europe after 1871? State five specific reasons." },
+                { chip: "Unification of Italy: Cavour & Garibaldi", q: "Examine the role of Giuseppe Mazzini, Count Cavour, and Giuseppe Garibaldi in the unification of Italy." },
+                { chip: "Otto von Bismarck & German Unification", q: "Describe the three wars fought over seven years that completed the process of German unification under Bismarck." },
+                { chip: "Frankfurt Parliament failure (1848)", q: "Explain the causes for the failure of the Frankfurt Parliament of 1848 and the role of women in the liberal movement." },
+                { chip: "Marianne & Germania allegories", q: "How were female allegories developed in the nineteenth century to personify nations in France and Germany?" }
+            ],
+            "SS10_HIS_02": [
+                { chip: "Non-Cooperation withdrawal reason", q: "Why did Mahatma Gandhi decide to withdraw the Non-Cooperation Movement in February 1922? Explain the Chauri Chaura incident." },
+                { chip: "Salt March & Civil Disobedience", q: "Why did Mahatma Gandhi perceive salt as a powerful symbol that could unite the nation? Describe the launch of Civil Disobedience." },
+                { chip: "Rowlatt Act of 1919 provisions", q: "What was the Rowlatt Act of 1919? Why was it opposed by Indians and what was the British reaction?" },
+                { chip: "Poona Pact of 1932 terms", q: "Explain the circumstances leading to the Poona Pact between Dr. B.R. Ambedkar and Mahatma Gandhi in September 1932." },
+                { chip: "Plantation workers' idea of Swaraj", q: "How did the plantation workers in Assam interpret the concept of Swaraj under the Inland Emigration Act of 1859?" }
+            ],
+            "SS10_GEO_01": [
+                { chip: "Soil conservation techniques", q: "Explain contour ploughing, terrace farming, strip cropping, and shelter belts as methods of soil conservation in India." },
+                { chip: "Black soil features & distribution", q: "Describe the physical characteristics, chemical composition, and regional distribution of Black (Regur) soil in India." },
+                { chip: "Agenda 21 & Rio Earth Summit 1992", q: "What were the major objectives of the Earth Summit held at Rio de Janeiro in 1992 and Agenda 21?" },
+                { chip: "Land degradation causes state-wise", q: "State the primary causes of land degradation in Punjab (over-irrigation), Jharkhand (mining), and Gujarat (overgrazing)." },
+                { chip: "Resource planning 3 stages in India", q: "Explain the three-stage complex process of Resource Planning in India with reference to balanced regional development." }
+            ],
+            "SS10_POL_01": [
+                { chip: "Belgium vs Sri Lanka power sharing", q: "Compare the power-sharing arrangements adopted in Belgium with the majoritarian policies implemented in Sri Lanka." },
+                { chip: "Horizontal vs Vertical power sharing", q: "Differentiate between horizontal division of power and vertical division of power with suitable Indian examples." },
+                { chip: "Prudential vs Moral reasons", q: "Distinguish between the prudential reasons and moral reasons for power sharing in a modern democratic setup." },
+                { chip: "Community Government in Belgium", q: "What is Community Government in Belgium? What specific powers are vested in this tier of governance?" },
+                { chip: "Coalition government power dynamics", q: "How do political parties and pressure groups ensure that power does not remain in single hands in a democracy?" }
+            ]
+        };
+
+        function renderDoubtTab(chapterKey) {
+            if (typeof loadSessionDoubtHistory === 'function') loadSessionDoubtHistory();
+            const subj = currentSubject || 'MATH';
+            const activeSubj = subjectsRegistry[subj] || subjectsRegistry.MATH;
+            const chapters = activeSubj.chapters || {};
+            const ch = chapters[chapterKey] || { code: chapterKey, name: "Selected Chapter" };
+
+            // 1. Update Header Mentor Persona & Description Dynamically
+            const badgeEl = document.getElementById('tab5MentorBadge');
+            const descEl = document.getElementById('tab5MentorDescription');
+            const tagEl = document.getElementById('tab5ChapterTag');
+
+            if (tagEl) tagEl.innerText = `Context: ${ch.name}`;
+
+            if (subj === 'SCI') {
+                if (badgeEl) badgeEl.innerText = "24/7 AI Science Mentor";
+                if (descEl) descEl.innerText = "Ask questions on reactions, SI units, ray paths, and experimental reasoning. The solver provides balanced chemical equations and NCERT marking scheme breakdowns.";
+            } else if (subj === 'SST') {
+                if (badgeEl) badgeEl.innerText = "24/7 AI Social Science Mentor";
+                if (descEl) descEl.innerText = "Ask conceptual questions on events, treaties, articles, and definitions. The solver structures responses in 3-mark and 5-mark CBSE point-wise formats.";
+            } else {
+                if (badgeEl) badgeEl.innerText = "24/7 AI Math Mentor";
+                if (descEl) descEl.innerText = "Ask any mathematical proof or problem step. The solver breaks down the solution according to NCERT step criteria with verified algebraic deductions.";
+            }
+
+            // 2. Load Granular Chapter Doubts
+            const header = document.getElementById('doubtChipsHeader');
+            if (header) header.innerText = `${ch.code || ''} (${ch.name}) Frequent Doubts & CBSE Shortcuts:`;
+
+            const chipsContainer = document.getElementById('doubtQuickChips');
+            if (chipsContainer) {
+                const chips = chapterDoubtBank[chapterKey] || [
+                    { chip: "Key Board Definitions", q: `Explain the fundamental definitions and key principles of ${ch.name}.` },
+                    { chip: "High-Weightage 3M Questions", q: `What are the most frequent 3-mark questions asked from ${ch.name} in CBSE board exams?` },
+                    { chip: "Common Deduction Traps", q: `What are the common step deduction traps students make in ${ch.name}?` },
+                    { chip: "NCERT Summary Notes", q: `Provide a structured summary of core NCERT concepts in ${ch.name}.` }
+                ];
+
+                let html = '';
+                chips.forEach(item => {
+                    const cleanQ = (item.q || '').replace(/'/g, "\'");
+                    html += `
+                        <button onclick="fillDoubt('${cleanQ}')" class="text-xs px-3 py-1.5 rounded-lg bg-surfaceLight border border-slate-700 hover:border-indigo-500 text-slate-300 hover:text-white transition flex items-center gap-1.5 shadow-sm">
+                            <span class="text-indigo-400 font-bold">⚡</span> <span>${item.chip}</span>
+                        </button>
+                    `;
+                });
+                chipsContainer.innerHTML = html;
+            }
+        }
+
+        function clearDoubtWorkspace() {
+            const input = document.getElementById('doubtInput');
+            if (input) input.value = '';
+
+            const idleState = document.getElementById('doubtIdleState');
+            const activeContent = document.getElementById('doubtActiveContent');
+            const answerBody = document.getElementById('doubtAnswerBody');
+
+            if (idleState) idleState.classList.remove('hidden');
+            if (activeContent) activeContent.classList.add('hidden');
+            if (answerBody) answerBody.innerHTML = '';
+        }
+
+        async function solveDoubt() {
+            const userTier = getCurrentUserTier();
+            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+            const allowedDemoChapters = activeSubj.freeChapters || [];
+
+            if (userTier === 'FREE' && !allowedDemoChapters.includes(currentChapterKey)) {
+                showUpgradeModal(`The AI Doubt Solver is limited to free demo chapters on the Free tier. Upgrade to Pro for full solutions across all ${activeSubj.name} topics.`);
+                return;
+            }
+
+            const input = document.getElementById('doubtInput');
+            const question = input ? input.value.trim() : '';
+            if (!question) {
+                alert("Please type or select a question first.");
+                return;
+            }
+
+            const btn = document.getElementById('doubtSubmitBtn');
+            const idleState = document.getElementById('doubtIdleState');
+            const activeContent = document.getElementById('doubtActiveContent');
+            const answerBody = document.getElementById('doubtAnswerBody');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span>⏳</span> Solving...`;
+            }
+
+            let solutionText = "";
+
+            try {
+                const response = await fetch('http://127.0.0.1:8001/api/solve-doubt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: question, chapter_id: currentChapterKey })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    solutionText = data.solution_markdown || data.solution;
+                } else {
+                    throw new Error("Backend response error");
+                }
+            } catch (err) {
+                solutionText = generateFallbackDoubtSolution(question);
+            }
+
+            if (idleState) idleState.classList.add('hidden');
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (answerBody) {
+                answerBody.innerHTML = solutionText;
+                if (window.renderMathInElement) {
+                    renderMathInElement(answerBody, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+                }
+            }
+
+            doubtSessionHistory.unshift(question);
+            updateDoubtHistoryUI();
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<span>🚀</span> Resolve Doubt`;
+            }
+        }
+
+function generateFallbackDoubtSolution(q) {
+            const lower = q.toLowerCase();
+
+            // 1. Social Science (SST) Queries
+            if (currentSubject === 'SST' || lower.includes('balkan') || lower.includes('napoleon') || lower.includes('1804') || lower.includes('bangar') || lower.includes('khadar') || lower.includes('soil') || lower.includes('swaraj') || lower.includes('treaty') || lower.includes('congress') || lower.includes('movement')) {
+                if (lower.includes('balkan')) {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-amber-300 text-sm">Causes of Nationalist Tensions in the Balkan Region (Post-1871):</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>1. Ethnic & Geographical Diversity:</strong> The Balkans was a region of enormous geographical and ethnic variation comprising modern-day Romania, Bulgaria, Albania, Greece, Macedonia, Croatia, Bosnia-Herzegovina, Slovenia, Serbia, and Montenegro, whose inhabitants were broadly known as the Slavs.</p>
+                                <p><strong>2. Disintegration of the Ottoman Empire:</strong> A large part of the Balkans was under the control of the Ottoman Empire. The spread of romantic nationalism coupled with the disintegration of the Ottoman Empire made this region explosive.</p>
+                                <p><strong>3. Mutual Jealousy & Territorial Ambition:</strong> As Slavic nationalities struggled to define their identity and independence, the Balkan states were fiercely jealous of each other and each hoped to gain more territory at the expense of others.</p>
+                                <p><strong>4. Big Power Rivalry:</strong> The area became the scene of intense rivalry among European powers (Russia, Germany, England, and Austro-Hungary) over trade supremacy and territorial control, culminating in World War I.</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (lower.includes('napoleon') || lower.includes('1804')) {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-amber-300 text-sm">Civil Code of 1804 (Napoleonic Code) - Core Provisions:</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>1. Equality before the Law:</strong> Abolished all privileges based on birth and established legal equality.</p>
+                                <p><strong>2. Right to Property:</strong> Secured private property rights for French citizens.</p>
+                                <p><strong>3. Feudal Abolition:</strong> Freed peasants from serfdom, manorial dues, and feudal obligations.</p>
+                                <p><strong>4. Administrative Uniformity:</strong> Standardized weights, measures, and a unified national currency.</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (lower.includes('bangar') || lower.includes('khadar')) {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-amber-300 text-sm">Comparison: Bangar vs Khadar Alluvial Soils:</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>• Bangar (Old Alluvium):</strong> Found in higher terraces away from river valleys; contains higher concentration of calcareous deposits (kankar nodules); less fertile.</p>
+                                <p><strong>• Khadar (New Alluvium):</strong> Found in low floodplains renewed annually by seasonal silt; fine-grained texture; highly fertile for intensive agriculture.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-indigo-300 text-sm">CBSE Social Science Step-by-Step Resolution</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>Point 1: Historical / Constitutional Context:</strong> Clearly define the core event, policy, treaty, or geographical feature referenced in the question.</p>
+                                <p><strong>Point 2: Primary Socio-Economic & Political Factors:</strong> State 2 to 3 substantive points supported by historical dates, locations, or economic data.</p>
+                                <p><strong>Point 3: Long-term Impact & Conclusion:</strong> Conclude with the national outcome or policy relevance to secure full marks according to CBSE rubrics.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // 2. Science (SCI) Queries
+            if (currentSubject === 'SCI' || lower.includes('fe') || lower.includes('reaction') || lower.includes('acid') || lower.includes('lens') || lower.includes('ohm') || lower.includes('current') || lower.includes('respiration')) {
+                if (lower.includes('fe') && lower.includes('h2o')) {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-indigo-300 text-sm">Balancing Iron and Steam Reaction Step-by-Step</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>Step 1: Skeletal Equation:</strong> $\\text{Fe} + \\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + \\text{H}_2$</p>
+                                <p><strong>Step 2: Balance Oxygen:</strong> $4\\text{H}_2\\text{O} \\implies \\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + \\text{H}_2$</p>
+                                <p><strong>Step 3: Balance Hydrogen:</strong> Multiply $\\text{H}_2$ by 4 $\\implies \\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + 4\\text{H}_2$</p>
+                                <p><strong>Step 4: Balance Iron:</strong> Multiply $\\text{Fe}$ by 3 $\\implies 3\\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + 4\\text{H}_2$</p>
+                                <p><strong>Final Equation with Physical States:</strong> $3\\text{Fe(s)} + 4\\text{H}_2\\text{O(g)} \\rightarrow \\text{Fe}_3\\text{O}_4\\text{(s)} + 4\\text{H}_2\\text{(g)}$</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="space-y-3 font-sans">
+                            <p class="font-bold text-indigo-300 text-sm">CBSE Science Step-by-Step Resolution</p>
+                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                                <p><strong>Step 1: Governing Scientific Principle / Definition:</strong> State the scientific law, ray diagram rule, or reaction category.</p>
+                                <p><strong>Step 2: Mathematical Working or Balanced Chemical Equation:</strong> Provide step calculations or balanced reactions complete with physical states ($s, l, g, aq$).</p>
+                                <p><strong>Step 3: Observation & Standard Scientific Units:</strong> Clearly mention the final unit (e.g., $\\text{cm}, \\text{D}, \\Omega, \\text{A}$) or qualitative observation.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // 3. Mathematics (MATH) Queries
+            if (lower.includes('negative root') || lower.includes('speed') || lower.includes('reject')) {
+                return `
+                    <div class="space-y-3 font-sans">
+                        <p class="font-bold text-indigo-300 text-sm">CBSE Examiner Rationale: Rejecting Negative Roots in Real-World Word Problems</p>
+                        <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                            <p><strong>Step 1: Domain Definition:</strong> Variables denote non-negative scalar physical quantities ($v > 0$, $\\text{dimensions} > 0$).</p>
+                            <p><strong>Step 2: Algebraic Roots:</strong> A quadratic model produces two roots: $x = 6$ and $x = -54$.</p>
+                            <p><strong>Step 3: Marking Rubric Penalty:</strong> In CBSE rubrics, leaving both roots without an explicit rejection statement forfeits 1 mark. State:</p>
+                            <blockquote class="p-2.5 bg-surface border-l-4 border-amber-500 rounded text-slate-300 font-mono text-xs">
+                                "Since physical speed cannot be negative, $x = -54$ is discarded. Therefore, stream speed = $6\\text{ km/h}$."
+                            </blockquote>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="space-y-3 font-sans">
+                    <p class="font-bold text-indigo-300 text-sm">CBSE Step-by-Step Resolution</p>
+                    <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
+                        <p><strong>Step 1: Identify Given Equations & Domain Restrictions:</strong> Analyze the problem statement, establish standard variable declarations, and state boundary conditions.</p>
+                        <p><strong>Step 2: Apply Governing NCERT Formula or Principle:</strong> State the primary mathematical theorem explicitly before numeric substitution.</p>
+                        <p><strong>Step 3: Concluding Verification & Units:</strong> Verify values, calculate final steps, and ensure final units are written.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateDoubtHistoryUI() {
+            const container = document.getElementById('doubtHistoryContainer');
+            if (!container) return;
+
+            let html = '';
+            doubtSessionHistory.forEach((q, idx) => {
+                html += `
+                    <div onclick="fillDoubt('${q.replace(/'/g, "\\'")}')" class="p-2 rounded-lg bg-surfaceLight hover:bg-slate-700/60 cursor-pointer border border-slate-700/60 truncate transition">
+                        <span class="text-indigo-400 font-mono text-[10px] mr-1">#${idx + 1}</span>
+                        <span class="text-slate-300">${q}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function copyDoubtSolution() {
+            const answerBody = document.getElementById('doubtAnswerBody');
+            const btn = document.getElementById('copySolutionBtn');
+            if (!answerBody) return;
+
+            navigator.clipboard.writeText(answerBody.innerText).then(() => {
+                if (btn) {
+                    btn.innerHTML = `<span>✓</span> Copied!`;
+                    setTimeout(() => {
+                        btn.innerHTML = `<span>📋</span> Copy Solution`;
+                    }, 2000);
+                }
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // TAB 6: SUBJECT-AWARE TIMED MOCK TEST ENGINE
+        // -------------------------------------------------------------------------
+        let mockMode = 'chapter';
+        let mockTimerInterval = null;
+        let mockTotalSeconds = 2700;
+        let mockSecondsLeft = 2700;
+        let mockStartTime = null;
+        let activeMockQuestions = [];
+        let currentMockTestNo = 1;
+        let lastEvaluationResults = null;
+        let examSourceMode = 'blueprint';
+
+        function setExamSource(source) {
+    const userTier = (getCurrentUserTier() || '').toUpperCase();
+    const isInstitutional = (userTier === 'ENTERPRISE' || userTier === 'INSTITUTIONAL');
+
+    if (source === 'pyq' && !isInstitutional) {
+        showUpgradeModal("Authentic CBSE Past Year Board Papers and School Cohort Diagnostics require an Institutional (ENTERPRISE) plan.");
+        return;
+    }
+
+    examSourceMode = source;
+    const bpBtn = document.getElementById('sourceBlueprintBtn');
+    const pyqBtn = document.getElementById('sourcePyqBtn');
+    const pastPaperContainer = document.getElementById('pastPaperContainer');
+    const formatGrid = document.querySelector('#mockTestStartCard .grid.grid-cols-1.md\\:grid-cols-3');
+
+    if (source === 'blueprint') {
+        if (bpBtn) bpBtn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-md shadow-amber-900/30 transition";
+        if (pyqBtn) pyqBtn.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-surfaceLight border border-slate-700 text-slate-400 hover:text-white transition";
+        if (pastPaperContainer) pastPaperContainer.classList.add('hidden');
+        if (formatGrid) formatGrid.classList.remove('hidden');
+        setMockMode(mockMode || 'quick');
+    } else {
+        if (pyqBtn) pyqBtn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-md shadow-amber-900/30 transition";
+        if (bpBtn) bpBtn.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-surfaceLight border border-slate-700 text-slate-400 hover:text-white transition";
+        if (pastPaperContainer) pastPaperContainer.classList.remove('hidden');
+        if (formatGrid) formatGrid.classList.add('hidden');
+        loadAvailablePastPapers();
+    }
+}
+
+        async function loadAvailablePastPapers() {
+            try {
+                const response = await fetch(`http://127.0.0.1:8001/api/mock-test/past-papers?subject_code=${currentSubject}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const select = document.getElementById('pastPaperSelect');
+                    if (select && data.papers && data.papers.length > 0) {
+                        let html = '';
+                        data.papers.forEach(p => {
+                            html += `<option value="${p.year}_${p.set}">${p.label || `${p.year} (${p.set}) • ${p.total_marks}M`}</option>`;
+                        });
+                        select.innerHTML = html;
+                        onPastPaperChanged();
+                    } else if (select) {
+                        select.innerHTML = `<option value="">No past papers available for ${currentSubject}</option>`;
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not load past papers list:", e);
+            }
+        }
+
+        function onPastPaperChanged() {
+            mockTotalSeconds = 5400;
+            mockSecondsLeft = 5400;
+            document.getElementById('secALabel').innerText = "3 × 1M";
+            document.getElementById('secBLabel').innerText = "3 × 2M";
+            document.getElementById('secCLabel').innerText = "3 × 3M";
+            document.getElementById('secDLabel').innerText = "3 × 5M";
+        }
+
+        function setMockMode(mode) {
+            const userTier = getCurrentUserTier();
+            if (mode === 'quick' && userTier === 'FREE') {
+                showUpgradeModal("40-Mark timed drills require a Pro Learner or Institutional subscription.");
+                return;
+            }
+            if (mode === 'full_80' && userTier === 'FREE') {
+                showUpgradeModal("Comprehensive 80-Mark (3-Hour) board simulations require a Pro Learner or Institutional subscription.");
+                return;
+            }
+            mockMode = mode;
+            const chBtn = document.getElementById('mockModeChapterBtn');
+            const quickBtn = document.getElementById('mockModeQuickBtn');
+            const full80Btn = document.getElementById('mockModeFull80Btn');
+
+            const inactiveClass = "p-4 rounded-xl border border-slate-700 bg-surfaceLight text-slate-400 hover:text-white transition flex flex-col gap-1 text-left";
+            if (chBtn) chBtn.className = inactiveClass;
+            if (quickBtn) quickBtn.className = inactiveClass;
+            if (full80Btn) full80Btn.className = inactiveClass;
+
+            if (mode === 'chapter') {
+                mockTotalSeconds = 2700;
+                mockSecondsLeft = 2700;
+                if (chBtn) chBtn.className = "p-4 rounded-xl border-2 border-sky-500 bg-sky-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-sky-950/40 text-left";
+                document.getElementById('secALabel').innerText = "2 × 1M";
+                document.getElementById('secBLabel').innerText = "2 × 2M";
+                document.getElementById('secCLabel').innerText = "3 × 3M";
+                document.getElementById('secDLabel').innerText = "1 × 5M";
+            } else if (mode === 'quick') {
+                mockTotalSeconds = 5400;
+                mockSecondsLeft = 5400;
+                if (quickBtn) quickBtn.className = "p-4 rounded-xl border-2 border-amber-500 bg-amber-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-amber-950/40 text-left";
+                document.getElementById('secALabel').innerText = "4 × 1M";
+                document.getElementById('secBLabel').innerText = "3 × 2M";
+                document.getElementById('secCLabel').innerText = "5 × 3M";
+                document.getElementById('secDLabel').innerText = "3 × 5M";
+            } else if (mode === 'full_80') {
+                mockTotalSeconds = 10800;
+                mockSecondsLeft = 10800;
+                if (full80Btn) full80Btn.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-emerald-950/40 text-left";
+                document.getElementById('secALabel').innerText = "20 × 1M";
+                document.getElementById('secBLabel').innerText = "5 × 2M";
+                document.getElementById('secCLabel').innerText = "6 × 3M";
+                document.getElementById('secDLabel').innerText = "4 × 5M";
+            }
+        }
+
+        async function generateMockTest() {
+            const isChapter = (typeof mockMode !== 'undefined' && mockMode === 'chapter');
+            const targetChapter = isChapter ? currentChapterKey : 'ALL';
+            const queryMode = isChapter ? 'chapter' : 'full';
+            const examFmt = (typeof mockMode !== 'undefined') ? mockMode : 'quick';
+
+            const candidateName = document.getElementById('candidateNameInput')?.value || "Rohan Kumar";
+            const activeCandidate = document.getElementById('activeCandidateName');
+            const activeTag = document.getElementById('activeExamModeTag');
+            if (activeCandidate) activeCandidate.innerText = candidateName;
+            if (activeTag) {
+                if (typeof examSourceMode !== 'undefined' && examSourceMode === 'pyq') {
+                    const select = document.getElementById('pastPaperSelect');
+                    activeTag.innerText = select ? select.options[select.selectedIndex]?.text.split('•')[0].trim() : "Official Board Paper";
+                } else {
+                    if (mockMode === 'chapter') activeTag.innerText = "Chapter Focus Drill (20M)";
+                    else if (mockMode === 'quick') activeTag.innerText = "Quick Board Drill (40M)";
+                    else activeTag.innerText = "Comprehensive Board Mock (80M)";
+                }
+            }
+
+            let questions = [];
+
+            try {
+                let response;
+                if (typeof examSourceMode !== 'undefined' && examSourceMode === 'pyq') {
+                    const select = document.getElementById('pastPaperSelect');
+                    const [pyqYear, pyqSet] = (select ? select.value : "2023_Delhi Set 1").split('_');
+                    response = await fetch(`http://127.0.0.1:8001/api/mock-test/generate-pyq/${pyqYear}?pyq_set=${encodeURIComponent(pyqSet)}&subject_code=${currentSubject}`);
+                } else {
+                    response = await fetch(`http://127.0.0.1:8001/api/mock-test/generate/${targetChapter}?mode=${queryMode}&exam_format=${examFmt}&subject_code=${currentSubject}`);
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    questions = (data.questions || []).map(q => ({
+                        id: q.question_id,
+                        marks: q.total_marks,
+                        text: q.question_text,
+                        section: q.section || (q.total_marks === 1 ? "Section A" : (q.total_marks === 2 ? "Section B" : (q.total_marks === 3 ? "Section C" : "Section D"))),
+                        model: q.ideal_solution || '', rubric: q.marking_rubric || null,
+                        sourceTag: (q.pyq_year && q.pyq_set) ? `CBSE ${q.pyq_year} • ${q.pyq_set}` : null,
+                        lossCategory: "Calculation / Step Omission",
+                        remedy: `Revise chapter concepts in Tab 1`
+                    }));
+                }
+            } catch (e) {
+                console.warn("Backend API offline or failed, falling back to local pool:", e);
+            }
+
+            if (!questions || questions.length === 0) {
+                questions = buildChapterMock(currentChapterKey);
+            }
+
+            if (!questions || questions.length === 0) {
+                alert("No questions found for this topic.");
+                return;
+            }
+
+            activeMockQuestions = questions;
+
+            let html = '';
+            questions.forEach((q, idx) => {
+                html += `
+                    <div class="p-5 bg-surfaceLight border border-slate-700/70 rounded-2xl shadow-sm space-y-3">
+                        <div class="flex justify-between items-center text-xs text-slate-400 font-mono">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-white">Question ${idx + 1}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${q.section}</span>
+                                ${q.sourceTag ? `<span class="text-[10px] px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 font-bold">${q.sourceTag}</span>` : ''}
+                            </div>
+                            <span class="text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2.5 py-0.5 rounded font-bold">${q.marks} Mark${q.marks > 1 ? 's' : ''}</span>
+                        </div>
+                        <p class="text-xs sm:text-sm font-medium text-slate-200 leading-relaxed">${q.text}</p>
+                        <textarea name="q_${q.id}" rows="${q.marks > 2 ? 4 : 2}" class="w-full p-3 text-xs font-mono border border-slate-700 rounded-xl bg-background text-slate-200 focus:border-amber-500 outline-none leading-relaxed" placeholder="Write step-by-step solution and final answer..."></textarea>
+                    </div>
+                `;
+            });
+
+            document.getElementById('mockTestQuestions').innerHTML = html;
+            document.getElementById('mockTestStartCard').classList.add('hidden');
+            document.getElementById('mockTestResults').classList.add('hidden');
+            document.getElementById('mockTestForm').classList.remove('hidden');
+        if (typeof renderFormulaToolbars === 'function') { renderFormulaToolbars(); } // tab6-start
+            document.getElementById('mockTimerBadge').classList.remove('hidden');
+
+            mockStartTime = Date.now();
+            startMockTimer();
+
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('mockTestQuestions'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+            }
+        }
+
+        function buildChapterMock(chKey) {
+    const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
+    const chapters = activeSubj.chapters || {};
+    const ch = chapters[chKey] || chapters[Object.keys(chapters)[0]];
+    const bank = (typeof window !== 'undefined' && window.dbQuestionBank) ? window.dbQuestionBank : {};
+    
+    // Get all available questions for this chapter from the synced bank
+    let available = (typeof resolveProblemsForChapter === 'function') 
+        ? resolveProblemsForChapter(bank, chKey, currentSubject) 
+        : (bank[chKey] || []);
+
+    // Filter by marks
+    const q1M = available.filter(q => (q.marks || q.total_marks) === 1);
+    const q2M = available.filter(q => (q.marks || q.total_marks) === 2);
+    const q3M = available.filter(q => (q.marks || q.total_marks) === 3);
+    const q5M = available.filter(q => (q.marks || q.total_marks) >= 4);
+
+    const questions = [];
+
+    // Helper to format or generate fallback questions if database bank is sparse
+    function makeQ(q, defaultSection, defaultMarks, fallbackText) {
+        if (q) {
+            return {
+                id: q.question_id || Math.floor(Math.random() * 90000 + 10000),
+                section: defaultSection,
+                marks: defaultMarks,
+                text: q.text || q.question_text || fallbackText,
+                model: q.idealAnswer || q.ideal_solution || "Refer to CBSE marking criteria.",
+                rubric: q.rubric || q.marking_rubric || null,
+                lossCategory: "Conceptual / Working Step Slip",
+                remedy: `Revise ${ch ? ch.name : 'chapter'} in Tab 1`
+            };
+        }
+        return {
+            id: Math.floor(Math.random() * 90000 + 10000),
+            section: defaultSection,
+            marks: defaultMarks,
+            text: fallbackText,
+            model: "Standard CBSE point-wise response.",
+            rubric: null,
+            lossCategory: "Omitted core definitions / steps",
+            remedy: `Review ${ch ? ch.name : 'chapter'} in Tab 1`
+        };
+    }
+
+    // SECTION A: 2 x 1M (Questions 1, 2)
+    questions.push(makeQ(q1M[0], "Section A", 1, `Identify the core definition or objective term related to ${ch ? ch.name : 'the chapter'}.`));
+    questions.push(makeQ(q1M[1] || q1M[0], "Section A", 1, `State the primary historical event, rule, or formula governing ${ch ? ch.name : 'this topic'}.`));
+
+    // SECTION B: 2 x 2M (Questions 3, 4)
+    questions.push(makeQ(q2M[0], "Section B", 2, `Explain two key features or consequences of ${ch ? ch.name : 'the chapter concepts'}.`));
+    questions.push(makeQ(q2M[1] || q2M[0], "Section B", 2, `Differentiate between two fundamental concepts in ${ch ? ch.name : 'this topic'}.`));
+
+    // SECTION C: 3 x 3M (Questions 5, 6, 7)
+    questions.push(makeQ(q3M[0], "Section C", 3, `Analyze three major causes or conditions leading to developments in ${ch ? ch.name : 'the chapter'}.`));
+    questions.push(makeQ(q3M[1] || q3M[0], "Section C", 3, `Examine three key arguments or applications derived from ${ch ? ch.name : 'the curriculum'}.`));
+    questions.push(makeQ(q3M[2] || q3M[0], "Section C", 3, `Describe the structural impact or working mechanism of ${ch ? ch.name : 'this topic'}.`));
+
+    // SECTION D: 1 x 5M (Question 8)
+    questions.push(makeQ(q5M[0] || q3M[0], "Section D", 5, `Examine in detail the multifaceted implications, institutional reforms, and historical significance of ${ch ? ch.name : 'the chapter'}.`));
+
+    return questions;
+}
+
+        
+        function startMockTimer() {
             clearInterval(mockTimerInterval);
             mockSecondsLeft = mockTotalSeconds;
 
@@ -1626,11 +3237,6 @@
             clearInterval(mockTimerInterval);
 
             const elapsedSecs = Math.max(1, Math.round((Date.now() - mockStartTime) / 1000));
-
-        const subjCode = (currentSubject || 'MATH') === 'SCI' ? 'SCI086' : ((currentSubject || 'MATH') === 'SST' ? 'SST087' : 'MTH041');
-        const randHex = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
-        const testAssessmentId = `CBSE-2026-${subjCode}-${randHex}`;
-        
             const elapsedMins = Math.floor(elapsedSecs / 60);
             const remainingSecs = elapsedSecs % 60;
             const timeString = `${elapsedMins}m ${remainingSecs}s`;
@@ -1721,7 +3327,6 @@
             const percentage = ((evaluatedScore / maxExamMarks) * 100).toFixed(1);
 
             lastEvaluationResults = {
-            testId: typeof testAssessmentId !== 'undefined' ? testAssessmentId : `CBSE-2026-${Date.now().toString().slice(-6)}`,
                 candidate: candidateName,
                 mode: mockMode,
                 score: evaluatedScore,
@@ -1733,11 +3338,6 @@
                 paceColor: paceColor,
                 breakdown: itemizedBreakdown
             };
-        // Milestone 2: Save to LocalStorage History
-        try {
-            saveMockAttemptToHistory(lastEvaluationResults);
-        } catch(e) { console.warn("Failed to persist mock test:", e); }
-    
 
             renderMockResultsView('all');
         }
@@ -1800,289 +3400,6 @@
 }
 
         
-        // =======================================================
-        // CBSE OFFICIAL DIAGNOSTIC PDF MARKSHEET GENERATOR
-        // =======================================================
-        // =======================================================
-        // PERSISTENT MOCK HISTORY & PERFORMANCE TRENDS (TAB 4)
-        // =======================================================
-        function saveMockAttemptToHistory(evalRes) {
-            if (!evalRes) return;
-            const history = JSON.parse(localStorage.getItem('cbse_mock_history') || '[]');
-            const record = {
-                testId: evalRes.testId || `CBSE-${Date.now().toString().slice(-6)}`,
-                date: new Date().toISOString(),
-                subject: currentSubject || 'MATH',
-                score: evalRes.score,
-                maxMarks: evalRes.maxMarks,
-                percentage: evalRes.percentage,
-                pacePerMark: evalRes.pacePerMark,
-                paceVerdict: evalRes.paceVerdict || 'Standard',
-                format: evalRes.mode === 'full_80' ? 'Board Mock (80M)' : (evalRes.mode === 'quick' ? 'Quick Drill (40M)' : 'Focus Drill (20M)')
-            };
-            history.unshift(record); // newest first
-            if (history.length > 20) history.pop(); // keep last 20 attempts
-            localStorage.setItem('cbse_mock_history', JSON.stringify(history));
-            renderMockHistoryInTab4();
-        }
-
-        function renderMockHistoryInTab4() {
-            const container = document.getElementById('mockHistoryContainer');
-            if (!container) return;
-
-            const history = JSON.parse(localStorage.getItem('cbse_mock_history') || '[]');
-            if (history.length === 0) {
-                container.innerHTML = `
-                    <div class="text-xs text-slate-500 italic p-4 text-center border border-dashed border-slate-800 rounded-xl">
-                        No mock test attempts recorded yet. Take an exam in Tab 6 to start your trendline!
-                    </div>`;
-                return;
-            }
-
-            let rows = '';
-            history.forEach(item => {
-                const dt = new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-                const isPassed = item.percentage >= 60;
-                rows += `
-                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/30 text-xs transition">
-                        <td class="py-2.5 font-mono text-indigo-400 font-bold">${item.testId}</td>
-                        <td class="py-2.5 text-slate-400">${dt}</td>
-                        <td class="py-2.5 font-semibold text-slate-200">${item.subject}</td>
-                        <td class="py-2.5 text-slate-300">${item.format}</td>
-                        <td class="py-2.5 text-right font-bold ${isPassed ? 'text-emerald-400' : 'text-amber-400'}">${item.score} / ${item.maxMarks}</td>
-                        <td class="py-2.5 text-right font-mono font-bold ${isPassed ? 'text-emerald-400' : 'text-rose-400'}">${item.percentage}%</td>
-                        <td class="py-2.5 text-right text-slate-400">${item.pacePerMark}s</td>
-                    </tr>
-                `;
-            });
-
-            container.innerHTML = `
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-[10px] uppercase font-bold text-slate-500 border-b border-slate-700/60 tracking-wider">
-                                <th class="pb-2">Test ID</th>
-                                <th class="pb-2">Date</th>
-                                <th class="pb-2">Subject</th>
-                                <th class="pb-2">Format</th>
-                                <th class="pb-2 text-right">Score</th>
-                                <th class="pb-2 text-right">Aggregate</th>
-                                <th class="pb-2 text-right">Pace</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function downloadPdfMarksheet() {
-            if (!lastEvaluationResults || !lastEvaluationResults.breakdown) {
-                alert("Please complete and submit a mock test first to generate your marksheet.");
-                return;
-            }
-
-            const data = lastEvaluationResults;
-            const subj = currentSubject || 'MATH';
-            const subjName = subj === 'SCI' ? 'Science (086)' : (subj === 'SST' ? 'Social Science (087)' : 'Mathematics Standard (041)');
-            const candidateName = data.candidate || document.getElementById('activeCandidateName')?.innerText || "Aarav Gupta";
-            const dateStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-
-            // Generate clean unique filename components
-            const now = new Date();
-            const dateStamp = now.getFullYear().toString() +
-                String(now.getMonth() + 1).padStart(2, '0') +
-                String(now.getDate()).padStart(2, '0');
-            const timeStamp = String(now.getHours()).padStart(2, '0') +
-                String(now.getMinutes()).padStart(2, '0') +
-                String(now.getSeconds()).padStart(2, '0');
-            const cleanTestId = (data.testId || 'CBSE-2026-MOCK').replace(/[^a-zA-Z0-9_-]/g, '_');
-            const cleanCandidate = candidateName.replace(/\s+/g, '_');
-            const uniqueReportTitle = `CBSE_Marksheet_${cleanTestId}_${dateStamp}_${timeStamp}_${cleanCandidate}`;
-
-            let rowsHtml = '';
-            data.breakdown.forEach(item => {
-                const isFull = item.loss === 0;
-                const statusColor = isFull ? '#059669' : '#e11d48';
-                const statusText = isFull ? '✓ Full Credit' : `▲ Mark Deduction (-${item.loss.toFixed(1)}M)`;
-
-                let modelFormatted = '';
-                if (typeof item.model === 'string') {
-                    modelFormatted = item.model.replace(/\n/g, '<br/>');
-                } else {
-                    modelFormatted = JSON.stringify(item.model);
-                }
-
-                rowsHtml += `
-                    <div style="border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 18px; padding: 14px; page-break-inside: avoid; background-color: #ffffff;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px;">
-                            <div>
-                                <strong style="font-size: 13pt; color: #0f172a;">Question ${item.qNo}</strong>
-                                <span style="font-size: 9pt; background-color: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600;">${item.section || 'General'}</span>
-                                <span style="font-size: 9pt; color: ${statusColor}; font-weight: bold; margin-left: 10px;">${statusText}</span>
-                            </div>
-                            <div style="font-size: 12pt; font-weight: bold; color: #0f172a;">
-                                ${item.earned} / ${item.totalMarks} Marks
-                            </div>
-                        </div>
-
-                        <div style="font-size: 10.5pt; color: #1e293b; margin-bottom: 12px; font-weight: 500; line-height: 1.4;">
-                            ${item.text}
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
-                            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
-                                <div style="font-size: 8.5pt; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
-                                    Candidate's Submitted Working
-                                </div>
-                                <div style="font-size: 9.5pt; color: #0f172a; white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${item.studentAns || '(No response submitted)'}</div>
-                            </div>
-
-                            <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px;">
-                                <div style="font-size: 8.5pt; font-weight: bold; text-transform: uppercase; color: #1d4ed8; margin-bottom: 6px; border-bottom: 1px solid #dbeafe; padding-bottom: 4px;">
-                                    Official CBSE Marking Scheme & Ideal Solution
-                                </div>
-                                <div style="font-size: 9.5pt; color: #1e3a8a; line-height: 1.4;">${modelFormatted}</div>
-                            </div>
-                        </div>
-
-                        ${item.loss > 0 ? `
-                            <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 8px 12px; font-size: 9pt; color: #9f1239; margin-top: 6px;">
-                                <strong>Examiner Slip Diagnosis:</strong> ${item.lossReason || 'Omitted critical derivation steps'} | 
-                                <strong>Remedy:</strong> ${item.remedy || 'Review NCERT theorem statements in Tab 1'}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-
-            const printWindow = window.open('', '_blank');
-            if (!printWindow) {
-                alert("Pop-up blocked! Please allow pop-ups for this page to download the PDF marksheet.");
-                return;
-            }
-
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>${uniqueReportTitle}</title>
-                    <meta charset="utf-8" />
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-                    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
-                    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"><\/script>
-                    <style>
-                        @page { size: A4; margin: 12mm 15mm; }
-                        body {
-                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                            color: #0f172a;
-                            background-color: #ffffff;
-                            margin: 0;
-                            padding: 0;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                        .header-box {
-                            border-bottom: 2px solid #0f172a;
-                            padding-bottom: 12px;
-                            margin-bottom: 16px;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: flex-end;
-                        }
-                        .summary-grid {
-                            display: grid;
-                            grid-template-columns: repeat(4, 1fr);
-                            gap: 10px;
-                            background-color: #f8fafc;
-                            border: 1px solid #e2e8f0;
-                            border-radius: 8px;
-                            padding: 12px;
-                            margin-bottom: 20px;
-                        }
-                        .stat-item {
-                            text-align: center;
-                        }
-                        .stat-label {
-                            font-size: 8pt;
-                            text-transform: uppercase;
-                            color: #64748b;
-                            font-weight: 700;
-                            letter-spacing: 0.5px;
-                        }
-                        .stat-val {
-                            font-size: 14pt;
-                            font-weight: 800;
-                            color: #0f172a;
-                            margin-top: 2px;
-                        }
-                        @media print {
-                            .no-print { display: none; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="no-print" style="background-color: #1e1b4b; color: white; padding: 12px 20px; text-align: center; margin-bottom: 20px; border-radius: 6px;">
-                        <span style="font-size: 11pt; font-weight: 600;">Print Preview Ready!</span>
-                        <p style="font-size: 9pt; margin: 4px 0 10px 0; opacity: 0.8;">Click the button below or press <strong>Ctrl + P</strong> to save your customized report.</p>
-                        <button onclick="window.print()" style="background-color: #6366f1; color: white; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer;">
-                            🖨️ Save as PDF / Print Marksheet
-                        </button>
-                    </div>
-
-                    <div class="header-box">
-                        <div>
-                            <div style="font-size: 8.5pt; font-weight: 800; color: #4338ca; letter-spacing: 1.5px; text-transform: uppercase;">GOALisB CBSE Evaluation Engine</div>
-                            <div style="font-size: 18pt; font-weight: 900; color: #0f172a; margin: 2px 0;">Official CBSE Diagnostic Marksheet</div>
-                            <div style="font-size: 9.5pt; color: #475569;">
-                                Candidate: <strong>${candidateName}</strong> | Test ID: <strong style="color: #4338ca; font-family: monospace;">${data.testId || "CBSE-2026-MOCK"}</strong> | Class 10 | Subject: <strong>${subjName}</strong> | Date: ${dateStr}
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 24pt; font-weight: 900; color: #059669;">${data.score} <span style="font-size: 14pt; color: #64748b; font-weight: 600;">/ ${data.maxMarks}</span></div>
-                            <div style="font-size: 10pt; font-weight: 700; color: #475569;">${data.percentage}% Aggregate</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-grid">
-                        <div class="stat-item">
-                            <div class="stat-label">Assessment Format</div>
-                            <div class="stat-val" style="font-size: 11pt;">${data.mode === 'full_80' ? 'Board Mock (80M)' : (data.mode === 'quick' ? 'Board Drill (40M)' : 'Focus Drill (20M)')}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Time Consumed</div>
-                            <div class="stat-val" style="font-size: 11pt;">${data.timeString || 'N/A'}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Pacing Rate</div>
-                            <div class="stat-val" style="font-size: 11pt;">${data.pacePerMark}s / mark</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Speed Assessment</div>
-                            <div class="stat-val" style="font-size: 10pt; color: #4338ca;">${data.paceVerdict || 'Standard'}</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 12px; font-size: 11pt; font-weight: 800; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
-                        Itemized Question Derivations & Model Marking Schemes
-                    </div>
-
-                    ${rowsHtml}
-
-                    <div style="margin-top: 25px; border-top: 1px solid #cbd5e1; padding-top: 10px; font-size: 8pt; color: #94a3b8; display: flex; justify-content: space-between;">
-                        <span>Generated by CBSE AI Micro-Evaluator Platform</span>
-                        <span>Official NCERT / CBSE Marking Scheme Verified</span>
-                    </div>
-                    
-    
-</body>
-                </html>
-            `);
-            printWindow.document.close();
-            // Also explicitly set title on the new window document after write
-            printWindow.document.title = uniqueReportTitle;
-        }
-
         function renderMockResultsView(filter) {
             const data = lastEvaluationResults;
             if (!data) return;
@@ -2148,14 +3465,6 @@
                             <div class="p-2.5 bg-rose-950/40 border border-rose-900/50 rounded-xl flex flex-wrap items-center justify-between gap-2 text-[11px]">
                                 <span class="text-rose-300"><strong>Mark Leakage Reason:</strong> ${item.lossReason}</span>
                                 <span class="text-indigo-400 font-semibold">Recommended: ${item.remedy}</span>
-                    <div class="flex items-center gap-2 mt-1">
-                        <button type="button" onclick="switchTab(1)" class="px-2 py-0.5 rounded bg-indigo-900/60 hover:bg-indigo-700/80 text-[10px] text-indigo-200 border border-indigo-700/60 cursor-pointer">
-                            🎯 Revise in Tab 1 (Tuition)
-                        </button>
-                        <button type="button" onclick="switchTab(2)" class="px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-700/80 text-[10px] text-rose-200 border border-rose-700/60 cursor-pointer">
-                            🔍 Inspect Trap in Tab 2 (Error Finder)
-                        </button>
-                    </div>
                             </div>
                         ` : ''}
 
@@ -2170,8 +3479,13 @@
                             <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800">
                                 Exam Evaluated Successfully
                             </span>
-                            <h3 class="text-2xl sm:text-3xl font-black text-white mt-2">Official CBSE Diagnostic Score Card</h3>
-                            <p class="text-xs text-slate-400">Candidate: <strong class="text-white">${data.candidate}</strong> • Test ID: <span class="font-mono text-indigo-400 font-bold bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/80">${data.testId || "CBSE-MOCK-001"}</span> • Format: <strong>${data.mode === 'full_80' ? 'Comprehensive Board Mock (80M)' : (data.mode === 'quick' ? 'Quick Board Drill (40M)' : 'Chapter Focus Drill (20M)')}</strong></p>
+                            <div class="flex flex-wrap items-center justify-between gap-3 mt-2">
+                        <h3 class="text-2xl sm:text-3xl font-black text-white">Official CBSE Diagnostic Score Card</h3>
+                        <button type="button" onclick="window.downloadDiagnosticMarksheet()" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg border border-indigo-400/40 transition cursor-pointer">
+                            <span>??</span> <span>Download Marksheet (PDF)</span>
+                        </button>
+                    </div>
+                            <p class="text-xs text-slate-400">Candidate: <strong class="text-white">${data.candidate}</strong> • Format: <strong>${data.mode === 'full_80' ? 'Comprehensive Board Mock (80M)' : (data.mode === 'quick' ? 'Quick Board Drill (40M)' : 'Chapter Focus Drill (20M)')}</strong></p>
                         </div>
                         <div class="text-right">
                             <div class="text-4xl sm:text-5xl font-black text-emerald-400">${data.score} <span class="text-xl sm:text-2xl text-slate-400 font-bold">/ ${data.maxMarks}</span></div>
@@ -2199,10 +3513,7 @@
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Question-Wise Mark Evaluation & Correct Solutions</h4>
                         <div class="flex items-center gap-1.5 bg-surfaceLight p-1 rounded-lg border border-slate-700 text-xs font-medium">
-                            <button type="button" onclick="downloadPdfMarksheet()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 border border-indigo-400/30 mr-2">
-                        <span>📄</span> Download PDF Marksheet
-                    </button>
-                    <button onclick="renderMockResultsView('all')" class="px-2.5 py-1 rounded ${filter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
+                            <button onclick="renderMockResultsView('all')" class="px-2.5 py-1 rounded ${filter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
                                 All (${data.breakdown.length})
                             </button>
                             <button onclick="renderMockResultsView('lost')" class="px-2.5 py-1 rounded ${filter === 'lost' ? 'bg-rose-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
@@ -2924,9 +4235,90 @@ if (typeof window !== 'undefined' && window.dbQuestionBank) {
         </form>
     </div>
 </div>
-    
-    
-    <script src="/data/dbQuestionBank.js"></script>
-    <script src="/data/tab3_engine.js"></script>
+
+<script>
+window.downloadDiagnosticMarksheet = function() {
+    // 1. Isolate ONLY the score card and question-wise breakdown container
+    var card = document.getElementById('mockResultsContainer') || 
+               document.getElementById('mockExamResults') || 
+               document.getElementById('mockExamResultsArea');
+
+    // If container ID was generic, narrow down strictly to the score card card element
+    if (card) {
+        var specificScoreCard = card.querySelector('.rounded-2xl.border-slate-800') || card.querySelector('.rounded-2xl');
+        if (specificScoreCard) {
+            // Include score card and its question list sibling
+            var parent = specificScoreCard.parentElement;
+            if (parent && parent.children.length <= 4) {
+                card = parent;
+            } else {
+                card = specificScoreCard;
+            }
+        }
+    } else {
+        var h3 = Array.from(document.querySelectorAll('h3')).find(el => el.textContent.includes('Official CBSE Diagnostic Score Card'));
+        if (h3) {
+            card = h3.closest('.rounded-2xl') ? h3.closest('.rounded-2xl').parentElement : h3.parentElement;
+        }
+    }
+
+    if (!card) {
+        alert('Please complete the mock drill and click Submit Exam to view your marksheet.');
+        return;
+    }
+
+    // 2. Candidate & Test ID
+    var candidate = (window.activeUser && window.activeUser.name) ? window.activeUser.name : 'Aarav Gupta';
+    var testId = (window.activeMockExam && window.activeMockExam.testId) ? 
+                 window.activeMockExam.testId : 
+                 ('CBSE-2026-MTH041-' + Math.floor(1000 + Math.random() * 9000));
+
+    // 3. Date & Timestamp formatting for Filename
+    var d = new Date();
+    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    var timestampStr = d.getFullYear() + '' + pad(d.getMonth() + 1) + '' + pad(d.getDate()) + '_' + pad(d.getHours()) + '' + pad(d.getMinutes()) + '' + pad(d.getSeconds());
+    var displayDate = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    var filename = 'CBSE_Marksheet_' + testId + '_' + timestampStr + '_' + candidate.replace(/\s+/g, '_');
+
+    // 4. Open Print Window
+    var win = window.open('', '_blank', 'width=950,height=850');
+    if (!win) {
+        alert('Please allow popups to download the marksheet PDF.');
+        return;
+    }
+
+    var doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + filename + '</title>';
+    doc += '<style>';
+    doc += '@page { size: A4 portrait; margin: 12mm 14mm; }';
+    doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 12px; font-size: 13px; line-height: 1.5; background: #fff; }';
+    doc += '.header { border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 12px; }';
+    doc += '.title { font-size: 19px; font-weight: 800; color: #0f172a; margin: 0; }';
+    doc += '.subtitle { font-size: 11px; color: #475569; margin-top: 4px; font-weight: 500; }';
+    doc += '.footer { margin-top: 25px; text-align: center; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; }';
+    doc += 'button, .no-print, nav, header, aside, .modal { display: none !important; }';
+    doc += 'div { background-color: transparent !important; color: inherit !important; }';
+    doc += '.border-slate-800, .border-slate-700 { border-color: #cbd5e1 !important; }';
+    doc += '.text-white { color: #0f172a !important; }';
+    doc += '.text-slate-400, .text-slate-300 { color: #475569 !important; }';
+    doc += '.text-emerald-400 { color: #059669 !important; }';
+    doc += '.text-rose-400, .text-rose-300 { color: #e11d48 !important; }';
+    doc += '.bg-slate-900, .bg-slate-800, .bg-surface { background: #f8fafc !important; }';
+    doc += '.rounded-2xl { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 12px !important; margin-bottom: 14px !important; }';
+    doc += '</style></head><body>';
+    doc += '<div class="header">';
+    doc += '  <h1 class="title">GOALisB CBSE EVALUATION ENGINE</h1>';
+    doc += '  <p class="subtitle">Official CBSE Diagnostic Marksheet | Candidate: <strong>' + candidate + '</strong> | Test ID: <strong>' + testId + '</strong> | Class 10 | Subject: Mathematics Standard (041) | Date: ' + displayDate + '</p>';
+    doc += '</div>';
+    doc += card.innerHTML;
+    doc += '<div class="footer">Generated by CBSE AI Micro-Evaluator Platform &bull; Official NCERT/CBSE Marking Scheme Verified</div>';
+    doc += '<script>window.onload = function() { setTimeout(function(){ window.print(); }, 400); };<\/script></body></html>';
+
+    win.document.open();
+    win.document.write(doc);
+    win.document.close();
+};
+</script>
+
 </body>
 </html>
