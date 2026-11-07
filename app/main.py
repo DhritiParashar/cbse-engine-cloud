@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends
@@ -65,7 +65,7 @@ async def log_feedback(fb: FeedbackPayload, pool = Depends(get_db_pool)):
 DATA_DIR = Path(__file__).resolve().parent.parent / "frontend" / "data"
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
-FRONTEND_FILE = Path("C:/Users/dhrit/cbse_engine_modular/frontend/index.html")
+FRONTEND_FILE = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
 
 @app.get("/")
 async def serve_index():
