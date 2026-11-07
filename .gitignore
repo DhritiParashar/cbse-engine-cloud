@@ -2,3 +2,8 @@
 *.pyc
 cbse_full_backup.sql
 .env
+__pycache__/
+*.pyc
+*.bak
+*backup*
+.env

@@ -23,13 +23,13 @@ window.mathChapterRegistry = {
                             <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">🏛️ Why This Was Invented</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    Ancient merchants needed a way to package goods evenly (HCF) and align recurring schedules or planetary rotations (LCM). Later, Greek mathematicians discovered numbers like $\sqrt{2}$ that could not be written as simple ratios, creating the concept of <em>Irrational Numbers</em>.
+                                    Ancient merchants needed a way to package goods evenly (HCF) and align recurring schedules or planetary rotations (LCM). Later, Greek mathematicians discovered numbers like $\\sqrt{2}$ that could not be written as simple ratios, creating the concept of <em>Irrational Numbers</em>.
                                 </p>
                             </div>
                             <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">✨ The "Aha!" Moment</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    <strong>Proof by Contradiction:</strong> To prove something impossible (like proving $\sqrt{5}$ is irrational), assume it IS rational! If that assumption leads to a logical absurdity (like a number being both even and odd), your original assumption MUST be wrong.
+                                    <strong>Proof by Contradiction:</strong> To prove something impossible (like proving $\\sqrt{5}$ is irrational), assume it IS rational! If that assumption leads to a logical absurdity (like a number being both even and odd), your original assumption MUST be wrong.
                                 </p>
                             </div>
                         </div>
@@ -39,7 +39,7 @@ window.mathChapterRegistry = {
                             <ol class="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-decimal list-inside">
                                 <li><strong>Step 1:</strong> Express composite numbers into prime exponential factors ($2^a \cdot 3^b \dots$).</li>
                                 <li><strong>Step 2:</strong> Master HCF (smallest powers of common primes) and LCM (greatest powers of all primes).</li>
-                                <li><strong>Step 3:</strong> Master the 5-step proof by contradiction for irrationality ($\sqrt{2}, \sqrt{3}, \sqrt{5}$).</li>
+                                <li><strong>Step 3:</strong> Master the 5-step proof by contradiction for irrationality ($\\sqrt{2}, \\sqrt{3}, \\sqrt{5}$).</li>
                             </ol>
                         </div>
                     </div>
@@ -76,13 +76,13 @@ window.mathChapterRegistry = {
                 `,
                 exp2: `
                     <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 text-xs text-slate-700 dark:text-slate-300 shadow-sm leading-relaxed">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Formal Line-by-Line Proof: Prove $\\sqrt{5}$ is Irrational</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Formal Line-by-Line Proof: Prove $\\\sqrt{5}$ is Irrational</h4>
                         
                         <p><strong>Theorem Lemma:</strong> Let $p$ be a prime number. If $p$ divides $a^2$, then $p$ divides $a$, where $a$ is a positive integer.</p>
                         
                         <p><strong>Step 1: Assume the contrary (Proof by Contradiction).</strong><br>
-                        Suppose $\\sqrt{5}$ is a rational number. Therefore, we can find coprime integers $a$ and $b$ ($b \\neq 0$) such that:</p>
-                        <div class="py-1 text-center font-mono">$$\\sqrt{5} = \\frac{a}{b}$$</div>
+                        Suppose $\\\sqrt{5}$ is a rational number. Therefore, we can find coprime integers $a$ and $b$ ($b \\neq 0$) such that:</p>
+                        <div class="py-1 text-center font-mono">$$\\\sqrt{5} = \\frac{a}{b}$$</div>
                         
                         <p><strong>Step 2: Square both sides and rearrange terms.</strong><br>
                         $$5 = \\frac{a^2}{b^2} \\implies a^2 = 5b^2 \\quad \\text{--- (Equation 1)}$$</p>
@@ -96,7 +96,7 @@ window.mathChapterRegistry = {
                         This means $5$ divides $b^2$, and therefore <strong>$5$ also divides $b$</strong>.</p>
                         
                         <p><strong>Step 5: Identify the contradiction and conclude.</strong><br>
-                        From Steps 3 and 4, both $a$ and $b$ have at least $5$ as a common factor. This contradicts our initial assumption that $a$ and $b$ are coprime. Hence, $\\sqrt{5}$ cannot be expressed as $\\frac{a}{b}$, proving that $\\sqrt{5}$ is irrational. $\\blacksquare$</p>
+                        From Steps 3 and 4, both $a$ and $b$ have at least $5$ as a common factor. This contradicts our initial assumption that $a$ and $b$ are coprime. Hence, $\\\sqrt{5}$ cannot be expressed as $\\frac{a}{b}$, proving that $\\\sqrt{5}$ is irrational. $\\blacksquare$</p>
                     </div>
                 `,
                 vernacular: {
@@ -112,13 +112,13 @@ window.mathChapterRegistry = {
                     { q: "If $n$ is a natural number, then $6^n$ always ends with the digit:", difficulty: "Foundation Level", options: ["0", "2", "4", "6"], correct: 3, solution: "<strong>Step 1:</strong> Powers of 6 are $6^1 = 6, 6^2 = 36, 6^3 = 216$.<br><strong>Conclusion:</strong> Multiplying any number ending in 6 by 6 always results in a number ending in 6." },
                     { q: "If $\\text{HCF}(a, b) = 12$ and $a \\times b = 1800$, then $\\text{LCM}(a, b)$ is:", difficulty: "Application Level", options: ["150", "90", "200", "120"], correct: 0, solution: "<strong>Step 1:</strong> $\\text{LCM} = \\frac{a \\times b}{\\text{HCF}} = \\frac{1800}{12} = 150$." },
                     { q: "The ratio of HCF to LCM of the least composite number and the least prime number is:", difficulty: "HOTS Level", options: ["1:2", "2:1", "1:1", "1:3"], correct: 0, solution: "<strong>Step 1:</strong> Least prime $= 2$, least composite $= 4$.<br><strong>Step 2:</strong> $\\text{HCF}(2, 4) = 2$, $\\text{LCM}(2, 4) = 4$.<br><strong>Conclusion:</strong> Ratio $= 2:4 = 1:2$." },
-                    { q: "Which of the following is an irrational number?", difficulty: "Foundation Level", options: ["$3.141414...$", "$22/7$", "$3 + \\sqrt{5}$", "$\\sqrt{16}$"], correct: 2, solution: "<strong>Step 1:</strong> $3 + \\sqrt{5}$ is the sum of a rational and an irrational number, which is always irrational." },
+                    { q: "Which of the following is \tan irrational number?", difficulty: "Foundation Level", options: ["$3.141414...$", "$22/7$", "$3 + \\\sqrt{5}$", "$\\\sqrt{16}$"], correct: 2, solution: "<strong>Step 1:</strong> $3 + \\\sqrt{5}$ is the sum of a rational and \tan irrational number, which is always irrational." },
                     { q: "If $p$ and $q$ are coprime numbers, then $p^2$ and $q^2$ are:", difficulty: "Application Level", options: ["Not coprime", "Coprime", "Even", "Odd"], correct: 1, solution: "<strong>Step 1:</strong> If two numbers share no common prime factors, squaring them introduces no new prime factors, so they remain coprime." },
                     { q: "The total number of factors of a prime number is:", difficulty: "Foundation Level", options: ["1", "2", "3", "Infinite"], correct: 1, solution: "<strong>Step 1:</strong> By definition, a prime number has exactly two distinct factors: 1 and itself." }
                 ]
             },
             M10_CH02: {
-                code: "Chapter 02", name: "Polynomials", weight: 4,
+                code: "Chapter 02", name: "Polynomials", weight: 5,
                 desc: "Explore zeros of quadratic polynomials, geometric interpretations, and relationship between coefficients and zeros.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -465,10 +465,10 @@ window.mathChapterRegistry = {
                         $$\\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2}{4a^2} - \\frac{c}{a} = \\frac{b^2 - 4ac}{4a^2}$$</p>
                         
                         <p><strong>Step 5: Take square root of both sides.</strong><br>
-                        $$x + \\frac{b}{2a} = \\pm \\frac{\\sqrt{b^2 - 4ac}}{2a}$$</p>
+                        $$x + \\frac{b}{2a} = \\pm \\frac{\\\sqrt{b^2 - 4ac}}{2a}$$</p>
                         
                         <p><strong>Step 6: Isolate $x$.</strong><br>
-                        $$x = -\\frac{b}{2a} \\pm \\frac{\\sqrt{b^2 - 4ac}}{2a} \\implies x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a} \\quad \\blacksquare$$</p>
+                        $$x = -\\frac{b}{2a} \\pm \\frac{\\\sqrt{b^2 - 4ac}}{2a} \\implies x = \\frac{-b \\pm \\\sqrt{b^2 - 4ac}}{2a} \\quad \\blacksquare$$</p>
                     </div>
                 `,
                 vernacular: {
@@ -476,7 +476,7 @@ window.mathChapterRegistry = {
                 },
                 diagnostics: [
                     { q: "What is the standard degree of a Quadratic Equation?", difficulty: "Foundation Level", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], correct: 1, solution: "<strong>Step 1:</strong> The standard form is $ax^2 + bx + c = 0$ where $a \\neq 0$.<br><strong>Conclusion:</strong> The highest exponent of variable $x$ is 2, so its degree is 2." },
-                    { q: "If D = b^2 - 4ac > 0, what is the nature of the roots?", difficulty: "Application Level", options: ["No real roots", "Two equal real roots", "Two distinct real roots", "Imaginary roots"], correct: 2, solution: "<strong>Step 1:</strong> When $D > 0$, $\\sqrt{D}$ produces a positive real number.<br><strong>Conclusion:</strong> The quadratic formula yields two distinct real values." },
+                    { q: "If D = b^2 - 4ac > 0, what is the nature of the roots?", difficulty: "Application Level", options: ["No real roots", "Two equal real roots", "Two distinct real roots", "Imaginary roots"], correct: 2, solution: "<strong>Step 1:</strong> When $D > 0$, $\\\sqrt{D}$ produces a positive real number.<br><strong>Conclusion:</strong> The quadratic formula yields two distinct real values." },
                     { q: "For 2x^2 - 5x + 3 = 0, what is the value of Discriminant D?", difficulty: "HOTS Level", options: ["D = 1", "D = 0", "D = 25", "D = -11"], correct: 0, solution: "<strong>Step 1:</strong> $a = 2, b = -5, c = 3$.<br><strong>Step 2:</strong> $D = b^2 - 4ac = (-5)^2 - 4(2)(3) = 25 - 24 = 1$." },
                     { q: "Which of the following equations has 2 as a root?", difficulty: "Foundation Level", options: ["$x^2 - 4x + 5 = 0$", "$x^2 + 3x - 12 = 0$", "$2x^2 - 7x + 6 = 0$", "$3x^2 - 6x - 2 = 0$"], correct: 2, solution: "<strong>Step 1:</strong> Substitute $x = 2$ in Option C: $2(2)^2 - 7(2) + 6 = 8 - 14 + 6 = 0$. Hence 2 is a root." },
                     { q: "If the equation $x^2 + 4x + k = 0$ has real and equal roots, then $k$ is:", difficulty: "Application Level", options: ["$k = 4$", "$k < 4$", "$k > 4$", "$k = 2$"], correct: 0, solution: "<strong>Step 1:</strong> Equal roots require $D = 0 \\implies 4^2 - 4(1)(k) = 0 \\implies 16 = 4k \\implies k = 4$." },
@@ -493,7 +493,7 @@ window.mathChapterRegistry = {
                         {
                             title: "The Missing Negative Sign Trap in $b^2 - 4ac$",
                             severity: "High (1-2 Marks Lost)",
-                            explanation: "When $b$ is negative (e.g., $x^2 - 5x + 6 = 0$), students often write $-5^2 = -25$ instead of $(-5)^2 = +25$, resulting in an incorrect discriminant calculation."
+                            explanation: "When $b$ is negative (e.g., $x^2 - 5x + 6 = 0$), students often write $-5^2 = -25$ instead of $(-5)^2 = +25$, resulting in \tan incorrect discriminant calculation."
                         },
                         {
                             title: "Discarding Roots in Real-World Word Problems",
@@ -536,7 +536,7 @@ window.mathChapterRegistry = {
                 }
             },
             M10_CH05: {
-                code: "Chapter 05", name: "Arithmetic Progressions", weight: 6,
+                code: "Chapter 05", name: "Arithmetic Progressions", weight: 5,
                 desc: "Analyze sequences, common difference ($d$), general term ($a_n$), and series sum ($S_n$).",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -624,19 +624,19 @@ window.mathChapterRegistry = {
                     { q: "The 10th term of AP: 2, 7, 12... is:", difficulty: "Foundation Level", options: ["47", "52", "42", "37"], correct: 0, solution: "<strong>Step 1:</strong> $a = 2, d = 5$.<br><strong>Step 2:</strong> $a_{10} = a + 9d = 2 + 9(5) = 2 + 45 = 47$." },
                     { q: "Which term of AP: 21, 18, 15... is -81?", difficulty: "Application Level", options: ["35th", "36th", "34th", "30th"], correct: 0, solution: "<strong>Step 1:</strong> $a = 21, d = -3$.<br><strong>Step 2:</strong> $-81 = 21 + (n-1)(-3) \\implies -102 = -3(n-1) \\implies n-1 = 34 \\implies n = 35$." },
                     { q: "Sum of first 100 positive integers is:", difficulty: "Foundation Level", options: ["5050", "5000", "5100", "4950"], correct: 0, solution: "<strong>Step 1:</strong> $S_n = \\frac{n(n+1)}{2} = \\frac{100 \\times 101}{2} = 5050$." },
-                    { q: "In an AP, if $d = -4, n = 7, a_n = 4$, then first term $a$ is:", difficulty: "Foundation Level", options: ["6", "7", "20", "28"], correct: 3, solution: "<strong>Step 1:</strong> $a_n = a + (n-1)d \\implies 4 = a + 6(-4) \\implies 4 = a - 24 \\implies a = 28$." },
+                    { q: "In \tan AP, if $d = -4, n = 7, a_n = 4$, then first term $a$ is:", difficulty: "Foundation Level", options: ["6", "7", "20", "28"], correct: 3, solution: "<strong>Step 1:</strong> $a_n = a + (n-1)d \\implies 4 = a + 6(-4) \\implies 4 = a - 24 \\implies a = 28$." },
                     { q: "The 11th term of the AP: $-3, -1/2, 2, \\dots$ is:", difficulty: "Application Level", options: ["28", "22", "-38", "-46.5"], correct: 1, solution: "<strong>Step 1:</strong> $d = -1/2 - (-3) = 2.5$.<br><strong>Step 2:</strong> $a_{11} = -3 + 10(2.5) = -3 + 25 = 22$." },
                     { q: "The famous mathematician associated with finding the sum of first 100 natural numbers is:", difficulty: "Foundation Level", options: ["Pythagoras", "Newton", "Gauss", "Euclid"], correct: 2, solution: "<strong>Step 1:</strong> Carl Friedrich Gauss discovered the pairwise pairing trick in primary school." },
-                    { q: "If the 3rd and 9th terms of an AP are 4 and -8 respectively, which term is 0?", difficulty: "Application Level", options: ["5th", "6th", "7th", "8th"], correct: 0, solution: "<strong>Step 1:</strong> $a + 2d = 4$ and $a + 8d = -8 \\implies 6d = -12 \\implies d = -2, a = 8$.<br><strong>Step 2:</strong> $8 + (n-1)(-2) = 0 \\implies 2(n-1) = 8 \\implies n = 5$." },
+                    { q: "If the 3rd and 9th terms of \tan AP are 4 and -8 respectively, which term is 0?", difficulty: "Application Level", options: ["5th", "6th", "7th", "8th"], correct: 0, solution: "<strong>Step 1:</strong> $a + 2d = 4$ and $a + 8d = -8 \\implies 6d = -12 \\implies d = -2, a = 8$.<br><strong>Step 2:</strong> $8 + (n-1)(-2) = 0 \\implies 2(n-1) = 8 \\implies n = 5$." },
                     { q: "The number of two-digit numbers divisible by 3 is:", difficulty: "Application Level", options: ["25", "30", "32", "35"], correct: 1, solution: "<strong>Step 1:</strong> First is 12, last is 99. $d = 3$.<br><strong>Step 2:</strong> $99 = 12 + (n-1)3 \\implies 87 = 3(n-1) \\implies n-1 = 29 \\implies n = 30$." },
-                    { q: "If the $n$-th term of an AP is $3n + 5$, then its common difference is:", difficulty: "Foundation Level", options: ["3", "5", "8", "2"], correct: 0, solution: "<strong>Step 1:</strong> $a_1 = 3(1)+5 = 8$, $a_2 = 3(2)+5 = 11$.<br><strong>Step 2:</strong> $d = a_2 - a_1 = 11 - 8 = 3$." },
-                    { q: "Sum of first $n$ terms of an AP is given by $S_n = 3n^2 + 5n$. Its 2nd term is:", difficulty: "HOTS Level", options: ["8", "14", "11", "22"], correct: 1, solution: "<strong>Step 1:</strong> $S_1 = a_1 = 3(1)^2 + 5(1) = 8$.<br><strong>Step 2:</strong> $S_2 = a_1 + a_2 = 3(4) + 10 = 22$.<br><strong>Step 3:</strong> $a_2 = S_2 - S_1 = 22 - 8 = 14$." },
+                    { q: "If the $n$-th term of \tan AP is $3n + 5$, then its common difference is:", difficulty: "Foundation Level", options: ["3", "5", "8", "2"], correct: 0, solution: "<strong>Step 1:</strong> $a_1 = 3(1)+5 = 8$, $a_2 = 3(2)+5 = 11$.<br><strong>Step 2:</strong> $d = a_2 - a_1 = 11 - 8 = 3$." },
+                    { q: "Sum of first $n$ terms of \tan AP is given by $S_n = 3n^2 + 5n$. Its 2nd term is:", difficulty: "HOTS Level", options: ["8", "14", "11", "22"], correct: 1, solution: "<strong>Step 1:</strong> $S_1 = a_1 = 3(1)^2 + 5(1) = 8$.<br><strong>Step 2:</strong> $S_2 = a_1 + a_2 = 3(4) + 10 = 22$.<br><strong>Step 3:</strong> $a_2 = S_2 - S_1 = 22 - 8 = 14$." },
                     { q: "If $a, b, c$ are in AP, then $\\frac{a + c}{2}$ is equal to:", difficulty: "Foundation Level", options: ["$a$", "$b$", "$c$", "$b/2$"], correct: 1, solution: "<strong>Step 1:</strong> In any AP, the middle term is the arithmetic mean of its neighbors: $b = \\frac{a+c}{2}$." },
                     { q: "The common difference of the AP $\\frac{1}{p}, \\frac{1-p}{p}, \\frac{1-2p}{p}, \\dots$ is:", difficulty: "Application Level", options: ["$p$", "$-1$", "1", "$-p$"], correct: 1, solution: "<strong>Step 1:</strong> $d = \\frac{1-p}{p} - \\frac{1}{p} = \\frac{1 - p - 1}{p} = \\frac{-p}{p} = -1$." }
                 ]
             },
 M10_CH06: {
-                code: "Chapter 06", name: "Triangles", weight: 8,
+                code: "Chapter 06", name: "Triangles", weight: 6,
                 desc: "Master triangle similarity criteria, Basic Proportionality Theorem (BPT/Thales Theorem), and geometric ratio proofs.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -692,7 +692,7 @@ M10_CH06: {
 
                     <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4 text-slate-300 font-mono text-xs shadow-inner">
                         <p class="text-amber-400 font-bold">FULLY WORKED NUMERICAL EXAMPLE: BPT RATIO EVALUATION</p>
-                        <p>Given $\\Delta ABC$ with $DE \\parallel BC$. $AD = 1.5\\text{ cm}, DB = 3\\text{ cm}, AE = 1\\text{ cm}$. Find $EC$.</p>
+                        <p>Given $\\\Delta ABC$ with $DE \\parallel BC$. $AD = 1.5\\text{ cm}, DB = 3\\text{ cm}, AE = 1\\text{ cm}$. Find $EC$.</p>
                         <p><strong>Step 1: State BPT ratio.</strong> $\\frac{AD}{DB} = \\frac{AE}{EC}$</p>
                         <p><strong>Step 2: Substitute values.</strong> $\\frac{1.5}{3} = \\frac{1}{EC}$</p>
                         <p><strong>Step 3: Cross multiply.</strong> $1.5 \\cdot EC = 3 \\implies EC = \\frac{3}{1.5} = 2\\text{ cm}$.</p>
@@ -706,21 +706,21 @@ M10_CH06: {
                         <strong>To Prove:</strong> $\\frac{AD}{DB} = \\frac{AE}{EC}$.<br>
                         <strong>Construction:</strong> Join $BE$ and $CD$. Draw $EF \\perp AB$ and $DG \\perp AC$.</p>
                         
-                        <p><strong>Step 1: Calculate area of $\\Delta ADE$.</strong><br>
-                        $$\\text{Area}(\\Delta ADE) = \\frac{1}{2} \\times \\text{base} \\times \\text{height} = \\frac{1}{2} \\times AD \\times EF$$</p>
+                        <p><strong>Step 1: Calculate area of $\\\Delta ADE$.</strong><br>
+                        $$\\text{Area}(\\\Delta ADE) = \\frac{1}{2} \\times \\text{base} \\times \\text{height} = \\frac{1}{2} \\times AD \\times EF$$</p>
                         
-                        <p><strong>Step 2: Calculate area of $\\Delta BDE$.</strong><br>
-                        $$\\text{Area}(\\Delta BDE) = \\frac{1}{2} \\times DB \\times EF$$</p>
+                        <p><strong>Step 2: Calculate area of $\\\Delta BDE$.</strong><br>
+                        $$\\text{Area}(\\\Delta BDE) = \\frac{1}{2} \\times DB \\times EF$$</p>
                         
-                        <p><strong>Step 3: Ratio of Area($\\Delta ADE$) to Area($\\Delta BDE$).</strong><br>
-                        $$\\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta BDE)} = \\frac{\\frac{1}{2} \\times AD \\times EF}{\\frac{1}{2} \\times DB \\times EF} = \\frac{AD}{DB} \\quad \\text{--- (Eq 1)}$$</p>
+                        <p><strong>Step 3: Ratio of Area($\\\Delta ADE$) to Area($\\\Delta BDE$).</strong><br>
+                        $$\\frac{\\text{Area}(\\\Delta ADE)}{\\text{Area}(\\\Delta BDE)} = \\frac{\\frac{1}{2} \\times AD \\times EF}{\\frac{1}{2} \\times DB \\times EF} = \\frac{AD}{DB} \\quad \\text{--- (Eq 1)}$$</p>
                         
                         <p><strong>Step 4: Similarly, compute ratio on side $AC$.</strong><br>
-                        $$\\frac{\\text{Area}(\\Delta ADE)}{\\text{Area}(\\Delta DEC)} = \\frac{\\frac{1}{2} \\times AE \\times DG}{\\frac{1}{2} \\times EC \\times DG} = \\frac{AE}{EC} \\quad \\text{--- (Eq 2)}$$</p>
+                        $$\\frac{\\text{Area}(\\\Delta ADE)}{\\text{Area}(\\\Delta DEC)} = \\frac{\\frac{1}{2} \\times AE \\times DG}{\\frac{1}{2} \\times EC \\times DG} = \\frac{AE}{EC} \\quad \\text{--- (Eq 2)}$$</p>
                         
                         <p><strong>Step 5: Apply parallel lines area theorem.</strong><br>
-                        $\\Delta BDE$ and $\\Delta DEC$ lie on same base $DE$ and between same parallels $DE \\parallel BC$.<br>
-                        $$\\implies \\text{Area}(\\Delta BDE) = \\text{Area}(\\Delta DEC)$$</p>
+                        $\\\Delta BDE$ and $\\\Delta DEC$ lie on same base $DE$ and between same parallels $DE \\parallel BC$.<br>
+                        $$\\implies \\text{Area}(\\\Delta BDE) = \\text{Area}(\\\Delta DEC)$$</p>
                         
                         <p><strong>Step 6: Equate equations 1 and 2.</strong><br>
                         $$\\frac{AD}{DB} = \\frac{AE}{EC} \\quad \\blacksquare$$</p>
@@ -733,15 +733,15 @@ M10_CH06: {
                     { q: "All circles are always:", difficulty: "Foundation Level", options: ["Congruent", "Similar", "Equal", "None"], correct: 1, solution: "<strong>Step 1:</strong> All circles have the exact same round geometry regardless of radius, so they are always similar." },
                     { q: "In triangle ABC, DE || BC. If AD=1.5, DB=3, AE=1, then EC is:", difficulty: "Application Level", options: ["2 cm", "3 cm", "1.5 cm", "4 cm"], correct: 0, solution: "<strong>Step 1:</strong> By BPT: $\\frac{AD}{DB} = \\frac{AE}{EC} \\implies \\frac{1.5}{3} = \\frac{1}{EC} \\implies EC = 2$ cm." },
                     { q: "If perimeters of two similar triangles are in ratio 4:9, sides are in ratio:", difficulty: "Foundation Level", options: ["4:9", "2:3", "16:81", "81:16"], correct: 0, solution: "<strong>Step 1:</strong> The ratio of perimeters of two similar triangles is equal to the ratio of their corresponding sides ($4:9$)." },
-                    { q: "If $\\Delta ABC \\sim \\Delta EDF$ and $\\Delta ABC$ is not similar to $\\Delta DEF$, then which of the following is true?", difficulty: "Application Level", options: ["$BC \\cdot EF = AC \\cdot FD$", "$AB \\cdot EF = AC \\cdot DE$", "$BC \\cdot DE = AB \\cdot EF$", "$BC \\cdot DE = AB \\cdot FD$"], correct: 3, solution: "<strong>Step 1:</strong> $\\frac{AB}{ED} = \\frac{BC}{DF} \\implies BC \\cdot ED = AB \\cdot DF$." },
-                    { q: "If in two triangles $ABC$ and $PQR$, $\\frac{AB}{QR} = \\frac{BC}{PR} = \\frac{CA}{PQ}$, then:", difficulty: "Application Level", options: ["$\\Delta PQR \\sim \\Delta CAB$", "$PQR \\sim \\Delta ABC$", "$\\Delta CBA \\sim \\Delta PQR$", "$\\Delta BCA \\sim \\Delta PQR$"], correct: 0, solution: "<strong>Step 1:</strong> Mapping corresponding sides: $AB \\leftrightarrow QR, BC \\leftrightarrow PR, CA \\leftrightarrow PQ \\implies \\Delta PQR \\sim \\Delta CAB$." },
+                    { q: "If $\\\Delta ABC \\sim \\\Delta EDF$ and $\\\Delta ABC$ is not similar to $\\\Delta DEF$, then which of the following is true?", difficulty: "Application Level", options: ["$BC \\cdot EF = AC \\cdot FD$", "$AB \\cdot EF = AC \\cdot DE$", "$BC \\cdot DE = AB \\cdot EF$", "$BC \\cdot DE = AB \\cdot FD$"], correct: 3, solution: "<strong>Step 1:</strong> $\\frac{AB}{ED} = \\frac{BC}{DF} \\implies BC \\cdot ED = AB \\cdot DF$." },
+                    { q: "If in two triangles $ABC$ and $PQR$, $\\frac{AB}{QR} = \\frac{BC}{PR} = \\frac{CA}{PQ}$, then:", difficulty: "Application Level", options: ["$\\\Delta PQR \\sim \\\Delta CAB$", "$PQR \\sim \\\Delta ABC$", "$\\\Delta CBA \\sim \\\Delta PQR$", "$\\\Delta BCA \\sim \\\Delta PQR$"], correct: 0, solution: "<strong>Step 1:</strong> Mapping corresponding sides: $AB \\leftrightarrow QR, BC \\leftrightarrow PR, CA \\leftrightarrow PQ \\implies \\\Delta PQR \\sim \\\Delta CAB$." },
                     { q: "A vertical pole of length 6m casts a shadow 4m long on the ground and at the same time a tower casts a shadow 28m long. The height of tower is:", difficulty: "Application Level", options: ["40m", "42m", "36m", "32m"], correct: 1, solution: "<strong>Step 1:</strong> $\\frac{\\text{Height}}{\\text{Shadow}} = \\frac{6}{4} = \\frac{H}{28} \\implies H = \\frac{6 \\times 28}{4} = 42$ m." },
-                    { q: "If $\\Delta ABC \\sim \\Delta QRP$, $\\frac{\\text{Area}(\\Delta ABC)}{\\text{Area}(\\Delta QRP)} = \\frac{9}{4}, AB = 18\\text{ cm}, BC = 15\\text{ cm}$, then $PR$ is:", difficulty: "HOTS Level", options: ["10 cm", "12 cm", "8 cm", "6 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{\\text{Area}_1}{\\text{Area}_2} = \\left(\\frac{BC}{RP}\\right)^2 \\implies \\frac{9}{4} = \\left(\\frac{15}{PR}\\right)^2 \\implies \\frac{3}{2} = \\frac{15}{PR} \\implies PR = 10$ cm." },
+                    { q: "If $\\\Delta ABC \\sim \\\Delta QRP$, $\\frac{\\text{Area}(\\\Delta ABC)}{\\text{Area}(\\\Delta QRP)} = \\frac{9}{4}, AB = 18\\text{ cm}, BC = 15\\text{ cm}$, then $PR$ is:", difficulty: "HOTS Level", options: ["10 cm", "12 cm", "8 cm", "6 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{\\text{Area}_1}{\\text{Area}_2} = \\left(\\frac{BC}{RP}\\right)^2 \\implies \\frac{9}{4} = \\left(\\frac{15}{PR}\\right)^2 \\implies \\frac{3}{2} = \\frac{15}{PR} \\implies PR = 10$ cm." },
                     { q: "In triangles $ABC$ and $DEF$, $\\angle B = \\angle E, \\angle F = \\angle C$ and $AB = 3 DE$. Then the two triangles are:", difficulty: "Foundation Level", options: ["Congruent & similar", "Similar but not congruent", "Neither similar nor congruent", "Congruent but not similar"], correct: 1, solution: "<strong>Step 1:</strong> Two angles are equal (similar by AA criterion), but sides are in a 3:1 ratio (not congruent)." },
-                    { q: "If $D, E$ are midpoints of sides $AB$ and $AC$ of $\\Delta ABC$, then ratio of area($\\Delta ADE$) to area($\\Delta ABC$) is:", difficulty: "Foundation Level", options: ["1:2", "1:4", "2:1", "4:1"], correct: 1, solution: "<strong>Step 1:</strong> Side ratio is $1:2$. Ratio of areas $= (1/2)^2 = 1:4$." },
-                    { q: "If in $\\Delta ABC, DE \\parallel BC$ such that $AD = x, DB = x-2, AE = x+2, EC = x-1$, then $x$ is:", difficulty: "HOTS Level", options: ["4", "3", "2", "1"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{x}{x-2} = \\frac{x+2}{x-1} \\implies x(x-1) = (x-2)(x+2) \\implies x^2 - x = x^2 - 4 \\implies x = 4$." },
-                    { q: "All equilateral triangles are always:", difficulty: "Foundation Level", options: ["Congruent only", "Similar only", "Both similar and congruent", "Neither"], correct: 1, solution: "<strong>Step 1:</strong> All internal angles are $60^\\circ$, hence they are always similar by AAA." },
-                    { q: "The length of diagonals of a rhombus are 16cm and 12cm. The length of the side of rhombus is:", difficulty: "Application Level", options: ["9 cm", "10 cm", "8 cm", "20 cm"], correct: 1, solution: "<strong>Step 1:</strong> Diagonals bisect at right angles with half-lengths 8 cm and 6 cm.<br><strong>Step 2:</strong> $\\text{Side} = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = 10$ cm." }
+                    { q: "If $D, E$ are midpoints of sides $AB$ and $AC$ of $\\\Delta ABC$, then ratio of area($\\\Delta ADE$) to area($\\\Delta ABC$) is:", difficulty: "Foundation Level", options: ["1:2", "1:4", "2:1", "4:1"], correct: 1, solution: "<strong>Step 1:</strong> Side ratio is $1:2$. Ratio of areas $= (1/2)^2 = 1:4$." },
+                    { q: "If in $\\\Delta ABC, DE \\parallel BC$ such that $AD = x, DB = x-2, AE = x+2, EC = x-1$, then $x$ is:", difficulty: "HOTS Level", options: ["4", "3", "2", "1"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{x}{x-2} = \\frac{x+2}{x-1} \\implies x(x-1) = (x-2)(x+2) \\implies x^2 - x = x^2 - 4 \\implies x = 4$." },
+                    { q: "All equilateral triangles are always:", difficulty: "Foundation Level", options: ["Congruent only", "Similar only", "Both similar and congruent", "Neither"], correct: 1, solution: "<strong>Step 1:</strong> All internal angles are $60^\\\circ$, hence they are always similar by AAA." },
+                    { q: "The length of diagonals of a rhombus are 16cm and 12cm. The length of the side of rhombus is:", difficulty: "Application Level", options: ["9 cm", "10 cm", "8 cm", "20 cm"], correct: 1, solution: "<strong>Step 1:</strong> Diagonals bisect at right angles with half-lengths 8 cm and 6 cm.<br><strong>Step 2:</strong> $\\text{Side} = \\\sqrt{8^2 + 6^2} = \\\sqrt{64 + 36} = 10$ cm." }
                 ]
             },
             M10_CH07: {
@@ -773,7 +773,7 @@ M10_CH06: {
                             <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">✨ The "Aha!" Moment</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    The Distance Formula $d = \\sqrt{\\Delta x^2 + \\Delta y^2}$ is NOT a new formula! It's just the ancient Pythagoras Theorem applied to horizontal and vertical grid steps on graph paper.
+                                    The Distance Formula $d = \\\sqrt{\\\Delta x^2 + \\\Delta y^2}$ is NOT a new formula! It's just the ancient Pythagoras Theorem applied to horizontal and vertical grid steps on graph paper.
                                 </p>
                             </div>
                         </div>
@@ -794,7 +794,7 @@ M10_CH06: {
                     <div class="p-5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/50 space-y-3">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">7. Distance & Section Formulas</h4>
                         <div class="text-center font-mono text-xs font-bold text-indigo-700 dark:text-indigo-300 py-2">
-                            $$d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}, \\quad P(x, y) = \\left(\\frac{m_1 x_2 + m_2 x_1}{m_1 + m_2}, \\frac{m_1 y_2 + m_2 y_1}{m_1 + m_2}\\right)$$
+                            $$d = \\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}, \\quad P(x, y) = \\left(\\frac{m_1 x_2 + m_2 x_1}{m_1 + m_2}, \\frac{m_1 y_2 + m_2 y_1}{m_1 + m_2}\\right)$$
                         </div>
                     </div>
 
@@ -815,28 +815,28 @@ M10_CH06: {
                         <p><strong>Step 1: Plot points $P(x_1, y_1)$ and $Q(x_2, y_2)$ on Cartesian plane.</strong><br>
                         Draw perpendiculars $PR$ and $QS$ to x-axis. Draw $PT \\perp QS$.</p>
                         
-                        <p><strong>Step 2: Determine side lengths of right triangle $\\Delta PTQ$.</strong><br>
+                        <p><strong>Step 2: Determine side lengths of right triangle $\\\Delta PTQ$.</strong><br>
                         Base $PT = RS = x_2 - x_1$<br>
                         Height $QT = QS - ST = y_2 - y_1$</p>
                         
-                        <p><strong>Step 3: Apply Pythagoras Theorem to $\\Delta PTQ$.</strong><br>
+                        <p><strong>Step 3: Apply Pythagoras Theorem to $\\\Delta PTQ$.</strong><br>
                         $$PQ^2 = PT^2 + QT^2$$
                         $$PQ^2 = (x_2 - x_1)^2 + (y_2 - y_1)^2$$</p>
                         
                         <p><strong>Step 4: Take square root.</strong><br>
-                        $$PQ = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} \\quad \\blacksquare$$</p>
+                        $$PQ = \\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} \\quad \\blacksquare$$</p>
                     </div>
                 `,
                 vernacular: {
                     English: "Treat the Distance Formula as a direct application of the Pythagorean theorem: d = √((x₂ - x₁)² + (y₂ - y₁)²)."
                 },
                 diagnostics: [
-                    { q: "Distance of point P(-6, 8) from origin is:", difficulty: "Foundation Level", options: ["10", "8", "6", "2*sqrt(7)"], correct: 0, solution: "<strong>Step 1:</strong> $d = \\sqrt{(-6)^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$." },
+                    { q: "Distance of point P(-6, 8) from origin is:", difficulty: "Foundation Level", options: ["10", "8", "6", "2*sqrt(7)"], correct: 0, solution: "<strong>Step 1:</strong> $d = \\\sqrt{(-6)^2 + 8^2} = \\\sqrt{36 + 64} = \\\sqrt{100} = 10$." },
                     { q: "Midpoint of segment joining (2, 6) and (4, 2) is:", difficulty: "Foundation Level", options: ["(3, 4)", "(4, 3)", "(6, 8)", "(1, 2)"], correct: 0, solution: "<strong>Step 1:</strong> $\\left(\\frac{2+4}{2}, \\frac{6+2}{2}\\right) = (3, 4)$." },
                     { q: "Ratio in which y-axis divides (5, -6) and (-1, -4) is:", difficulty: "Application Level", options: ["5:1", "1:5", "2:3", "3:2"], correct: 0, solution: "<strong>Step 1:</strong> On y-axis, $x = 0$. Using section formula: $0 = \\frac{k(-1) + 1(5)}{k+1} \\implies -k + 5 = 0 \\implies k = 5$ (ratio $5:1$)." },
-                    { q: "The distance between the points $(0, 5)$ and $(-5, 0)$ is:", difficulty: "Foundation Level", options: ["5", "$5\\sqrt{2}$", "$2\\sqrt{5}$", "10"], correct: 1, solution: "<strong>Step 1:</strong> $d = \\sqrt{(-5-0)^2 + (0-5)^2} = \\sqrt{25 + 25} = \\sqrt{50} = 5\\sqrt{2}$." },
+                    { q: "The distance between the points $(0, 5)$ and $(-5, 0)$ is:", difficulty: "Foundation Level", options: ["5", "$5\\\sqrt{2}$", "$2\\\sqrt{5}$", "10"], correct: 1, solution: "<strong>Step 1:</strong> $d = \\\sqrt{(-5-0)^2 + (0-5)^2} = \\\sqrt{25 + 25} = \\\sqrt{50} = 5\\\sqrt{2}$." },
                     { q: "If the distance between points $(4, p)$ and $(1, 0)$ is 5, then value of $p$ is:", difficulty: "Application Level", options: ["$\\pm 4$", "4 only", "$-4$ only", "0"], correct: 0, solution: "<strong>Step 1:</strong> $(4-1)^2 + (p-0)^2 = 5^2 \\implies 9 + p^2 = 25 \\implies p^2 = 16 \\implies p = \\pm 4$." },
-                    { q: "The perimeter of a triangle with vertices $(0,4), (0,0)$ and $(3,0)$ is:", difficulty: "Application Level", options: ["$7 + \\sqrt{5}$", "5", "11", "12"], correct: 3, solution: "<strong>Step 1:</strong> Sides along axes are 4 and 3. Hypotenuse $= \\sqrt{4^2+3^2} = 5$. Perimeter $= 4 + 3 + 5 = 12$." },
+                    { q: "The perimeter of a triangle with vertices $(0,4), (0,0)$ and $(3,0)$ is:", difficulty: "Application Level", options: ["$7 + \\\sqrt{5}$", "5", "11", "12"], correct: 3, solution: "<strong>Step 1:</strong> Sides along axes are 4 and 3. Hypotenuse $= \\\sqrt{4^2+3^2} = 5$. Perimeter $= 4 + 3 + 5 = 12$." },
                     { q: "The point which divides line segment joining $(7, -6)$ and $(3, 4)$ in ratio $1:2$ internally lies in quadrant:", difficulty: "HOTS Level", options: ["I", "II", "III", "IV"], correct: 3, solution: "<strong>Step 1:</strong> $x = \\frac{1(3)+2(7)}{3} = 17/3 > 0$, $y = \\frac{1(4)+2(-6)}{3} = -8/3 < 0$. Sign $(+, -)$ is Quadrant IV." },
                     { q: "The point on x-axis equidistant from $(2, -5)$ and $(-2, 9)$ is:", difficulty: "HOTS Level", options: ["$(-7, 0)$", "$(7, 0)$", "$(0, -7)$", "$(0, 7)$"], correct: 0, solution: "<strong>Step 1:</strong> $(x-2)^2 + 25 = (x+2)^2 + 81 \\implies -4x + 29 = 4x + 85 \\implies 8x = -56 \\implies x = -7$." },
                     { q: "If $(1, 2), (4, y), (x, 6)$ and $(3, 5)$ are vertices of parallelogram taken in order, then $(x, y)$ is:", difficulty: "HOTS Level", options: ["$(6, 3)$", "$(3, 6)$", "$(5, 2)$", "$(2, 5)$"], correct: 0, solution: "<strong>Step 1:</strong> Midpoints of diagonals coincide: $\\frac{1+x}{2} = \\frac{4+3}{2} \\implies x = 6$; $\\frac{2+6}{2} = \\frac{y+5}{2} \\implies y = 3$." },
@@ -846,7 +846,7 @@ M10_CH06: {
                 ]
             },
             M10_CH08: {
-                code: "Chapter 08", name: "Introduction to Trigonometry", weight: 7,
+                code: "Chapter 08", name: "Introduction to Trigonometry", weight: 8,
                 desc: "Master trigonometric ratios, standard angle values, and fundamental Pythagorean identities.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -883,7 +883,7 @@ M10_CH06: {
                             <h4 class="text-xs font-bold text-indigo-900 dark:text-indigo-200 mb-2">🗺️ Your Learning Roadmap</h4>
                             <ol class="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-decimal list-inside">
                                 <li><strong>Step 1:</strong> Memorize 6 trigonometric ratios ($\sin, \cos, \tan, \csc, \sec, \cot$).</li>
-                                <li><strong>Step 2:</strong> Master standard angle values table ($0^\circ, 30^\circ, 45^\circ, 60^\circ, 90^\circ$).</li>
+                                <li><strong>Step 2:</strong> Master standard angle values table ($0^\\circ, 30^\\circ, 45^\\circ, 60^\\circ, 90^\\circ$).</li>
                                 <li><strong>Step 3:</strong> Prove trigonometric identities using algebraic substitutions.</li>
                             </ol>
                         </div>
@@ -920,14 +920,14 @@ M10_CH06: {
                     <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 text-xs text-slate-700 dark:text-slate-300 shadow-sm leading-relaxed">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Formal Geometric Proof: $\\sin^2 \\theta + \\cos^2 \\theta = 1$</h4>
                         
-                        <p><strong>Step 1: Consider right triangle $\\Delta ABC$ right-angled at $B$.</strong><br>
+                        <p><strong>Step 1: Consider right triangle $\\\Delta ABC$ right-angled at $B$.</strong><br>
                         Let angle $\\angle ACB = \\theta$.<br>
                         Perpendicular $= AB$, Base $= BC$, Hypotenuse $= AC$.</p>
                         
                         <p><strong>Step 2: Write trigonometric ratio definitions.</strong><br>
                         $$\\sin \\theta = \\frac{AB}{AC}, \\quad \\cos \\theta = \\frac{BC}{AC}$$</p>
                         
-                        <p><strong>Step 3: Apply Pythagoras Theorem to $\\Delta ABC$.</strong><br>
+                        <p><strong>Step 3: Apply Pythagoras Theorem to $\\\Delta ABC$.</strong><br>
                         $$AB^2 + BC^2 = AC^2$$</p>
                         
                         <p><strong>Step 4: Divide entire equation by $AC^2$.</strong><br>
@@ -943,21 +943,21 @@ M10_CH06: {
                 },
                 diagnostics: [
                     { q: "Value of sin^2 30 + cos^2 30 is:", difficulty: "Foundation Level", options: ["1", "0", "1/2", "2"], correct: 0, solution: "<strong>Step 1:</strong> Fundamental identity: $\\sin^2 \\theta + \\cos^2 \\theta = 1$ holds for all angles." },
-                    { q: "If sin A = 3/4, then cos A is:", difficulty: "Application Level", options: ["sqrt(7)/4", "4/3", "3/5", "1/4"], correct: 0, solution: "<strong>Step 1:</strong> $\\cos A = \\sqrt{1 - \\sin^2 A} = \\sqrt{1 - 9/16} = \\sqrt{7/16} = \\sqrt{7}/4$." },
+                    { q: "If sin A = 3/4, then cos A is:", difficulty: "Application Level", options: ["sqrt(7)/4", "4/3", "3/5", "1/4"], correct: 0, solution: "<strong>Step 1:</strong> $\\cos A = \\\sqrt{1 - \\sin^2 A} = \\\sqrt{1 - 9/16} = \\\sqrt{7/16} = \\\sqrt{7}/4$." },
                     { q: "Value of 9 sec^2 A - 9 tan^2 A is:", difficulty: "Foundation Level", options: ["9", "1", "0", "8"], correct: 0, solution: "<strong>Step 1:</strong> Factor out 9: $9(\\sec^2 A - \\tan^2 A) = 9(1) = 9$." },
-                    { q: "If $\\cos A = 4/5$, then value of $\\tan A$ is:", difficulty: "Foundation Level", options: ["3/5", "3/4", "4/3", "5/3"], correct: 1, solution: "<strong>Step 1:</strong> $\\text{Opposite} = \\sqrt{5^2 - 4^2} = 3$. Therefore $\\tan A = 3/4$." },
-                    { q: "Value of $\\frac{1 - \\tan^2 45^\\circ}{1 + \\tan^2 45^\\circ}$ is:", difficulty: "Foundation Level", options: ["$\\tan 90^\\circ$", "1", "$\\sin 45^\\circ$", "0"], correct: 3, solution: "<strong>Step 1:</strong> $\\tan 45^\\circ = 1 \\implies \\frac{1 - 1}{1 + 1} = \\frac{0}{2} = 0$." },
+                    { q: "If $\\cos A = 4/5$, then value of $\\tan A$ is:", difficulty: "Foundation Level", options: ["3/5", "3/4", "4/3", "5/3"], correct: 1, solution: "<strong>Step 1:</strong> $\\text{Opposite} = \\\sqrt{5^2 - 4^2} = 3$. Therefore $\\tan A = 3/4$." },
+                    { q: "Value of $\\frac{1 - \\tan^2 45^\\\circ}{1 + \\tan^2 45^\\\circ}$ is:", difficulty: "Foundation Level", options: ["$\\tan 90^\\\circ$", "1", "$\\sin 45^\\\circ$", "0"], correct: 3, solution: "<strong>Step 1:</strong> $\\tan 45^\\\circ = 1 \\implies \\frac{1 - 1}{1 + 1} = \\frac{0}{2} = 0$." },
                     { q: "If $\\sin A + \\sin^2 A = 1$, then value of expression $(\\cos^2 A + \\cos^4 A)$ is:", difficulty: "HOTS Level", options: ["1", "1/2", "2", "3"], correct: 0, solution: "<strong>Step 1:</strong> $\\sin A = 1 - \\sin^2 A = \\cos^2 A$.<br><strong>Step 2:</strong> $\\cos^2 A + \\cos^4 A = \\sin A + \\sin^2 A = 1$." },
                     { q: "If $4 \\tan \\theta = 3$, then $\\frac{4 \\sin \\theta - \\cos \\theta}{4 \\sin \\theta + \\cos \\theta}$ equals:", difficulty: "HOTS Level", options: ["2/3", "1/3", "1/2", "3/4"], correct: 2, solution: "<strong>Step 1:</strong> Divide numerator and denominator by $\\cos \\theta$: $\\frac{4\\tan\\theta - 1}{4\\tan\\theta + 1} = \\frac{3 - 1}{3 + 1} = \\frac{2}{4} = 1/2$." },
-                    { q: "If $\\sin \\theta + \\cos \\theta = \\sqrt{2} \\cos \\theta$, then $\\tan \\theta$ is:", difficulty: "HOTS Level", options: ["$\\sqrt{2} - 1$", "$\\sqrt{2} + 1$", "1", "$\\sqrt{2}$"], correct: 0, solution: "<strong>Step 1:</strong> Divide by $\\cos \\theta$: $\\tan \\theta + 1 = \\sqrt{2} \\implies \\tan \\theta = \\sqrt{2} - 1$." },
-                    { q: "Value of $\\sin 60^\\circ \\cos 30^\\circ + \\sin 30^\\circ \\cos 60^\\circ$ is:", difficulty: "Foundation Level", options: ["0", "1", "1/2", "1/4"], correct: 1, solution: "<strong>Step 1:</strong> $(\\sqrt{3}/2)(\\sqrt{3}/2) + (1/2)(1/2) = 3/4 + 1/4 = 1$." },
-                    { q: "If $\\theta = 45^\\circ$, then $\\sec \\theta \\cdot \\cot \\theta$ equals:", difficulty: "Foundation Level", options: ["1", "$\\sqrt{2}$", "2", "$1/\\sqrt{2}$"], correct: 1, solution: "<strong>Step 1:</strong> $\\sec 45^\\circ \\times \\cot 45^\\circ = \\sqrt{2} \\times 1 = \\sqrt{2}$." },
+                    { q: "If $\\sin \\theta + \\cos \\theta = \\\sqrt{2} \\cos \\theta$, then $\\tan \\theta$ is:", difficulty: "HOTS Level", options: ["$\\\sqrt{2} - 1$", "$\\\sqrt{2} + 1$", "1", "$\\\sqrt{2}$"], correct: 0, solution: "<strong>Step 1:</strong> Divide by $\\cos \\theta$: $\\tan \\theta + 1 = \\\sqrt{2} \\implies \\tan \\theta = \\\sqrt{2} - 1$." },
+                    { q: "Value of $\\sin 60^\\\circ \\cos 30^\\\circ + \\sin 30^\\\circ \\cos 60^\\\circ$ is:", difficulty: "Foundation Level", options: ["0", "1", "1/2", "1/4"], correct: 1, solution: "<strong>Step 1:</strong> $(\\\sqrt{3}/2)(\\\sqrt{3}/2) + (1/2)(1/2) = 3/4 + 1/4 = 1$." },
+                    { q: "If $\\theta = 45^\\\circ$, then $\\sec \\theta \\cdot \\cot \\theta$ equals:", difficulty: "Foundation Level", options: ["1", "$\\\sqrt{2}$", "2", "$1/\\\sqrt{2}$"], correct: 1, solution: "<strong>Step 1:</strong> $\\sec 45^\\\circ \\times \\cot 45^\\\circ = \\\sqrt{2} \\times 1 = \\\sqrt{2}$." },
                     { q: "$(\\sec A + \\tan A)(1 - \\sin A)$ is equal to:", difficulty: "Application Level", options: ["$\\sec A$", "$\\sin A$", "$\\csc A$", "$\\cos A$"], correct: 3, solution: "<strong>Step 1:</strong> $\\left(\\frac{1+\\sin A}{\\cos A}\\right)(1 - \\sin A) = \\frac{1 - \\sin^2 A}{\\cos A} = \\frac{\\cos^2 A}{\\cos A} = \\cos A$." },
-                    { q: "If $\\sqrt{3} \\tan \\theta = 1$, then acute angle $\\theta$ is:", difficulty: "Foundation Level", options: ["$30^\\circ$", "$45^\\circ$", "$60^\\circ$", "$90^\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = 1/\\sqrt{3} \\implies \\theta = 30^\\circ$." }
+                    { q: "If $\\\sqrt{3} \\tan \\theta = 1$, then acute angle $\\theta$ is:", difficulty: "Foundation Level", options: ["$30^\\\circ$", "$45^\\\circ$", "$60^\\\circ$", "$90^\\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = 1/\\\sqrt{3} \\implies \\theta = 30^\\\circ$." }
                 ]
             },
             M10_CH09: {
-                code: "Chapter 09", name: "Some Applications of Trigonometry", weight: 5,
+                code: "Chapter 09", name: "Some Applications of Trigonometry", weight: 4,
                 desc: "Solve height and distance problems using line of sight, angle of elevation, and angle of depression.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -971,7 +971,7 @@ M10_CH06: {
                                 <span>💡</span> Flashlights & Lighthouse Keepers
                             </h4>
                             <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                                Looking UP at a bird in a tree creates an <strong>Angle of Elevation</strong>. Looking DOWN from a balcony at a car creates an <strong>Angle of Depression</strong>. Both create virtual right triangles in thin air!
+                                Looking UP at a bird in a tree creates \tan <strong>Angle of Elevation</strong>. Looking DOWN from a balcony at a car creates \tan <strong>Angle of Depression</strong>. Both create virtual right triangles in thin air!
                             </p>
                         </div>
 
@@ -995,7 +995,7 @@ M10_CH06: {
                             <ol class="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-decimal list-inside">
                                 <li><strong>Step 1:</strong> Convert word problems into accurate right-triangle geometric diagrams.</li>
                                 <li><strong>Step 2:</strong> Label Line of Sight, Angle of Elevation/Depression, and ground distance.</li>
-                                <li><strong>Step 3:</strong> Set up $\\tan 30^\\circ, \\tan 45^\\circ, \\tan 60^\\circ$ equations to solve missing dimensions.</li>
+                                <li><strong>Step 3:</strong> Set up $\\tan 30^\\\circ, \\tan 45^\\\circ, \\tan 60^\\\circ$ equations to solve missing dimensions.</li>
                             </ol>
                         </div>
                     </div>
@@ -1012,11 +1012,11 @@ M10_CH06: {
 
                     <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4 text-slate-300 font-mono text-xs shadow-inner">
                         <p class="text-amber-400 font-bold">FULLY WORKED NUMERICAL EXAMPLE: SHADOW HEIGHT EVALUATION</p>
-                        <p>A tower casts shadow $10\\sqrt{3}\\text{ m}$ long when sun elevation is $30^\\circ$. Find tower height $h$.</p>
-                        <p><strong>Step 1: Set up tangent ratio.</strong> $\\tan 30^\\circ = \\frac{h}{10\\sqrt{3}}$</p>
-                        <p><strong>Step 2: Substitute standard angle value $\\tan 30^\\circ = \\frac{1}{\\sqrt{3}}$.</strong></p>
-                        <p class="pl-4">$\\frac{1}{\\sqrt{3}} = \\frac{h}{10\\sqrt{3}}$</p>
-                        <p><strong>Step 3: Solve for $h$.</strong> $h = \\frac{10\\sqrt{3}}{\\sqrt{3}} = 10\\text{ meters}$.</p>
+                        <p>A tower casts shadow $10\\\sqrt{3}\\text{ m}$ long when sun elevation is $30^\\\circ$. Find tower height $h$.</p>
+                        <p><strong>Step 1: Set up tangent ratio.</strong> $\\tan 30^\\\circ = \\frac{h}{10\\\sqrt{3}}$</p>
+                        <p><strong>Step 2: Substitute standard angle value $\\tan 30^\\\circ = \\frac{1}{\\\sqrt{3}}$.</strong></p>
+                        <p class="pl-4">$\\frac{1}{\\\sqrt{3}} = \\frac{h}{10\\\sqrt{3}}$</p>
+                        <p><strong>Step 3: Solve for $h$.</strong> $h = \\frac{10\\\sqrt{3}}{\\\sqrt{3}} = 10\\text{ meters}$.</p>
                     </div>
                 `,
                 exp2: `
@@ -1038,21 +1038,21 @@ M10_CH06: {
                     </div>
                 `,
                 vernacular: {
-                    English: "Always construct an accurate right-triangle diagram first, clearly labeling the angle of elevation or depression."
+                    English: "Always construct \tan accurate right-triangle diagram first, clearly labeling the angle of elevation or depression."
                 },
                 diagnostics: [
-                    { q: "A tower 10m high casts shadow 10*sqrt(3)m long. Sun elevation is:", difficulty: "Foundation Level", options: ["30 deg", "45 deg", "60 deg", "90 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = \\frac{10}{10\\sqrt{3}} = \\frac{1}{\\sqrt{3}} \\implies \\theta = 30^\\circ$." },
-                    { q: "If height of pole equals length of shadow, sun altitude is:", difficulty: "Foundation Level", options: ["45 deg", "30 deg", "60 deg", "90 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = h/h = 1 \\implies \\theta = 45^\\circ$." },
-                    { q: "A 20m ladder touches wall at 10m height. Angle with ground is:", difficulty: "Application Level", options: ["30 deg", "45 deg", "60 deg", "15 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\sin \\theta = \\frac{\\text{Opp}}{\\text{Hyp}} = \\frac{10}{20} = \\frac{1}{2} \\implies \\theta = 30^\\circ$." },
-                    { q: "If the sun's elevation changes from $30^\\circ$ to $60^\\circ$, the length of shadow of a tower:", difficulty: "Foundation Level", options: ["Increases", "Decreases", "Remains same", "Doubles"], correct: 1, solution: "<strong>Step 1:</strong> As the sun rises higher (larger angle), shadow length decreases." },
-                    { q: "The angle of elevation of the top of a tower from a point on the ground 30m away from foot of tower is $30^\\circ$. Tower height is:", difficulty: "Application Level", options: ["$10\\sqrt{3}$m", "$30\\sqrt{3}$m", "$10$m", "$20$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\circ = h/30 \\implies h = 30/\\sqrt{3} = 10\\sqrt{3}$ m." },
-                    { q: "A string of kite is 100m long making angle of $60^\\circ$ with ground. Height of kite is:", difficulty: "Application Level", options: ["$50\\sqrt{3}$m", "$100\\sqrt{3}$m", "$50$m", "$100/\\sqrt{3}$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\sin 60^\\circ = h/100 \\implies h = 100(\\sqrt{3}/2) = 50\\sqrt{3}$ m." },
-                    { q: "An observer 1.5m tall is 28.5m away from a tower 30m high. Angle of elevation of top of tower from eye of observer is:", difficulty: "Application Level", options: ["$30^\\circ$", "$45^\\circ$", "$60^\\circ$", "$90^\\circ$"], correct: 1, solution: "<strong>Step 1:</strong> Net height $= 30 - 1.5 = 28.5$m. $\\tan \\theta = 28.5/28.5 = 1 \\implies \\theta = 45^\\circ$." },
-                    { q: "From top of a 7m high building, angle of elevation of top of cable tower is $60^\\circ$ and angle of depression of its foot is $45^\\circ$. Tower height is:", difficulty: "HOTS Level", options: ["$7(\\sqrt{3}+1)$m", "$7(\\sqrt{3}-1)$m", "$14$m", "$7\\sqrt{3}$m"], correct: 0, solution: "<strong>Step 1:</strong> Distance to tower $= 7/\\tan 45^\\circ = 7$m. Top section $= 7\\tan 60^\\circ = 7\\sqrt{3}$. Total $= 7(1+\\sqrt{3})$m." },
-                    { q: "Ratio of height of a rod and its shadow is $1 : \\sqrt{3}$. Angle of elevation of sun is:", difficulty: "Foundation Level", options: ["$30^\\circ$", "$45^\\circ$", "$60^\\circ$", "$90^\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = 1/\\sqrt{3} \\implies \\theta = 30^\\circ$." },
-                    { q: "If angle of elevation of a balloon from two points at distances $a$ and $b$ ($a>b$) from base are $30^\\circ$ and $60^\\circ$, height of balloon is:", difficulty: "HOTS Level", options: ["$\\sqrt{ab}$", "$a+b$", "$a-b$", "$ab$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\circ = h/a, \\tan 60^\\circ = h/b \\implies (h/a)(h/b) = (1/\\sqrt{3})(\\sqrt{3}) = 1 \\implies h = \\sqrt{ab}$." },
-                    { q: "Angle of depression of a car standing on ground from top of a 75m high tower is $30^\\circ$. Distance of car from base of tower is:", difficulty: "Foundation Level", options: ["$75\\sqrt{3}$m", "$25\\sqrt{3}$m", "$75$m", "$150$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\circ = 75/x \\implies x = 75/\\tan 30^\\circ = 75\\sqrt{3}$ m." },
-                    { q: "The line drawn from eye of an observer to object viewed is called:", difficulty: "Foundation Level", options: ["Horizontal line", "Line of sight", "Line of elevation", "Transversal"], correct: 1, solution: "<strong>Step 1:</strong> By definition, it is called the line of sight." }
+                    { q: "A tower 10m high casts shadow 10*sqrt(3)m long. Sun elevation is:", difficulty: "Foundation Level", options: ["30 deg", "45 deg", "60 deg", "90 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = \\frac{10}{10\\\sqrt{3}} = \\frac{1}{\\\sqrt{3}} \\implies \\theta = 30^\\\circ$." },
+                    { q: "If height of pole equals length of shadow, sun altitude is:", difficulty: "Foundation Level", options: ["45 deg", "30 deg", "60 deg", "90 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = h/h = 1 \\implies \\theta = 45^\\\circ$." },
+                    { q: "A 20m ladder touches wall at 10m height. Angle with ground is:", difficulty: "Application Level", options: ["30 deg", "45 deg", "60 deg", "15 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\sin \\theta = \\frac{\\text{Opp}}{\\text{Hyp}} = \\frac{10}{20} = \\frac{1}{2} \\implies \\theta = 30^\\\circ$." },
+                    { q: "If the sun's elevation changes from $30^\\\circ$ to $60^\\\circ$, the length of shadow of a tower:", difficulty: "Foundation Level", options: ["Increases", "Decreases", "Remains same", "Doubles"], correct: 1, solution: "<strong>Step 1:</strong> As the sun rises higher (larger angle), shadow length decreases." },
+                    { q: "The angle of elevation of the top of a tower from a point on the ground 30m away from foot of tower is $30^\\\circ$. Tower height is:", difficulty: "Application Level", options: ["$10\\\sqrt{3}$m", "$30\\\sqrt{3}$m", "$10$m", "$20$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\\circ = h/30 \\implies h = 30/\\\sqrt{3} = 10\\\sqrt{3}$ m." },
+                    { q: "A string of kite is 100m long making angle of $60^\\\circ$ with ground. Height of kite is:", difficulty: "Application Level", options: ["$50\\\sqrt{3}$m", "$100\\\sqrt{3}$m", "$50$m", "$100/\\\sqrt{3}$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\sin 60^\\\circ = h/100 \\implies h = 100(\\\sqrt{3}/2) = 50\\\sqrt{3}$ m." },
+                    { q: "An observer 1.5m tall is 28.5m away from a tower 30m high. Angle of elevation of top of tower from eye of observer is:", difficulty: "Application Level", options: ["$30^\\\circ$", "$45^\\\circ$", "$60^\\\circ$", "$90^\\\circ$"], correct: 1, solution: "<strong>Step 1:</strong> Net height $= 30 - 1.5 = 28.5$m. $\\tan \\theta = 28.5/28.5 = 1 \\implies \\theta = 45^\\\circ$." },
+                    { q: "From top of a 7m high building, angle of elevation of top of cable tower is $60^\\\circ$ and angle of depression of its foot is $45^\\\circ$. Tower height is:", difficulty: "HOTS Level", options: ["$7(\\\sqrt{3}+1)$m", "$7(\\\sqrt{3}-1)$m", "$14$m", "$7\\\sqrt{3}$m"], correct: 0, solution: "<strong>Step 1:</strong> Distance to tower $= 7/\\tan 45^\\\circ = 7$m. Top section $= 7\\tan 60^\\\circ = 7\\\sqrt{3}$. Total $= 7(1+\\\sqrt{3})$m." },
+                    { q: "Ratio of height of a rod and its shadow is $1 : \\\sqrt{3}$. Angle of elevation of sun is:", difficulty: "Foundation Level", options: ["$30^\\\circ$", "$45^\\\circ$", "$60^\\\circ$", "$90^\\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan \\theta = 1/\\\sqrt{3} \\implies \\theta = 30^\\\circ$." },
+                    { q: "If angle of elevation of a balloon from two points at distances $a$ and $b$ ($a>b$) from base are $30^\\\circ$ and $60^\\\circ$, height of balloon is:", difficulty: "HOTS Level", options: ["$\\\sqrt{ab}$", "$a+b$", "$a-b$", "$ab$"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\\circ = h/a, \\tan 60^\\\circ = h/b \\implies (h/a)(h/b) = (1/\\\sqrt{3})(\\\sqrt{3}) = 1 \\implies h = \\\sqrt{ab}$." },
+                    { q: "Angle of depression of a car standing on ground from top of a 75m high tower is $30^\\\circ$. Distance of car from base of tower is:", difficulty: "Foundation Level", options: ["$75\\\sqrt{3}$m", "$25\\\sqrt{3}$m", "$75$m", "$150$m"], correct: 0, solution: "<strong>Step 1:</strong> $\\tan 30^\\\circ = 75/x \\implies x = 75/\\tan 30^\\\circ = 75\\\sqrt{3}$ m." },
+                    { q: "The line drawn from eye of \tan observer to object viewed is called:", difficulty: "Foundation Level", options: ["Horizontal line", "Line of sight", "Line of elevation", "Transversal"], correct: 1, solution: "<strong>Step 1:</strong> By definition, it is called the line of sight." }
                 ]
             },
             M10_CH10: {
@@ -1084,7 +1084,7 @@ M10_CH06: {
                             <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">✨ The "Aha!" Moment</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    If you hold a ice-cream cone (an external point $P$), both sides of the cone stretching to the scoop of ice-cream ($PA$ and $PB$) MUST be identical in length ($PA = PB$) due to symmetry!
+                                    If you hold a ice-cream cone (\tan external point $P$), both sides of the cone stretching to the scoop of ice-cream ($PA$ and $PB$) MUST be identical in length ($PA = PB$) due to symmetry!
                                 </p>
                             </div>
                         </div>
@@ -1092,7 +1092,7 @@ M10_CH06: {
                         <div class="p-4 bg-indigo-100/60 dark:bg-indigo-950/80 rounded-xl border border-indigo-200 dark:border-indigo-800">
                             <h4 class="text-xs font-bold text-indigo-900 dark:text-indigo-200 mb-2">🗺️ Your Learning Roadmap</h4>
                             <ol class="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-decimal list-inside">
-                                <li><strong>Step 1:</strong> Understand Theorem 10.1: Radius is always perpendicular ($90^\circ$) to tangent at point of contact.</li>
+                                <li><strong>Step 1:</strong> Understand Theorem 10.1: Radius is always perpendicular ($90^\\circ$) to tangent at point of contact.</li>
                                 <li><strong>Step 2:</strong> Master Theorem 10.2: Tangents from external point are equal ($PA=PB$) via RHS Congruence.</li>
                                 <li><strong>Step 3:</strong> Solve circumscribed polygon and cyclic quadrilateral chord problems.</li>
                             </ol>
@@ -1106,14 +1106,14 @@ M10_CH06: {
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">10. Tangent Theorems</h4>
                         <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                             • Theorem 10.1: Tangent at any point of circle is $\\perp$ to radius through point of contact.<br>
-                            • Theorem 10.2: Lengths of tangents drawn from an external point to a circle are equal ($PA = PB$).
+                            • Theorem 10.2: Lengths of tangents drawn from \tan external point to a circle are equal ($PA = PB$).
                         </p>
                     </div>
 
                     <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4 text-slate-300 font-mono text-xs shadow-inner">
                         <p class="text-amber-400 font-bold">FULLY WORKED NUMERICAL EXAMPLE: TANGENT LENGTH</p>
                         <p>A point $P$ is $10\\text{ cm}$ away from center $O$ of circle of radius $r = 6\\text{ cm}$. Find tangent length $PA$.</p>
-                        <p><strong>Step 1: Identify right triangle $\\Delta OAP$ ($\\angle OAP = 90^\\circ$).</strong></p>
+                        <p><strong>Step 1: Identify right triangle $\\\Delta OAP$ ($\\angle OAP = 90^\\\circ$).</strong></p>
                         <p><strong>Step 2: Apply Pythagoras Theorem.</strong></p>
                         <p class="pl-4">$OP^2 = OA^2 + PA^2 \\implies 10^2 = 6^2 + PA^2$</p>
                         <p class="pl-4">$100 = 36 + PA^2 \\implies PA^2 = 64 \\implies PA = 8\\text{ cm}$.</p>
@@ -1129,40 +1129,40 @@ M10_CH06: {
                         
                         <p><strong>Step 1: Identify perpendicular angles.</strong><br>
                         By Theorem 10.1, radius is perpendicular to tangent at point of contact.<br>
-                        $$\\implies \\angle OAP = \\angle OBP = 90^\\circ$$</p>
+                        $$\\implies \\angle OAP = \\angle OBP = 90^\\\circ$$</p>
                         
-                        <p><strong>Step 2: Compare triangles $\\Delta OAP$ and $\\Delta OBP$.</strong><br>
-                        • $\\angle OAP = \\angle OBP = 90^\\circ$ (Right angles)<br>
+                        <p><strong>Step 2: Compare triangles $\\\Delta OAP$ and $\\\Delta OBP$.</strong><br>
+                        • $\\angle OAP = \\angle OBP = 90^\\\circ$ (Right angles)<br>
                         • $OP = OP$ (Common hypotenuse)<br>
                         • $OA = OB$ (Radii of same circle)</p>
                         
                         <p><strong>Step 3: Apply RHS Congruence Criterion.</strong><br>
-                        $$\\Delta OAP \\cong \\Delta OBP \\quad \\text{(by RHS)}$$</p>
+                        $$\\\Delta OAP \\cong \\\Delta OBP \\quad \\text{(by RHS)}$$</p>
                         
                         <p><strong>Step 4: Conclude using CPCTC.</strong><br>
                         $$PA = PB \\quad \\text{(Corresponding Parts of Congruent Triangles)} \\quad \\blacksquare$$</p>
                     </div>
                 `,
                 vernacular: {
-                    English: "Master Theorem 10.2 (tangents from an external point are equal in length) using RHS triangle congruence."
+                    English: "Master Theorem 10.2 (tangents from \tan external point are equal in length) using RHS triangle congruence."
                 },
                 diagnostics: [
-                    { q: "Maximum number of tangents from an external point to a circle is:", difficulty: "Foundation Level", options: ["2", "1", "Infinite", "0"], correct: 0, solution: "<strong>Step 1:</strong> Exactly two tangents can be drawn from any point outside a circle." },
-                    { q: "If TP and TQ are tangents with angle POQ = 110 deg, angle PTQ is:", difficulty: "Application Level", options: ["70 deg", "80 deg", "90 deg", "60 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\angle PTQ + \\angle POQ = 180^\\circ \\implies \\angle PTQ = 180^\\circ - 110^\\circ = 70^\\circ$." },
-                    { q: "Length of chord of outer circle (r=5) touching inner circle (r=3) is:", difficulty: "HOTS Level", options: ["8 cm", "6 cm", "4 cm", "10 cm"], correct: 0, solution: "<strong>Step 1:</strong> Half chord $= \\sqrt{5^2 - 3^2} = \\sqrt{16} = 4$. Full chord $= 2 \\times 4 = 8$ cm." },
-                    { q: "If tangents $PA$ and $PB$ from point $P$ to circle with center $O$ are inclined to each other at angle $80^\\circ$, then $\\angle POA$ is equal to:", difficulty: "Application Level", options: ["$50^\\circ$", "$60^\\circ$", "$70^\\circ$", "$80^\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\angle AOB = 180^\\circ - 80^\\circ = 100^\\circ$. Line $OP$ bisects $\\angle AOB$, so $\\angle POA = 50^\\circ$." },
+                    { q: "Maximum number of tangents from \tan external point to a circle is:", difficulty: "Foundation Level", options: ["2", "1", "Infinite", "0"], correct: 0, solution: "<strong>Step 1:</strong> Exactly two tangents can be drawn from any point outside a circle." },
+                    { q: "If TP and TQ are tangents with angle POQ = 110 deg, angle PTQ is:", difficulty: "Application Level", options: ["70 deg", "80 deg", "90 deg", "60 deg"], correct: 0, solution: "<strong>Step 1:</strong> $\\angle PTQ + \\angle POQ = 180^\\\circ \\implies \\angle PTQ = 180^\\\circ - 110^\\\circ = 70^\\\circ$." },
+                    { q: "Length of chord of outer circle (r=5) touching inner circle (r=3) is:", difficulty: "HOTS Level", options: ["8 cm", "6 cm", "4 cm", "10 cm"], correct: 0, solution: "<strong>Step 1:</strong> Half chord $= \\\sqrt{5^2 - 3^2} = \\\sqrt{16} = 4$. Full chord $= 2 \\times 4 = 8$ cm." },
+                    { q: "If tangents $PA$ and $PB$ from point $P$ to circle with center $O$ are inclined to each other at angle $80^\\\circ$, then $\\angle POA$ is equal to:", difficulty: "Application Level", options: ["$50^\\\circ$", "$60^\\\circ$", "$70^\\\circ$", "$80^\\\circ$"], correct: 0, solution: "<strong>Step 1:</strong> $\\angle AOB = 180^\\\circ - 80^\\\circ = 100^\\\circ$. Line $OP$ bisects $\\angle AOB$, so $\\angle POA = 50^\\\circ$." },
                     { q: "Number of tangents that can be drawn to a circle at any point on the circle is:", difficulty: "Foundation Level", options: ["1", "2", "Infinite", "0"], correct: 0, solution: "<strong>Step 1:</strong> Only 1 tangent line can touch a circle at a given point on its circumference." },
                     { q: "If a parallelogram circumscribes a circle, then it is a:", difficulty: "Application Level", options: ["Rectangle", "Square", "Rhombus", "Trapezium"], correct: 2, solution: "<strong>Step 1:</strong> Equal tangent segments force adjacent sides to be equal, turning the parallelogram into a rhombus." },
-                    { q: "In figure, $AQ, AR, BC$ are tangents to circle with center $O$. If $AQ = 5\\text{ cm}$, perimeter of $\\Delta ABC$ is:", difficulty: "HOTS Level", options: ["10 cm", "15 cm", "20 cm", "25 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\text{Perimeter}(\\Delta ABC) = 2 \\times AQ = 2(5) = 10$ cm." },
+                    { q: "In figure, $AQ, AR, BC$ are tangents to circle with center $O$. If $AQ = 5\\text{ cm}$, perimeter of $\\\Delta ABC$ is:", difficulty: "HOTS Level", options: ["10 cm", "15 cm", "20 cm", "25 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\text{Perimeter}(\\\Delta ABC) = 2 \\times AQ = 2(5) = 10$ cm." },
                     { q: "Distance between two parallel tangents to a circle of radius 5 cm is:", difficulty: "Foundation Level", options: ["5 cm", "10 cm", "2.5 cm", "15 cm"], correct: 1, solution: "<strong>Step 1:</strong> Distance $= 2 \\times r = 2(5) = 10$ cm (diameter length)." },
                     { q: "A line touching a circle at only one single point is called a:", difficulty: "Foundation Level", options: ["Secant", "Chord", "Tangent", "Segment"], correct: 2, solution: "<strong>Step 1:</strong> By definition, it is a tangent." },
                     { q: "A line intersecting a circle in two distinct points is called a:", difficulty: "Foundation Level", options: ["Secant", "Tangent", "Radius", "Diameter"], correct: 0, solution: "<strong>Step 1:</strong> By definition, it is a secant." },
-                    { q: "If radii of two concentric circles are 4cm and 5cm, length of chord of larger circle touching smaller circle is:", difficulty: "Application Level", options: ["3 cm", "6 cm", "9 cm", "10 cm"], correct: 1, solution: "<strong>Step 1:</strong> Half-chord $= \\sqrt{5^2 - 4^2} = 3$ cm. Total chord $= 2 \\times 3 = 6$ cm." },
-                    { q: "Angle between tangent and radius through point of contact is:", difficulty: "Foundation Level", options: ["$45^\\circ$", "$60^\\circ$", "$90^\\circ$", "$180^\\circ$"], correct: 2, solution: "<strong>Step 1:</strong> Theorem 10.1 proves this angle is always $90^\\circ$." }
+                    { q: "If radii of two concentric circles are 4cm and 5cm, length of chord of larger circle touching smaller circle is:", difficulty: "Application Level", options: ["3 cm", "6 cm", "9 cm", "10 cm"], correct: 1, solution: "<strong>Step 1:</strong> Half-chord $= \\\sqrt{5^2 - 4^2} = 3$ cm. Total chord $= 2 \\times 3 = 6$ cm." },
+                    { q: "Angle between tangent and radius through point of contact is:", difficulty: "Foundation Level", options: ["$45^\\\circ$", "$60^\\\circ$", "$90^\\\circ$", "$180^\\\circ$"], correct: 2, solution: "<strong>Step 1:</strong> Theorem 10.1 proves this angle is always $90^\\\circ$." }
                 ]
             },
 M10_CH11: {
-                code: "Chapter 11", name: "Areas Related to Circles", weight: 5,
+                code: "Chapter 11", name: "Areas Related to Circles", weight: 6,
                 desc: "Calculate sector areas, arc lengths, segment areas, and combined plane figure areas.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -1190,7 +1190,7 @@ M10_CH11: {
                             <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">✨ The "Aha!" Moment</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    Every sector area is simply a fraction of the total circle: $\\frac{\\text{Angle } \\theta}{360^\\circ} \\times \\pi r^2$. If your angle is $60^\\circ$, your slice is exactly $\\frac{60}{360} = \\frac{1}{6}$ of the whole pizza!
+                                    Every sector area is simply a fraction of the total circle: $\\frac{\\text{Angle } \\theta}{360^\\\circ} \\times \\\pi r^2$. If your angle is $60^\\\circ$, your slice is exactly $\\frac{60}{360} = \\frac{1}{6}$ of the whole pizza!
                                 </p>
                             </div>
                         </div>
@@ -1198,8 +1198,8 @@ M10_CH11: {
                         <div class="p-4 bg-indigo-100/60 dark:bg-indigo-950/80 rounded-xl border border-indigo-200 dark:border-indigo-800">
                             <h4 class="text-xs font-bold text-indigo-900 dark:text-indigo-200 mb-2">🗺️ Your Learning Roadmap</h4>
                             <ol class="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-decimal list-inside">
-                                <li><strong>Step 1:</strong> Calculate Arc Length $l = \\frac{\\theta}{360^\\circ} \\times 2\\pi r$.</li>
-                                <li><strong>Step 2:</strong> Calculate Sector Area $A = \\frac{\\theta}{360^\\circ} \\times \\pi r^2$.</li>
+                                <li><strong>Step 1:</strong> Calculate Arc Length $l = \\frac{\\theta}{360^\\\circ} \\times 2\\\pi r$.</li>
+                                <li><strong>Step 2:</strong> Calculate Sector Area $A = \\frac{\\theta}{360^\\\circ} \\times \\\pi r^2$.</li>
                                 <li><strong>Step 3:</strong> Calculate Segment Area = Sector Area - Central Triangle Area.</li>
                             </ol>
                         </div>
@@ -1211,13 +1211,13 @@ M10_CH11: {
                     <div class="p-5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/50 space-y-3">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">11. Sector & Segment Formulas</h4>
                         <div class="text-center font-mono text-sm font-bold text-indigo-700 dark:text-indigo-300 py-2">
-                            $$\\text{Arc Length } l = \\frac{\\theta}{360^\\circ} \\times 2\\pi r, \\quad \\text{Sector Area} = \\frac{\\theta}{360^\\circ} \\times \\pi r^2$$
+                            $$\\text{Arc Length } l = \\frac{\\theta}{360^\\\circ} \\times 2\\\pi r, \\quad \\text{Sector Area} = \\frac{\\theta}{360^\\\circ} \\times \\\pi r^2$$
                         </div>
                     </div>
 
                     <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4 text-slate-300 font-mono text-xs shadow-inner">
                         <p class="text-amber-400 font-bold">FULLY WORKED NUMERICAL EXAMPLE: SECTOR AREA</p>
-                        <p>Find area of sector of circle with radius $r = 6\\text{ cm}$ and central angle $\\theta = 60^\\circ$.</p>
+                        <p>Find area of sector of circle with radius $r = 6\\text{ cm}$ and central angle $\\theta = 60^\\\circ$.</p>
                         <p><strong>Step 1: Apply Sector Area Formula.</strong></p>
                         <p class="pl-4">$\\text{Area} = \\frac{60}{360} \\times \\frac{22}{7} \\times 6^2 = \\frac{1}{6} \\times \\frac{22}{7} \\times 36 = \\frac{132}{7}\\text{ cm}^2 \\approx 18.86\\text{ cm}^2$.</p>
                     </div>
@@ -1227,16 +1227,16 @@ M10_CH11: {
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Derivation of Minor Segment Area Formula</h4>
                         
                         <p><strong>Step 1: Understand geometric components.</strong><br>
-                        Minor Segment Area = Area of Sector $OAPB$ - Area of Triangle $\\Delta OAB$.</p>
+                        Minor Segment Area = Area of Sector $OAPB$ - Area of Triangle $\\\Delta OAB$.</p>
                         
                         <p><strong>Step 2: Area of Sector $OAPB$.</strong><br>
-                        $$\\text{Area}(\\text{Sector}) = \\frac{\\theta}{360^\\circ} \\pi r^2$$</p>
+                        $$\\text{Area}(\\text{Sector}) = \\frac{\\theta}{360^\\\circ} \\\pi r^2$$</p>
                         
-                        <p><strong>Step 3: Area of Triangle $\\Delta OAB$ with central angle $\\theta$.</strong><br>
-                        Using trigonometry, $\\text{Area}(\\Delta OAB) = \\frac{1}{2} r^2 \\sin \\theta$.</p>
+                        <p><strong>Step 3: Area of Triangle $\\\Delta OAB$ with central angle $\\theta$.</strong><br>
+                        Using trigonometry, $\\text{Area}(\\\Delta OAB) = \\frac{1}{2} r^2 \\sin \\theta$.</p>
                         
                         <p><strong>Step 4: Combine terms.</strong><br>
-                        $$\\text{Area of Minor Segment} = \\left(\\frac{\\theta}{360^\\circ} \\pi r^2\\right) - \\left(\\frac{1}{2} r^2 \\sin \\theta\\right) \\quad \\blacksquare$$</p>
+                        $$\\text{Area of Minor Segment} = \\left(\\frac{\\theta}{360^\\\circ} \\\pi r^2\\right) - \\left(\\frac{1}{2} r^2 \\sin \\theta\\right) \\quad \\blacksquare$$</p>
                     </div>
                 `,
                 vernacular: {
@@ -1244,21 +1244,21 @@ M10_CH11: {
                 },
                 diagnostics: [
                     { q: "Area of sector of angle 60 deg of circle with radius 6 cm is:", difficulty: "Foundation Level", options: ["132/7 cm^2", "154/7 cm^2", "44/7 cm^2", "22/7 cm^2"], correct: 0, solution: "<strong>Step 1:</strong> $\\text{Area} = \\frac{60}{360} \\times \\frac{22}{7} \\times 6^2 = \\frac{1}{6} \\times \\frac{22}{7} \\times 36 = \\frac{132}{7}$ cm$^2$." },
-                    { q: "If perimeter and area of circle are numerically equal, radius is:", difficulty: "Application Level", options: ["2 units", "pi units", "4 units", "7 units"], correct: 0, solution: "<strong>Step 1:</strong> $2\\pi r = \\pi r^2 \\implies r = 2$ units." },
-                    { q: "Angle swept by minute hand of clock in 5 minutes is:", difficulty: "Foundation Level", options: ["30 deg", "60 deg", "15 deg", "45 deg"], correct: 0, solution: "<strong>Step 1:</strong> In 60 minutes, the minute hand sweeps $360^\\circ$. In 5 mins: $\\frac{360}{60} \\times 5 = 30^\\circ$." },
-                    { q: "Area of a quadrant of a circle whose circumference is 22 cm is:", difficulty: "Application Level", options: ["77/8 cm^2", "77/4 cm^2", "77/2 cm^2", "22/7 cm^2"], correct: 0, solution: "<strong>Step 1:</strong> $2\\pi r = 22 \\implies r = 7/2$. Area of quadrant $= \\frac{1}{4} \\pi r^2 = \\frac{1}{4} \\times \\frac{22}{7} \\times \\frac{49}{4} = \\frac{77}{8}$ cm$^2$." },
-                    { q: "Length of arc of sector of angle $p$ (in degrees) of circle with radius $R$ is:", difficulty: "Foundation Level", options: ["$\\frac{p}{180} \\times 2\\pi R$", "$\\frac{p}{360} \\times 2\\pi R$", "$\\frac{p}{360} \\times \\pi R^2$", "$\\frac{p}{720} \\times 2\\pi R$"], correct: 1, solution: "<strong>Step 1:</strong> Standard arc length formula is $\\frac{p}{360} \\times 2\\pi R$." },
-                    { q: "Area of sector of angle $p$ (in degrees) of a circle with radius $R$ is:", difficulty: "Foundation Level", options: ["$\\frac{p}{180} \\times 2\\pi R$", "$\\frac{p}{180} \\times \\pi R^2$", "$\\frac{p}{360} \\times 2\\pi R$", "$\\frac{p}{720} \\times 2\\pi R^2$"], correct: 3, solution: "<strong>Step 1:</strong> $\\frac{p}{360} \\pi R^2 = \\frac{p}{720} (2\\pi R^2)$." },
+                    { q: "If perimeter and area of circle are numerically equal, radius is:", difficulty: "Application Level", options: ["2 units", "pi units", "4 units", "7 units"], correct: 0, solution: "<strong>Step 1:</strong> $2\\\pi r = \\\pi r^2 \\implies r = 2$ units." },
+                    { q: "Angle swept by minute hand of clock in 5 minutes is:", difficulty: "Foundation Level", options: ["30 deg", "60 deg", "15 deg", "45 deg"], correct: 0, solution: "<strong>Step 1:</strong> In 60 minutes, the minute hand sweeps $360^\\\circ$. In 5 mins: $\\frac{360}{60} \\times 5 = 30^\\\circ$." },
+                    { q: "Area of a quadrant of a circle whose circumference is 22 cm is:", difficulty: "Application Level", options: ["77/8 cm^2", "77/4 cm^2", "77/2 cm^2", "22/7 cm^2"], correct: 0, solution: "<strong>Step 1:</strong> $2\\\pi r = 22 \\implies r = 7/2$. Area of quadrant $= \\frac{1}{4} \\\pi r^2 = \\frac{1}{4} \\times \\frac{22}{7} \\times \\frac{49}{4} = \\frac{77}{8}$ cm$^2$." },
+                    { q: "Length of arc of sector of angle $p$ (in degrees) of circle with radius $R$ is:", difficulty: "Foundation Level", options: ["$\\frac{p}{180} \\times 2\\\pi R$", "$\\frac{p}{360} \\times 2\\\pi R$", "$\\frac{p}{360} \\times \\\pi R^2$", "$\\frac{p}{720} \\times 2\\\pi R$"], correct: 1, solution: "<strong>Step 1:</strong> Standard arc length formula is $\\frac{p}{360} \\times 2\\\pi R$." },
+                    { q: "Area of sector of angle $p$ (in degrees) of a circle with radius $R$ is:", difficulty: "Foundation Level", options: ["$\\frac{p}{180} \\times 2\\\pi R$", "$\\frac{p}{180} \\times \\\pi R^2$", "$\\frac{p}{360} \\times 2\\\pi R$", "$\\frac{p}{720} \\times 2\\\pi R^2$"], correct: 3, solution: "<strong>Step 1:</strong> $\\frac{p}{360} \\\pi R^2 = \\frac{p}{720} (2\\\pi R^2)$." },
                     { q: "If radius of a circle is doubled, its area becomes:", difficulty: "Foundation Level", options: ["2 times", "4 times", "8 times", "3 times"], correct: 1, solution: "<strong>Step 1:</strong> Area $\\propto r^2$. Doubling the radius quadruples the area: $2^2 = 4$ times." },
                     { q: "Area of largest triangle that can be inscribed in a semi-circle of radius $r$ is:", difficulty: "HOTS Level", options: ["$r^2$", "$2r^2$", "$r^3$", "$\\frac{1}{2}r^2$"], correct: 0, solution: "<strong>Step 1:</strong> Base $= 2r$, Maximum height $= r$. Area $= \\frac{1}{2} \\times 2r \\times r = r^2$." },
-                    { q: "Ratio of area of circle to area of square inscribed in it is:", difficulty: "HOTS Level", options: ["$\\pi : 2$", "$\\pi : 4$", "2 : $\\pi$", "4 : $\\pi$"], correct: 0, solution: "<strong>Step 1:</strong> Square diagonal $= 2r \\implies \\text{side} = \\sqrt{2}r$. Area of square $= 2r^2$. Ratio $= \\pi r^2 : 2r^2 = \\pi : 2$." },
-                    { q: "If perimeter of a protractor is 36 cm, its diameter is ($\\,\\pi = 22/7\\,$):", difficulty: "HOTS Level", options: ["14 cm", "7 cm", "21 cm", "28 cm"], correct: 0, solution: "<strong>Step 1:</strong> Perimeter $= \\pi r + 2r = 36 \\implies r(22/7 + 2) = 36 \\implies r(36/7) = 36 \\implies r = 7$. Diameter $= 2r = 14$ cm." },
-                    { q: "Distance covered by a wheel of radius 35cm in 100 revolutions is:", difficulty: "Application Level", options: ["220m", "110m", "440m", "330m"], correct: 0, solution: "<strong>Step 1:</strong> Distance $= 100 \\times 2\\pi r = 100 \\times 2(22/7)(0.35) = 220$ m." },
-                    { q: "Perimeter of sector of central angle $60^\\circ$ and radius 7cm is:", difficulty: "Application Level", options: ["$21.33$ cm", "$14 + 7.33 = 21.33$ cm", "$7.33$ cm", "$44$ cm"], correct: 1, solution: "<strong>Step 1:</strong> Arc length $= \\frac{60}{360} \\times 2(22/7)(7) = 7.33$ cm. Perimeter $= 7.33 + 2(7) = 21.33$ cm." }
+                    { q: "Ratio of area of circle to area of square inscribed in it is:", difficulty: "HOTS Level", options: ["$\\\pi : 2$", "$\\\pi : 4$", "2 : $\\\pi$", "4 : $\\\pi$"], correct: 0, solution: "<strong>Step 1:</strong> Square diagonal $= 2r \\implies \\text{side} = \\\sqrt{2}r$. Area of square $= 2r^2$. Ratio $= \\\pi r^2 : 2r^2 = \\\pi : 2$." },
+                    { q: "If perimeter of a protractor is 36 cm, its diameter is ($\\,\\\pi = 22/7\\,$):", difficulty: "HOTS Level", options: ["14 cm", "7 cm", "21 cm", "28 cm"], correct: 0, solution: "<strong>Step 1:</strong> Perimeter $= \\\pi r + 2r = 36 \\implies r(22/7 + 2) = 36 \\implies r(36/7) = 36 \\implies r = 7$. Diameter $= 2r = 14$ cm." },
+                    { q: "Distance covered by a wheel of radius 35cm in 100 revolutions is:", difficulty: "Application Level", options: ["220m", "110m", "440m", "330m"], correct: 0, solution: "<strong>Step 1:</strong> Distance $= 100 \\times 2\\\pi r = 100 \\times 2(22/7)(0.35) = 220$ m." },
+                    { q: "Perimeter of sector of central angle $60^\\\circ$ and radius 7cm is:", difficulty: "Application Level", options: ["$21.33$ cm", "$14 + 7.33 = 21.33$ cm", "$7.33$ cm", "$44$ cm"], correct: 1, solution: "<strong>Step 1:</strong> Arc length $= \\frac{60}{360} \\times 2(22/7)(7) = 7.33$ cm. Perimeter $= 7.33 + 2(7) = 21.33$ cm." }
                 ]
             },
             M10_CH12: {
-                code: "Chapter 12", name: "Surface Areas and Volumes", weight: 6,
+                code: "Chapter 12", name: "Surface Areas and Volumes", weight: 5,
                 desc: "Calculate surface areas and volumes of combination 3D solids: cones, cylinders, spheres, hemispheres, and cubes.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -1306,14 +1306,14 @@ M10_CH11: {
                 exp1: `
                     <div class="p-5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/50 space-y-3">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">12. 3D Solids Formulas</h4>
-                        <p class="text-xs text-slate-700 dark:text-slate-300">Cylinder Volume: $\\pi r^2 h$, Cone Volume: $\\frac{1}{3}\\pi r^2 h$, Sphere Volume: $\\frac{4}{3}\\pi r^3$.</p>
+                        <p class="text-xs text-slate-700 dark:text-slate-300">Cylinder Volume: $\\\pi r^2 h$, Cone Volume: $\\frac{1}{3}\\\pi r^2 h$, Sphere Volume: $\\frac{4}{3}\\\pi r^3$.</p>
                     </div>
 
                     <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4 text-slate-300 font-mono text-xs shadow-inner">
                         <p class="text-amber-400 font-bold">FULLY WORKED NUMERICAL EXAMPLE: SPHERE RECASTING</p>
                         <p>A metallic sphere of radius $r_1 = 4.2\\text{ cm}$ is melted and recast into cylinder of radius $r_2 = 6\\text{ cm}$. Find cylinder height $h$.</p>
                         <p><strong>Step 1: Apply Volume Conservation: Volume of Cylinder = Volume of Sphere.</strong></p>
-                        <p class="pl-4">$\\pi r_2^2 h = \\frac{4}{3} \\pi r_1^3 \\implies r_2^2 h = \\frac{4}{3} r_1^3$</p>
+                        <p class="pl-4">$\\\pi r_2^2 h = \\frac{4}{3} \\\pi r_1^3 \\implies r_2^2 h = \\frac{4}{3} r_1^3$</p>
                         <p class="pl-4">$6^2 \\cdot h = \\frac{4}{3} (4.2)^3 \\implies 36 h = \\frac{4}{3} (74.088) = 98.784$</p>
                         <p class="pl-4">$h = \\frac{98.784}{36} = 2.74\\text{ cm}$.</p>
                     </div>
@@ -1329,22 +1329,22 @@ M10_CH11: {
                     English: "For recasting and melting problems, set initial total volume equal to final total volume to determine unknown dimensions."
                 },
                 diagnostics: [
-                    { q: "Volume of sphere of radius r is:", difficulty: "Foundation Level", options: ["4/3 * pi * r^3", "2/3 * pi * r^3", "4 * pi * r^2", "3/4 * pi * r^3"], correct: 0, solution: "<strong>Step 1:</strong> Standard volume of a sphere of radius $r$ is $\\frac{4}{3}\\pi r^3$." },
-                    { q: "Two cubes each of volume 64 cm^3 joined end to end form cuboid of SA:", difficulty: "Application Level", options: ["160 cm^2", "128 cm^2", "144 cm^2", "180 cm^2"], correct: 0, solution: "<strong>Step 1:</strong> Edge of cube $= \\sqrt[3]{64} = 4$ cm. Cuboid dimensions: $8 \\times 4 \\times 4$ cm.<br><strong>Step 2:</strong> $\\text{SA} = 2(8\\cdot 4 + 4\\cdot 4 + 8\\cdot 4) = 2(32 + 16 + 32) = 160$ cm$^2$." },
-                    { q: "Total surface area of solid hemisphere of radius r is:", difficulty: "Foundation Level", options: ["3 * pi * r^2", "2 * pi * r^2", "4 * pi * r^2", "pi * r^2"], correct: 0, solution: "<strong>Step 1:</strong> Curved surface area $= 2\\pi r^2$. Flat base area $= \\pi r^2$. $\\text{Total} = 3\\pi r^2$." },
-                    { q: "A metallic sphere of radius 4.2cm is melted and recast into cylinder of radius 6cm. Height of cylinder is:", difficulty: "Application Level", options: ["2.74 cm", "3.12 cm", "1.98 cm", "2.44 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\pi (6)^2 h = \\frac{4}{3}\\pi (4.2)^3 \\implies 36h = 98.784 \\implies h = 2.74$ cm." },
-                    { q: "Curved surface area of a right circular cone of height 15cm and base diameter 16cm is:", difficulty: "Application Level", options: ["$136\\pi$ cm^2", "$120\\pi$ cm^2", "$136$ cm^2", "$240\\pi$ cm^2"], correct: 0, solution: "<strong>Step 1:</strong> Radius $= 8$ cm. Slant height $l = \\sqrt{15^2 + 8^2} = 17$ cm.<br><strong>Step 2:</strong> $\\text{CSA} = \\pi r l = \\pi(8)(17) = 136\\pi$ cm$^2$." },
-                    { q: "If two solid hemispheres of same base radius $r$ are joined together along their bases, total surface area of new solid is:", difficulty: "Foundation Level", options: ["$4\\pi r^2$", "$3\\pi r^2$", "$6\\pi r^2$", "$5\\pi r^2$"], correct: 0, solution: "<strong>Step 1:</strong> Combining two hemispheres at their flat circular bases forms a complete sphere: Surface area $= 4\\pi r^2$." },
-                    { q: "Ratio of volumes of two spheres is 64:27. Ratio of their surface areas is:", difficulty: "HOTS Level", options: ["16:9", "4:3", "9:16", "3:4"], correct: 0, solution: "<strong>Step 1:</strong> Ratio of radii $= \\sqrt[3]{64/27} = 4/3$. Ratio of surface areas $= (4/3)^2 = 16:9$." },
-                    { q: "A solid piece of iron in form of cuboid $49cm \\times 33cm \\times 24cm$ is molded into solid sphere. Radius of sphere is:", difficulty: "HOTS Level", options: ["21 cm", "28 cm", "14 cm", "35 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{4}{3}\\pi r^3 = 49 \\times 33 \\times 24 \\implies r^3 = 9261 \\implies r = 21$ cm." },
+                    { q: "Volume of sphere of radius r is:", difficulty: "Foundation Level", options: ["4/3 * pi * r^3", "2/3 * pi * r^3", "4 * pi * r^2", "3/4 * pi * r^3"], correct: 0, solution: "<strong>Step 1:</strong> Standard volume of a sphere of radius $r$ is $\\frac{4}{3}\\\pi r^3$." },
+                    { q: "Two cubes each of volume 64 cm^3 joined end to end form cuboid of SA:", difficulty: "Application Level", options: ["160 cm^2", "128 cm^2", "144 cm^2", "180 cm^2"], correct: 0, solution: "<strong>Step 1:</strong> Edge of cube $= \\\sqrt[3]{64} = 4$ cm. Cuboid dimensions: $8 \\times 4 \\times 4$ cm.<br><strong>Step 2:</strong> $\\text{SA} = 2(8\\cdot 4 + 4\\cdot 4 + 8\\cdot 4) = 2(32 + 16 + 32) = 160$ cm$^2$." },
+                    { q: "Total surface area of solid hemisphere of radius r is:", difficulty: "Foundation Level", options: ["3 * pi * r^2", "2 * pi * r^2", "4 * pi * r^2", "pi * r^2"], correct: 0, solution: "<strong>Step 1:</strong> Curved surface area $= 2\\\pi r^2$. Flat base area $= \\\pi r^2$. $\\text{Total} = 3\\\pi r^2$." },
+                    { q: "A metallic sphere of radius 4.2cm is melted and recast into cylinder of radius 6cm. Height of cylinder is:", difficulty: "Application Level", options: ["2.74 cm", "3.12 cm", "1.98 cm", "2.44 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\\pi (6)^2 h = \\frac{4}{3}\\\pi (4.2)^3 \\implies 36h = 98.784 \\implies h = 2.74$ cm." },
+                    { q: "Curved surface area of a right circular cone of height 15cm and base diameter 16cm is:", difficulty: "Application Level", options: ["$136\\\pi$ cm^2", "$120\\\pi$ cm^2", "$136$ cm^2", "$240\\\pi$ cm^2"], correct: 0, solution: "<strong>Step 1:</strong> Radius $= 8$ cm. Slant height $l = \\\sqrt{15^2 + 8^2} = 17$ cm.<br><strong>Step 2:</strong> $\\text{CSA} = \\\pi r l = \\\pi(8)(17) = 136\\\pi$ cm$^2$." },
+                    { q: "If two solid hemispheres of same base radius $r$ are joined together along their bases, total surface area of new solid is:", difficulty: "Foundation Level", options: ["$4\\\pi r^2$", "$3\\\pi r^2$", "$6\\\pi r^2$", "$5\\\pi r^2$"], correct: 0, solution: "<strong>Step 1:</strong> Combining two hemispheres at their flat circular bases forms a complete sphere: Surface area $= 4\\\pi r^2$." },
+                    { q: "Ratio of volumes of two spheres is 64:27. Ratio of their surface areas is:", difficulty: "HOTS Level", options: ["16:9", "4:3", "9:16", "3:4"], correct: 0, solution: "<strong>Step 1:</strong> Ratio of radii $= \\\sqrt[3]{64/27} = 4/3$. Ratio of surface areas $= (4/3)^2 = 16:9$." },
+                    { q: "A solid piece of iron in form of cuboid $49cm \\times 33cm \\times 24cm$ is molded into solid sphere. Radius of sphere is:", difficulty: "HOTS Level", options: ["21 cm", "28 cm", "14 cm", "35 cm"], correct: 0, solution: "<strong>Step 1:</strong> $\\frac{4}{3}\\\pi r^3 = 49 \\times 33 \\times 24 \\implies r^3 = 9261 \\implies r = 21$ cm." },
                     { q: "If radius of base of cone is doubled keeping height same, volume becomes:", difficulty: "Foundation Level", options: ["2 times", "4 times", "8 times", "3 times"], correct: 1, solution: "<strong>Step 1:</strong> Volume is proportional to $r^2$. When $r$ doubles, volume increases by $2^2 = 4$ times." },
-                    { q: "Formula for slant height $l$ of cone of height $h$ and radius $r$ is:", difficulty: "Foundation Level", options: ["$l = \\sqrt{h^2 + r^2}$", "$l = h^2 + r^2$", "$l = \\sqrt{h^2 - r^2}$", "$l = h + r$"], correct: 0, solution: "<strong>Step 1:</strong> Derived via the Pythagorean theorem on the cross-sectional right triangle: $l = \\sqrt{h^2 + r^2}$." },
+                    { q: "Formula for slant height $l$ of cone of height $h$ and radius $r$ is:", difficulty: "Foundation Level", options: ["$l = \\\sqrt{h^2 + r^2}$", "$l = h^2 + r^2$", "$l = \\\sqrt{h^2 - r^2}$", "$l = h + r$"], correct: 0, solution: "<strong>Step 1:</strong> Derived via the Pythagorean theorem on the cross-sectional right triangle: $l = \\\sqrt{h^2 + r^2}$." },
                     { q: "Total surface area of a solid cube of side $a$ is:", difficulty: "Foundation Level", options: ["$4a^2$", "$6a^2$", "$a^3$", "$12a$"], correct: 1, solution: "<strong>Step 1:</strong> A cube has six square faces, each of area $a^2$: Total $= 6a^2$." },
-                    { q: "The number of solid spheres of diameter 6cm that can be made by melting a solid cylinder of height 45cm and diameter 4cm is:", difficulty: "HOTS Level", options: ["5", "15", "10", "20"], correct: 0, solution: "<strong>Step 1:</strong> Cylinder volume $= \\pi(2)^2(45) = 180\\pi$. Sphere volume $= \\frac{4}{3}\\pi(3)^3 = 36\\pi$. Count $= 180\\pi / 36\\pi = 5$." }
+                    { q: "The number of solid spheres of diameter 6cm that can be made by melting a solid cylinder of height 45cm and diameter 4cm is:", difficulty: "HOTS Level", options: ["5", "15", "10", "20"], correct: 0, solution: "<strong>Step 1:</strong> Cylinder volume $= \\\pi(2)^2(45) = 180\\\pi$. Sphere volume $= \\frac{4}{3}\\\pi(3)^3 = 36\\\pi$. Count $= 180\\\pi / 36\\\pi = 5$." }
                 ]
             },
             M10_CH13: {
-                code: "Chapter 13", name: "Statistics", weight: 7,
+                code: "Chapter 13", name: "Statistics", weight: 6,
                 desc: "Compute measures of central tendency: Mean (Direct, Assumed Mean methods), Mode, and Median of grouped data.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -1358,7 +1358,7 @@ M10_CH11: {
                                 <span>💡</span> Class Test Scores & Shoe Sizes
                             </h4>
                             <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                                If 1,000 students take an exam, looking at 1,000 separate numbers causes brain overload! We summarize data into 3 central measures:
+                                If 1,000 students take \tan exam, looking at 1,000 separate numbers causes brain overload! We summarize data into 3 central measures:
                                 <br>• <strong>Mean:</strong> The fair-share average if scores were distributed equally.
                                 <br>• <strong>Median:</strong> The exact middle student in line.
                                 <br>• <strong>Mode:</strong> The most popular shoe size or score in the crowd.
@@ -1442,7 +1442,7 @@ M10_CH11: {
                 ]
             },
             M10_CH14: {
-                code: "Chapter 14", name: "Probability", weight: 4,
+                code: "Chapter 14", name: "Probability", weight: 5,
                 desc: "Calculate theoretical probabilities of events, complementary events, and sample space outcomes for coins, dice, and cards.",
                 overview: `
                     <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-6">
@@ -1526,10 +1526,10 @@ M10_CH11: {
                 },
                 diagnostics: [
                     { q: "If P(E) = 0.05, what is P(not E)?", difficulty: "Foundation Level", options: ["0.95", "0.05", "1.05", "0"], correct: 0, solution: "<strong>Step 1:</strong> $P(\\text{not } E) = 1 - P(E) = 1 - 0.05 = 0.95$." },
-                    { q: "Probability of an impossible event is:", difficulty: "Foundation Level", options: ["0", "1", "0.5", "-1"], correct: 0, solution: "<strong>Step 1:</strong> An impossible event has 0 favorable outcomes, so its probability is 0." },
+                    { q: "Probability of \tan impossible event is:", difficulty: "Foundation Level", options: ["0", "1", "0.5", "-1"], correct: 0, solution: "<strong>Step 1:</strong> An impossible event has 0 favorable outcomes, so its probability is 0." },
                     { q: "Probability of getting a leap year with 53 Sundays is:", difficulty: "Application Level", options: ["2/7", "1/7", "53/366", "2/365"], correct: 0, solution: "<strong>Step 1:</strong> A leap year has 366 days $= 52$ full weeks $+ 2$ days.<br><strong>Step 2:</strong> Favorable 2-day combinations out of 7: (Sat, Sun) and (Sun, Mon) $\\implies 2/7$." },
-                    { q: "Which of the following cannot be the probability of an event?", difficulty: "Foundation Level", options: ["2/3", "-1.5", "15%", "0.7"], correct: 1, solution: "<strong>Step 1:</strong> Probability must satisfy $0 \\le P(E) \\le 1$. It can never be negative ($-1.5$)." },
-                    { q: "If an event cannot occur, its probability is:", difficulty: "Foundation Level", options: ["1", "3/4", "1/2", "0"], correct: 3, solution: "<strong>Step 1:</strong> An impossible event has probability 0." },
+                    { q: "Which of the following cannot be the probability of \tan event?", difficulty: "Foundation Level", options: ["2/3", "-1.5", "15%", "0.7"], correct: 1, solution: "<strong>Step 1:</strong> Probability must satisfy $0 \\le P(E) \\le 1$. It can never be negative ($-1.5$)." },
+                    { q: "If \tan event cannot occur, its probability is:", difficulty: "Foundation Level", options: ["1", "3/4", "1/2", "0"], correct: 3, solution: "<strong>Step 1:</strong> An impossible event has probability 0." },
                     { q: "Probability of getting a prime number on throwing a fair die once is:", difficulty: "Foundation Level", options: ["1/6", "1/3", "1/2", "2/3"], correct: 2, solution: "<strong>Step 1:</strong> Prime outcomes on a die are $\\{2, 3, 5\\}$ (3 outcomes out of 6).<br><strong>Step 2:</strong> $P = 3/6 = 1/2$." },
                     { q: "A card is drawn from a well-shuffled deck of 52 cards. Probability of getting a face card is:", difficulty: "Application Level", options: ["3/13", "1/13", "4/13", "9/52"], correct: 0, solution: "<strong>Step 1:</strong> Total face cards $= 4 \\text{ Kings} + 4 \\text{ Queens} + 4 \\text{ Jacks} = 12$.<br><strong>Step 2:</strong> $P = 12/52 = 3/13$." },
                     { q: "Two coins are tossed simultaneously. Probability of getting at most one head is:", difficulty: "Application Level", options: ["1/4", "1/2", "3/4", "1"], correct: 2, solution: "<strong>Step 1:</strong> Sample space: $\\{HH, HT, TH, TT\\}$. Favorable ('at most 1 head'): $\\{HT, TH, TT\\}$ (3 outcomes).<br><strong>Step 2:</strong> $P = 3/4$." },

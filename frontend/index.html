@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBSE Class 10 Math Master Engine</title>
+    <title>${pdfDocTitle}</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -76,24 +76,8 @@
                 </div>
 
                 <!-- Logged-in Student Indicator -->
-                <button onclick="showLoginModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-slate-700 hover:bg-surfaceLight transition text-xs">
-                    <span>🎓</span> <span id="studentNameDisplay">Sign In</span>
-                </button>
-
-                <!-- Track Selector -->
-                <select id="studentTrackSelect" class="px-3 py-1.5 rounded-lg bg-surface border border-slate-700 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 hover:bg-surfaceLight transition cursor-pointer">
-                    <option value="Standard">CBSE Standard (041)</option>
-                    <option value="Basic">CBSE Basic (241)</option>
-                </select>
-
-                <!-- Logout Button -->
-                <button id="logoutBtn" onclick="studentLogout()" class="hidden px-2.5 py-1.5 rounded-lg bg-rose-950/40 border border-rose-800 hover:bg-rose-900/60 text-rose-300 text-xs font-semibold transition" title="Logout">
-                    Exit
-                </button>
-
-                <!-- Voice Tutor Button -->
-                <button id="voiceTutorBtn" onclick="toggleVoiceTutor()" class="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition text-xs">
-                    <span id="voiceTutorIcon">🔊</span> <span id="voiceTutorText">Voice Tutor</span>
+                <button id="voiceTutorToggleBtn" onclick="toggleVoiceTutor()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-surfaceLight border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-white transition flex items-center gap-2 cursor-pointer shadow-sm">
+                    <span id="voiceTutorIcon">🔇</span> <span id="voiceTutorText">Voice Tutor: Off</span>
                 </button>
             </div>
         </header>
@@ -267,108 +251,161 @@
                 <!-- ============================================== -->
 		<!-- MAIN TAB 3: CBSE AI MICRO-EVALUATOR            -->
 		<!-- ============================================== -->
-<div id="workspace-3" class="hidden h-full flex flex-col overflow-y-auto pr-4 pb-16 space-y-6">
-    <!-- Header Banner -->
-    <div class="p-6 rounded-2xl bg-surface border border-slate-800 shadow-lg space-y-3 relative overflow-hidden shrink-0 mt-1">
-        <div class="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl"></div>
-        <div class="flex items-center justify-between flex-wrap gap-2 relative z-10">
-            <span class="px-2.5 py-1 rounded text-xs font-bold bg-purple-900/50 text-purple-300 border border-purple-800/50">
-                Line-by-Line CBSE Marking Scheme
-            </span>
-            <span id="tab3ChapterTag" class="text-xs font-semibold text-slate-400 px-3 py-1 rounded-full border border-slate-700 bg-surfaceLight">
-                Active Benchmark: Class 10 Boards
-            </span>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white relative z-10 tracking-tight">
-            CBSE AI Micro-Evaluator & Step Grader
-        </h2>
-        <p class="text-sm text-slate-400 leading-relaxed relative z-10 max-w-3xl">
-            CBSE examiners award step-by-step fractional marks according to official rubrics. Test typed or preset student solutions to see instant step deductions for sign errors, missed prerequisite checks, and omitted measurement units.
-        </p>
-    </div>
-
-    <!-- Evaluation Workspace Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Left Column: Problem & Rubric (5 Columns) -->
-        <div class="lg:col-span-5 space-y-4">
-            <!-- Preset Problem Selector -->
-            <div class="p-4 rounded-xl bg-surface border border-slate-800 space-y-2">
-                <label class="text-xs font-bold uppercase tracking-wider text-purple-400">Select Board Examination Question</label>
-                <select id="evalProblemSelect" onchange="loadEvalProblem()" class="w-full p-2.5 rounded-lg bg-surfaceLight border border-slate-700 text-sm text-white focus:outline-none focus:border-purple-500 cursor-pointer">
-                    <option value="0">Problem 1: Train Speed Quadratic Equation (4 Marks)</option>
-                    <option value="1">Problem 2: Arithmetic Progression Sum Formula (3 Marks)</option>
-                    <option value="2">Problem 3: Pair of Linear Equations by Elimination (3 Marks)</option>
-                    <option value="3">Problem 4: Tangents from External Point Circle Proof (4 Marks)</option>
-                </select>
-            </div>
-
-            <!-- Problem Statement Card -->
-            <div class="p-5 rounded-xl bg-surface border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-400">Question Statement</span>
-                    <span id="evalTotalMarks" class="text-xs px-2.5 py-0.5 rounded bg-purple-900/50 text-purple-300 font-bold border border-purple-800/50">4 Marks</span>
-                </div>
-                <p id="evalProblemText" class="text-sm text-slate-200 leading-relaxed font-medium"></p>
-            </div>
-
-            <!-- Expected Step Rubric Breakdown -->
-            <div class="p-5 rounded-xl bg-surface border border-slate-800 space-y-3">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                    <span>📋</span> Official CBSE Marking Rubric Allocation
-                </h4>
-                <div id="evalModelRubric" class="space-y-2 text-xs"></div>
-            </div>
-        </div>
-
-        <!-- Right Column: Student Answer & Evaluation Engine (7 Columns) -->
-        <div class="lg:col-span-7 space-y-4">
-            <!-- Student Solution Input Box -->
-            <div class="p-5 rounded-xl bg-surface border border-slate-800 space-y-3">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Student Solution Steps</label>
-                    <div class="flex items-center gap-2">
-                        <button id="btnIdealAnswer" onclick="loadSampleAnswer('ideal')" class="text-[11px] px-3 py-1 rounded-lg border transition-all font-	medium flex items-center gap-1.5">
-    	<span>✓</span> Load 100% Ideal Answer
-		</button>
-			<button id="btnFlawedAnswer" onclick="loadSampleAnswer('flawed')" class="text-[11px] px-3 py-1 rounded-lg border transition-all 	font-medium flex items-center gap-1.5">
-    <span>⚠️</span> Load Common Student Flaw
-		</button>
-                    </div>
-                </div>
-                <textarea id="studentSolutionInput" rows="9" class="w-full p-3.5 text-xs font-mono bg-background border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-purple-500 leading-relaxed" placeholder="Inspect or type student solution steps line-by-line..."></textarea>
-                
-                <div class="flex items-center justify-between pt-1">
-                    <span class="text-[11px] text-slate-400">Micro-evaluator validates line logic, sign retention, and concluding units.</span>
-                    <button onclick="runMicroEvaluation()" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition flex items-center gap-2">
-                        <span>⚡</span> Evaluate Steps Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- Evaluation Results Card -->
-            <div id="evalResultsContainer" class="hidden space-y-4">
-                <!-- Score Header -->
-                <div id="evalScoreCard" class="p-5 rounded-xl border flex items-center justify-between shadow-sm bg-surface">
+        <!-- TAB 3: CBSE AI MICRO-EVALUATOR & STEP GRADER -->
+        <div id="workspace-3" class="hidden h-full flex flex-col overflow-y-auto pr-4 pb-16 space-y-6">
+            <div class="p-6 rounded-2xl bg-surface border border-slate-800 shadow-xl relative overflow-hidden shrink-0">
+                <div class="flex items-center justify-between gap-4 flex-wrap relative z-10">
                     <div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Awarded Score</span>
-                        <div id="evalScoreDisplay" class="text-2xl font-black mt-0.5"></div>
+                        <h2 class="text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                            <span>CBSE AI Micro-Evaluator & Step Grader</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1 max-w-2xl">
+                            Evaluate handwritten pad derivations against CBSE step-marking rubrics. Detect sign reversals, missing units, and premise slips with fractional marks.
+                        </p>
                     </div>
-                    <div id="evalStatusBadge" class="text-xs px-3 py-1.5 rounded-lg font-bold border"></div>
-                </div>
-
-                <!-- Step-by-Step Itemized Marks -->
-                <div class="p-5 rounded-xl bg-surface border border-slate-800 space-y-3">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Line-by-Line CBSE Mark Allocations</h4>
-                    <div id="evalStepBreakdown" class="space-y-2.5 text-xs"></div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-               <!-- ============================================== -->
-		<!-- MAIN TAB 4: DYNAMIC STRATEGY & SELF-EVALUATOR -->
-		<!-- ============================================== -->
+            <!-- Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Column: Problem & Rubric (5 Columns) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Question Selector & Mark Preferences -->
+                    <div class="p-4 rounded-xl bg-surface border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <label class="text-xs font-bold uppercase tracking-wider text-purple-400">Select Examination Question</label>
+                            <div class="flex items-center gap-1.5" id="randomModeGroup">
+                                <button type="button" id="btnChapterRandom" onclick="setRandomScopeAndPick('chapter')" class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm" title="Pick random question from this chapter">
+                                    <span>🎲</span> <span>Chapter Random</span>
+                                </button>
+                                <button type="button" id="btnSyllabusRandom" onclick="setRandomScopeAndPick('syllabus')" class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm" title="Pick random question across syllabus">
+                                    <span>🌐</span> <span>Syllabus Random</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Marks Category Filter Pills -->
+                        <div class="flex items-center gap-1.5 pt-1 border-t border-slate-800/80">
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mr-1">Marks:</span>
+                            <button type="button" onclick="setMarkPreference('ALL')" id="markPill_ALL" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-bold transition bg-purple-600 text-white shadow-sm shadow-purple-900/50 border border-purple-500">All</button>
+                            <button type="button" onclick="setMarkPreference(1)" id="markPill_1" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700">1M</button>
+                            <button type="button" onclick="setMarkPreference(2)" id="markPill_2" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700">2M</button>
+                            <button type="button" onclick="setMarkPreference(3)" id="markPill_3" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700">3M</button>
+                            <button type="button" onclick="setMarkPreference(4)" id="markPill_4" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700">4M</button>
+                            <button type="button" onclick="setMarkPreference(5)" id="markPill_5" class="mark-pref-pill px-2 py-0.5 rounded-md text-[10px] font-semibold transition bg-surfaceLight/80 text-slate-300 border border-slate-700 hover:bg-slate-700">5M</button>
+                        </div>
+
+                        <select id="evalProblemSelect" onchange="onQuestionChanged()" class="w-full p-2.5 rounded-lg bg-surfaceLight border border-slate-700 text-sm text-white focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="0">Loading chapter questions...</option>
+                        </select>
+                    </div>
+
+                    <!-- Question Statement Card -->
+                    <div class="p-4 rounded-xl bg-surface border border-slate-800 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-400">Question Statement</span>
+                            <span id="evalTotalMarks" class="text-xs px-2.5 py-0.5 rounded bg-purple-900/50 text-purple-300 font-bold border border-purple-800/50">2 Marks Total</span>
+                        </div>
+                        <p id="evalProblemText" class="text-sm text-slate-200 leading-relaxed font-medium">Select a problem to inspect statement.</p>
+                    </div>
+
+                    <!-- Official Rubric Allocation Reference -->
+                    <div class="p-4 rounded-xl bg-surface border border-slate-800 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Official CBSE Marking Rubric Allocation</span>
+                            <span id="evalRubricBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surfaceLight text-slate-300 border border-slate-700">CBSE Rubric</span>
+                        </div>
+                        <div id="evalExpectedRubric" class="space-y-1.5 text-xs text-slate-300 font-mono">
+                            <p class="text-slate-500 italic">Select question to load rubric breakdown.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Student Answer Workspace & Pitfall Diagnostic (7 Columns) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <!-- Box 1: Student Answer Input -->
+                    <div class="p-4 rounded-xl bg-surface border border-slate-800 space-y-3 shadow-sm">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider text-purple-400 block">Your Answer / Working Steps</label>
+                                <span class="text-[11px] text-slate-400">Enter your solution lines, equations, or final result below</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="toggleIdealReference()" id="btnToggleIdeal" class="px-2.5 py-1 rounded-md bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-700 text-indigo-200 hover:text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm">
+                                    <span>👁️</span> <span>Model Solution</span>
+                                </button>
+                                <button type="button" onclick="resetMicroEvaluator()" id="btnResetWorkspace" class="px-2.5 py-1 rounded-md bg-rose-950/60 hover:bg-rose-900 border border-rose-800 text-rose-300 hover:text-rose-100 text-[11px] font-bold transition flex items-center gap-1 shadow-md shadow-rose-950/50" title="Clear your answer and evaluations">
+                                    <span>↺</span> <span>Reset</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Model Solution Reference -->
+                        <div id="idealReferencePreview" class="hidden p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-800/80 text-xs space-y-1.5">
+                            <div class="flex items-center justify-between text-indigo-300 font-bold text-[10px] uppercase tracking-wider pb-1 border-b border-indigo-900/50">
+                                <span>Official CBSE Model Marking Benchmark</span>
+                                <button type="button" onclick="toggleIdealReference()" class="text-slate-400 hover:text-white">✕ Close</button>
+                            </div>
+                            <div id="idealReferenceContent" class="text-indigo-200 font-mono text-[11px] leading-relaxed whitespace-pre-wrap"></div>
+                        </div>
+
+                        <!-- Quick 3-Case Testing Chips -->
+                        <div class="flex items-center justify-between gap-2 text-[11px] pb-1">
+                            <span class="text-slate-400 font-medium">Test AI Grader on:</span>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="loadEvaluationCase('ideal')" class="px-2 py-0.5 rounded bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-semibold transition" title="Fill with 100% full-mark solution">✓ Ideal (Full Marks)</button>
+                                <button type="button" onclick="loadEvaluationCase('flaw')" class="px-2 py-0.5 rounded bg-amber-950/80 hover:bg-amber-900 border border-amber-700 text-amber-300 font-semibold transition" title="Fill with typical student mistake">⚠️ Common Slip</button>
+                                <button type="button" onclick="loadEvaluationCase('clear')" class="px-2 py-0.5 rounded bg-surfaceLight hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold transition" title="Clear box to type your own handwritten steps">✏️ Type Own</button>
+                            </div>
+                        </div>
+
+                        <!-- Student Input Textarea -->
+                        <!-- Formula & Notation Quick Toolbar (Tab 3) -->
+                        <div id="toolbar_tab3" class="flex items-center gap-1 overflow-x-auto py-1 px-1 bg-slate-900/60 rounded-lg border border-slate-800 scrollbar-none text-xs"></div>
+                        <textarea id="studentSolutionInput" rows="6" class="w-full p-3.5 rounded-xl bg-surfaceLight border border-slate-700 text-white font-mono text-xs leading-relaxed focus:outline-none focus:border-purple-500 placeholder-slate-600 transition" placeholder="Type your handwritten working steps here...&#10;&#10;Step 1: State equations / formula&#10;Step 2: Derivation and calculation&#10;Step 3: Concluding answer with units"></textarea>
+
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-[10px] text-slate-500 font-mono">AI analyzes step validity, arithmetic precision, and concluding units.</span>
+                            <button type="button" onclick="runMicroEvaluation()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-900/40 transition flex items-center gap-2 cursor-pointer">
+                                <span>⚡</span> <span>Evaluate Answer</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Dedicated Common Mistakes & Traps Box -->
+                    <div class="p-4 rounded-xl bg-amber-950/20 border border-amber-900/50 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                                <span>⚠️</span> <span>Common Student Pitfalls & Mark Deductions</span>
+                            </span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800/60">Examiner Alert</span>
+                        </div>
+                        <div id="commonMistakesBox" class="text-xs text-amber-200/90 leading-relaxed font-sans p-3 rounded-lg bg-surface/80 border border-amber-900/40">
+                            Select a question to view the common errors and traps where students lose marks on this problem.
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Results Card (Appears on Evaluate Answer) -->
+                    <div id="evalResultsContainer" class="hidden p-4 rounded-xl bg-surface border border-slate-800 space-y-3.5">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                            <div>
+                                <span class="text-xs font-bold text-white uppercase tracking-wider block">AI Step-by-Step Mark Breakdown</span>
+                                <span id="evalStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 inline-block mt-1">Rubric Compliant</span>
+                            </div>
+                            <div class="text-right">
+                                <span id="evalScoreDisplay" class="text-xl font-black font-mono text-emerald-400">2 / 2 Marks</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider block">Line-by-Line CBSE Marking Scheme Breakdown:</span>
+                            <div id="evalStepBreakdown" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+</div>
+            </div>
+        </div>
 <div id="workspace-4" class="hidden h-full flex flex-col overflow-y-auto pr-4 pb-16 space-y-6">
     <!-- Header Banner -->
     <div class="p-6 rounded-2xl bg-surface border border-slate-800 shadow-lg space-y-3 relative overflow-hidden shrink-0 mt-1">
@@ -528,7 +565,7 @@
         <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl"></div>
         <div class="flex items-center justify-between flex-wrap gap-2 relative z-10">
             <span class="px-2.5 py-1 rounded text-xs font-bold bg-indigo-900/50 text-indigo-300 border border-indigo-800/50">
-                24/7 AI Math Mentor
+                <span id="tab5MentorBadge">24/7 AI Math Mentor</span>
             </span>
             <span id="tab5ChapterTag" class="text-xs font-semibold text-slate-400 px-3 py-1 rounded-full border border-slate-700 bg-surfaceLight">
                 Context: Quadratic Equations
@@ -538,7 +575,7 @@
             AI Doubt Solver & Step Explainer
         </h2>
         <p class="text-sm text-slate-400 leading-relaxed relative z-10 max-w-3xl">
-            Ask any question or concept doubt from your CBSE Class 10 syllabus. The solver breaks down the question according to NCERT step criteria, clarifies prerequisite conditions, and provides verified mathematical derivations.
+            <span id="tab5MentorDescription">Ask any question or concept doubt from your CBSE Class 10 syllabus. The solver breaks down the question according to NCERT step criteria, clarifies prerequisite conditions, and provides verified step derivations.</span>
         </p>
     </div>
 
@@ -562,12 +599,12 @@
                     <span>Ask Your Doubt</span>
                     <span class="text-[10px] text-slate-500 font-mono">English • LaTeX Supported</span>
                 </label>
-                <textarea id="doubtInput" rows="7" class="w-full p-3.5 text-xs font-mono bg-background border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-indigo-500 leading-relaxed" placeholder="Type your math question or paste an equation here (e.g., Solve 2x^2 - 5x + 3 = 0 using quadratic formula)..."></textarea>
+                <!-- Formula & Notation Quick Toolbar (Tab 5) -->
+                        <div id="toolbar_tab5" class="flex items-center gap-1 overflow-x-auto py-1 px-1 bg-slate-900/60 rounded-lg border border-slate-800 scrollbar-none text-xs"></div>
+                        <textarea id="doubtInput" rows="7" class="w-full p-3.5 text-xs font-mono bg-background border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-indigo-500 leading-relaxed" placeholder="Type your math question or paste an equation here (e.g., Solve 2x^2 - 5x + 3 = 0 using quadratic formula)..."></textarea>
                 
                 <div class="flex items-center justify-between pt-1">
-                    <button onclick="clearDoubtInput()" class="text-xs px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-surfaceLight transition">
-                        Clear
-                    </button>
+                    <button onclick="clearDoubtInput()" class="text-xs px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-surfaceLight transition" onclick="clearDoubtWorkspace()">Clear</button>
                     <button onclick="solveDoubt()" id="doubtSubmitBtn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
                         <span>🚀</span> Resolve Doubt
                     </button>
@@ -580,9 +617,7 @@
                     <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                         <span>🕒</span> Session Doubts History
                     </h4>
-                    <button onclick="clearDoubtHistory()" class="text-[10px] text-slate-500 hover:text-rose-400 transition">
-                        Clear Log
-                    </button>
+                    <button onclick="clearDoubtHistory()" class="text-[10px] text-slate-500 hover:text-rose-400 transition" onclick="clearSessionDoubtHistory()">Clear Log</button>
                 </div>
                 <div id="doubtHistoryContainer" class="space-y-2 text-xs text-slate-400 max-h-48 overflow-y-auto pr-1">
                     <p class="text-[11px] text-slate-500 italic">No doubts logged in this session yet.</p>
@@ -753,7 +788,12 @@
     
     <!-- Active Exam Form (Hidden until started) -->
     <form id="mockTestForm" onsubmit="submitMockTest(event)" class="space-y-6 hidden">
-        <div id="mockTestQuestions" class="space-y-4"></div>
+        
+            <!-- Sticky Formula & Notation Bar for Tab 6 Mock Exam -->
+            <div id="tab6_sticky_toolbar_wrap" class="sticky top-0 z-30 pb-2 pt-1 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+                <div id="toolbar_tab6" class="flex items-center gap-1 overflow-x-auto py-1.5 px-2 bg-slate-950/80 rounded-xl border border-slate-700/80 scrollbar-none text-xs shadow-md"></div>
+            </div>
+            <div id="mockTestQuestions" class="space-y-4"></div>
         
         <!-- Sticky Bottom Submission Bar with Reselect Option -->
         <div class="sticky bottom-0 p-4 bg-surface/95 backdrop-blur border-t border-slate-700 rounded-b-2xl flex flex-wrap justify-between items-center gap-3 shadow-xl">
@@ -764,7 +804,8 @@
                 <span id="activeExamModeTag" class="text-amber-400 font-mono">Full Curriculum (40M)</span>
             </div>
             <div class="flex items-center gap-3">
-                <button type="button" onclick="cancelAndReselectMock()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white font-semibold text-xs rounded-xl transition flex items-center gap-1.5">
+                
+                    <button type="button" onclick="cancelAndReselectMock()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white font-semibold text-xs rounded-xl transition flex items-center gap-1.5">
                     <span>↺</span> Exit & Reselect Paper
                 </button>
                 <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
@@ -779,9 +820,13 @@
 </div>
 
 	<!-- Modular Subject Data Registries -->
-    	<script src="/data/mathChapters.js"></script>
-    	<script src="/data/scienceChapters.js"></script>
-    	<script src="/data/sstChapters.js"></script>
+    	<script src="data/mathChapters.js"></script>
+    	<script src="data/scienceChapters.js"></script>
+    	<script src="data/sstChapters.js"></script>
+    <script src="data/class11MathChapters.js"></script>
+    <script src="data/class11PhysicsChapters.js"></script>
+    <script src="data/class12MathChapters.js"></script>
+    <script src="data/dbQuestionBank.js"></script>
 	   
  	<!-- Application Script Block Begins -->
 	<script>
@@ -856,6 +901,120 @@
             }
         };
 
+        // =======================================================
+        // SUBJECT-AWARE FORMULA & NOTATION TOOLBAR ENGINE
+        // =======================================================
+        const subjectNotations = {
+            'MATH': [
+                { label: '√', val: '√' },
+                { label: 'x²', val: '²' },
+                { label: 'x³', val: '³' },
+                { label: '±', val: '±' },
+                { label: 'π', val: 'π' },
+                { label: 'θ', val: 'θ' },
+                { label: 'α', val: 'α' },
+                { label: 'β', val: 'β' },
+                { label: 'Δ', val: 'Δ' },
+                { label: '≤', val: '≤' },
+                { label: '≥', val: '≥' },
+                { label: '≠', val: '≠' },
+                { label: '÷', val: '÷' },
+                { label: '×', val: '×' },
+                { label: 'a/b', val: 'frac{a}{b}' },
+                { label: 'b²-4ac', val: 'b² - 4ac' },
+                { label: 'Sn', val: 'S_n' },
+                { label: 'an', val: 'a_n' }
+            ],
+            'SCI': [
+                { label: '→', val: ' → ' },
+                { label: '⇌', val: ' ⇌ ' },
+                { label: '↑ (gas)', val: '↑' },
+                { label: '↓ (ppt)', val: '↓' },
+                { label: 'Δ (heat)', val: 'Δ' },
+                { label: '°C', val: '°C' },
+                { label: 'Ω', val: 'Ω' },
+                { label: 'λ', val: 'λ' },
+                { label: 'μ', val: 'μ' },
+                { label: '(s)', val: '(s)' },
+                { label: '(l)', val: '(l)' },
+                { label: '(g)', val: '(g)' },
+                { label: '(aq)', val: '(aq)' },
+                { label: 'Fe₃O₄', val: 'Fe₃O₄' },
+                { label: 'H₂O', val: 'H₂O' },
+                { label: 'CO₂', val: 'CO₂' }
+            ],
+            'SST': [
+                { label: '• Point', val: '• ' },
+                { label: '(i)', val: '(i) ' },
+                { label: '(ii)', val: '(ii) ' },
+                { label: '(iii)', val: '(iii) ' },
+                { label: '1.', val: '1. ' },
+                { label: '2.', val: '2. ' },
+                { label: '3.', val: '3. ' },
+                { label: '§ Act', val: 'Section ' },
+                { label: '₹', val: '₹' },
+                { label: '%', val: '%' },
+                { label: '“ ”', val: '""' },
+                { label: '—', val: ' — ' }
+            ]
+        };
+
+        let lastActiveTextarea = null;
+
+        document.addEventListener('focusin', (e) => {
+            if (e.target && (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT')) {
+                lastActiveTextarea = e.target;
+            }
+        });
+
+        function insertNotationAtCursor(targetId, notationText) {
+            let el = null;
+            if (targetId === 'active_or_tab6') {
+                el = (lastActiveTextarea && lastActiveTextarea.closest('#workspace-6')) 
+                    ? lastActiveTextarea 
+                    : document.querySelector('#workspace-6 textarea');
+            } else {
+                el = document.getElementById(targetId) || lastActiveTextarea;
+            }
+            if (!el) return;
+
+            const startPos = el.selectionStart !== undefined ? el.selectionStart : el.value.length;
+            const endPos = el.selectionEnd !== undefined ? el.selectionEnd : el.value.length;
+            const textBefore = el.value.substring(0, startPos);
+            const textAfter = el.value.substring(endPos, el.value.length);
+
+            el.value = textBefore + notationText + textAfter;
+            el.selectionStart = el.selectionEnd = startPos + notationText.length;
+            el.focus();
+        }
+
+        function renderFormulaToolbars() {
+            const subj = currentSubject || 'MATH';
+            const notations = subjectNotations[subj] || subjectNotations.MATH;
+
+            const containers = [
+                { id: 'toolbar_tab3', target: 'studentSolutionInput' },
+                { id: 'toolbar_tab5', target: 'doubtInput' },
+                { id: 'toolbar_tab6', target: 'active_or_tab6' }
+            ];
+
+            containers.forEach(c => {
+                const bar = document.getElementById(c.id);
+                if (!bar) return;
+
+                let html = '<span class="text-[10px] uppercase font-bold text-slate-500 px-1 shrink-0 select-none">Quick Inserts:</span>';
+                notations.forEach(n => {
+                    const cleanVal = n.val.replace(/"/g, '&quot;');
+                    html += `
+                        <button type="button" onclick="insertNotationAtCursor('${c.target}', '${cleanVal}')" class="px-2 py-0.5 rounded bg-surfaceLight hover:bg-slate-700 active:scale-95 border border-slate-700/80 hover:border-indigo-500 text-slate-200 hover:text-white font-mono text-[11px] font-semibold transition shrink-0 shadow-sm" title="Insert ${n.label}">
+                            ${n.label}
+                        </button>
+                    `;
+                });
+                bar.innerHTML = html;
+            });
+        }
+
         function switchSubject(subjectCode) {
     if (!subjectsRegistry[subjectCode]) return;
     currentSubject = subjectCode;
@@ -872,6 +1031,22 @@
     currentChapterKey = subjectsRegistry[subjectCode].defaultChapter;
     renderSidebar();
     selectChapter(currentChapterKey);
+        renderFormulaToolbars();
+
+        // Synchronize active workspace when subject changes
+        if (typeof currentMainTab !== 'undefined') {
+            if (currentMainTab === 2 && typeof renderErrorFinder === 'function') {
+                renderErrorFinder(currentChapterKey);
+            } else if (currentMainTab === 3) {
+                if (typeof filterDropdownByMarks === 'function') filterDropdownByMarks();
+                if (typeof loadEvalProblem === 'function') loadEvalProblem();
+            renderFormulaToolbars();
+            } else if (currentMainTab === 4 && typeof renderRoadmap === 'function') {
+                renderRoadmap();
+            } else if (currentMainTab === 5 && typeof renderDoubtTab === 'function') {
+                renderDoubtTab(currentChapterKey);
+            }
+        }
 
     // ALWAYS refresh past papers dropdown whenever subject switches
     loadAvailablePastPapers();
@@ -924,6 +1099,7 @@
 
         // 1. TOP TAB NAVIGATION
         function switchMainTab(tabIndex) {
+        if (typeof speechSynth !== 'undefined' && speechSynth) speechSynth.cancel();
             currentMainTab = tabIndex;
             for (let i = 1; i <= 6; i++) {
                 const btn = document.getElementById(`mainTab${i}`);
@@ -1290,9 +1466,9 @@
                 html += `
                     <div class="p-3 rounded-lg bg-surfaceLight border border-slate-700/60 flex items-center justify-between gap-3">
                         <span class="text-slate-300"><strong>Step ${st.stepNo}:</strong> ${st.text}</span>
-                        <button onclick="verifyErrorStep(${st.stepNo}, ${chlg.faultyStep})" id="btn-trap-step-${st.stepNo}" class="shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/40 hover:text-rose-300 border border-slate-700 text-[11px] font-sans font-semibold transition">
-                            Faulty Step?
-                        </button>
+                        <button onclick="verifyErrorStep(${st.stepNo}, ${chlg.faultyStep})" id="btn-trap-step-${st.stepNo}" class="shrink-0 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-400 text-slate-200 hover:text-white text-xs font-medium transition cursor-pointer shadow-sm">
+                                <span>🔍 Report Mistake</span>
+                            </button>
                     </div>
                 `;
             });
@@ -1330,1284 +1506,87 @@
 
         // CLEAR LOGICAL LABELS: Tells the student whether the step has an error or is valid
         function verifyErrorStep(selectedStep, faultyStep) {
-            const feedback = document.getElementById('trap-feedback-box');
-            if (!feedback) return;
+        const feedback = document.getElementById('trap-feedback-box');
+        const clickedBtn = document.getElementById(`btn-trap-step-${selectedStep}`);
 
-            feedback.classList.remove('hidden', 'bg-emerald-950/60', 'text-emerald-300', 'border-emerald-800', 'bg-rose-950/60', 'text-rose-300', 'border-rose-800');
-
+        if (selectedStep === faultyStep) {
+            // SUCCESS: Student found the actual trap
             for (let i = 1; i <= 3; i++) {
-                const btn = document.getElementById(`btn-trap-step-${i}`);
-                if (btn) {
-                    if (i === faultyStep) {
-                        btn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-emerald-900/50 border border-emerald-600 text-emerald-200 text-[11px] font-sans font-bold";
-                        btn.innerText = "⚠️ Error is Here!";
-                    } else if (i === selectedStep && selectedStep !== faultyStep) {
-                        btn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-600 text-slate-300 text-[11px] font-sans font-medium";
-                        btn.innerText = "✓ This Step is Correct";
-                    }
+                const b = document.getElementById(`btn-trap-step-${i}`);
+                if (!b) continue;
+                b.disabled = true;
+                b.style.cursor = 'default';
+                if (i === faultyStep) {
+                    b.className = "shrink-0 px-3.5 py-1.5 rounded-lg bg-emerald-950 border border-emerald-500 text-emerald-300 text-xs font-bold shadow-md animate-pulse";
+                    b.innerHTML = "🎯 Trap Identified (+1M)";
+                } else {
+                    b.className = "shrink-0 px-3 py-1 rounded-md bg-slate-900/50 border border-slate-800/80 text-slate-500 text-[11px] opacity-60";
+                    b.innerHTML = "Valid Step";
                 }
             }
 
-            if (selectedStep === faultyStep) {
-                feedback.classList.add('bg-emerald-950/60', 'text-emerald-300', 'border', 'border-emerald-800');
+            if (feedback) {
+                feedback.className = "p-4 rounded-xl text-xs leading-relaxed bg-emerald-950/80 text-emerald-200 border border-emerald-700 shadow-md";
                 const chlg = activeChallengesList[currentChallengeIndex];
-                feedback.innerHTML = `<strong>✓ Spot On!</strong> ${chlg.deductionReason}`;
-            } else {
-                feedback.classList.add('bg-rose-950/60', 'text-rose-300', 'border', 'border-rose-800');
-                feedback.innerHTML = `<strong>✗ Not quite:</strong> Step ${selectedStep} is mathematically valid according to CBSE rules. Inspect the other steps for hidden sign flips or illegal operations!`;
-            }
-
-            if (window.renderMathInElement) {
-                renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-            }
-        }
-	// -------------------------------------------------------------------------
-        // VOICE TUTOR ENGINE (Browser Web Speech API)
-        // -------------------------------------------------------------------------
-        let isSpeaking = false;
-
-        function toggleVoiceTutor() {
-            if (!('speechSynthesis' in window)) {
-                alert("Text-to-speech is not supported in this browser. Please use Chrome, Edge, or Firefox.");
-                return;
-            }
-
-            const icon = document.getElementById('voiceTutorIcon');
-            const text = document.getElementById('voiceTutorText');
-            const btn = document.getElementById('voiceTutorBtn');
-
-            if (isSpeaking) {
-                window.speechSynthesis.cancel();
-                isSpeaking = false;
-                if (icon) icon.innerText = '🔊';
-                if (text) text.innerText = 'Voice Tutor';
-                if (btn) btn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition';
-                return;
-            }
-
-            // Gather readable context from active subject registry
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-            const ch = chapters[currentChapterKey];
-            if (!ch) return;
-
-            let speechScript = `Chapter: ${ch.name}. Weightage: ${ch.weight} Marks. `;
-            speechScript += `${ch.desc} `;
-            if (ch.vernacular && ch.vernacular.English) {
-                speechScript += `Key board tip: ${ch.vernacular.English}`;
-            }
-
-            // Strip mathematical LaTeX symbols for clean pronunciation
-            const cleanText = speechScript
-                .replace(/\$\$/g, '')
-                .replace(/\$/g, '')
-                .replace(/\\times/g, ' multiplied by ')
-                .replace(/\\pm/g, ' plus or minus ')
-                .replace(/\\sqrt\{([^}]+)\}/g, ' square root of $1 ')
-                .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, ' $1 divided by $2 ')
-                .replace(/\\[a-zA-Z]+/g, '');
-
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.rate = 0.95;
-            utterance.pitch = 1.0;
-            utterance.lang = 'en-US';
-
-            utterance.onstart = () => {
-                isSpeaking = true;
-                if (icon) icon.innerText = '⏹️';
-                if (text) text.innerText = 'Stop Tutor';
-                if (btn) btn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/20 transition animate-pulse';
-            };
-
-            utterance.onend = () => {
-                isSpeaking = false;
-                if (icon) icon.innerText = '🔊';
-                if (text) text.innerText = 'Voice Tutor';
-                if (btn) btn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition';
-            };
-
-            utterance.onerror = () => {
-                isSpeaking = false;
-                if (icon) icon.innerText = '🔊';
-                if (text) text.innerText = 'Voice Tutor';
-                if (btn) btn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition';
-            };
-
-            window.speechSynthesis.speak(utterance);
-        }
-
-	// -------------------------------------------------------------------------
-        // TAB 3: SUBJECT-AWARE CBSE MICRO-EVALUATOR ENGINE
-        // -------------------------------------------------------------------------
-        const evalProblemBank = {
-            // Mathematics
-            M10_CH01: [
-                {
-                    title: "Proof of √5 Irrationality by Contradiction", marks: 3,
-                    text: "Prove that √5 is an irrational number by contradiction.",
-                    rubric: [
-                        { step: "Step 1: State assumption: √5 = a/b where a, b are coprime integers (b ≠ 0)", marks: 1.0 },
-                        { step: "Step 2: Square both sides: 5b² = a² => 5 divides a² => 5 divides a", marks: 1.0 },
-                        { step: "Step 3: Substitute a = 5c, show 5 divides b, identify contradiction and conclude", marks: 1.0 }
-                    ],
-                    idealAnswer: "Let us assume to the contrary that √5 is rational.\nTherefore, √5 = a/b, where a and b are coprime integers and b ≠ 0.\nSquaring both sides: 5 = a²/b² => a² = 5b².\nSince 5 divides a², by theorem 5 also divides a.\nLet a = 5c for some integer c.\nSubstituting: (5c)² = 5b² => 25c² = 5b² => b² = 5c².\nThis means 5 divides b² => 5 divides b.\nTherefore, a and b have at least 5 as a common factor.\nThis contradicts the fact that a and b are coprime.\nHence, √5 is irrational.",
-                    flawedAnswer: "Assume √5 = a/b.\n5 = a²/b² => a² = 5b².\nSo a is divisible by 5 and b is divisible by 5.\nSo it is not rational."
-                }
-            ],
-            M10_CH04: [
-                {
-                    title: "Train Speed Quadratic Word Problem", marks: 4,
-                    text: "A motor boat whose speed is 18 km/h in still water takes 1 hour more to go 24 km upstream than to return downstream to the same spot. Find the speed of the stream.",
-                    rubric: [
-                        { step: "Step 1: Declare stream speed x; formulate upstream (18 - x) and downstream (18 + x) speeds", marks: 1.0 },
-                        { step: "Step 2: Formulate time equation: 24/(18 - x) - 24/(18 + x) = 1", marks: 1.0 },
-                        { step: "Step 3: Simplify to standard quadratic form: x² + 48x - 324 = 0", marks: 1.0 },
-                        { step: "Step 4: Factorize to roots (6, -54), reject negative root with reason, state units (6 km/h)", marks: 1.0 }
-                    ],
-                    idealAnswer: "Let speed of the stream be x km/h.\nSpeed upstream = (18 - x) km/h and downstream = (18 + x) km/h.\nTime upstream - Time downstream = 1\n24/(18 - x) - 24/(18 + x) = 1\n24[(18 + x) - (18 - x)] / (324 - x²) = 1\n24(2x) = 324 - x²\nx² + 48x - 324 = 0\n(x + 54)(x - 6) = 0\nx = 6 or x = -54\nSince speed cannot be negative, discarding x = -54.\nSpeed of the stream = 6 km/h.",
-                    flawedAnswer: "Let stream speed be x.\n24/(18 - x) - 24/(18 + x) = 1\n48x = 324 - x²\nx² + 48x - 324 = 0\n(x + 54)(x - 6) = 0\nx = 6, x = -54\nAnswers are 6 and -54."
-                }
-            ],
-
-            // Science
-            S10_CH01: [
-                {
-                    title: "Redox Reagents & Steam Reaction Identification", marks: 3,
-                    text: "In the reaction: 3Fe(s) + 4H2O(g) -> Fe3O4(s) + 4H2(g), identify: (i) Substance oxidized, (ii) Substance reduced, (iii) Oxidizing agent, (iv) Reducing agent.",
-                    rubric: [
-                        { step: "Step 1: Identify oxidation: Fe gains oxygen to form Fe3O4 => Fe is oxidized", marks: 1.0 },
-                        { step: "Step 2: Identify reduction: H2O loses oxygen to form H2 => H2O is reduced", marks: 1.0 },
-                        { step: "Step 3: Conclude agents: Oxidizing agent is H2O; Reducing agent is Fe", marks: 1.0 }
-                    ],
-                    idealAnswer: "(i) Substance oxidized: Fe (Iron gains oxygen to form Fe3O4).\n(ii) Substance reduced: H2O (Water loses oxygen to form H2).\n(iii) Oxidizing agent: H2O (provides oxygen for oxidation).\n(iv) Reducing agent: Fe (removes oxygen from water).",
-                    flawedAnswer: "Fe is reduced because it reacts with steam.\nH2O is oxidized to H2.\nOxidizing agent is Fe."
-                }
-            ],
-            S10_CH02: [
-                {
-                    title: "Chlor-Alkali Electrolysis Chemistry", marks: 3,
-                    text: "Name the products formed at the anode and cathode during electrolysis of concentrated brine, write the balanced chemical equation, and give one use of the cathode gas.",
-                    rubric: [
-                        { step: "Step 1: Balanced chemical equation with state symbols: 2NaCl(aq) + 2H2O(l) -> 2NaOH(aq) + Cl2(g) + H2(g)", marks: 1.0 },
-                        { step: "Step 2: Correct electrode allocations: Anode = Cl2 gas, Cathode = H2 gas", marks: 1.0 },
-                        { step: "Step 3: Give valid industrial use of H2 gas (e.g. rocket fuel, hydrogenation of oils, ammonia)", marks: 1.0 }
-                    ],
-                    idealAnswer: "Balanced Chemical Equation:\n2NaCl(aq) + 2H2O(l) -> 2NaOH(aq) + Cl2(g) + H2(g)\nElectrode Products:\n- At Anode (+ electrode): Chlorine gas (Cl2)\n- At Cathode (- electrode): Hydrogen gas (H2)\n- Near Cathode: Sodium hydroxide (NaOH) solution forms\nUse of Hydrogen gas (Cathode):\nUsed as fuel in rockets and in the manufacture of ammonia for fertilizers.",
-                    flawedAnswer: "NaCl + H2O -> NaOH + Cl + H\nAnode produces hydrogen and cathode produces chlorine.\nChlorine is used for cleaning."
-                }
-            ],
-
-            // Social Science
-            SS10_HIS_01: [
-                {
-                    title: "Civil Code of 1804 (Napoleonic Code)", marks: 3,
-                    text: "Explain any three major administrative and legal reforms introduced by Napoleon in the territories conquered by France.",
-                    rubric: [
-                        { step: "Step 1: State abolition of privileges based on birth and equality before the law", marks: 1.0 },
-                        { step: "Step 2: State securing of property rights and abolition of the feudal system", marks: 1.0 },
-                        { step: "Step 3: State removal of guild restrictions and improvement in transport and communication", marks: 1.0 }
-                    ],
-                    idealAnswer: "Major reforms introduced by Napoleon under the Civil Code of 1804:\n1. Abolished all privileges based on birth and established equality before the law.\n2. Secured the right to property for French citizens.\n3. Abolished the feudal system and freed peasants from serfdom and manorial dues.\n4. In towns, guild restrictions were removed, and uniform weights, measures, and a national currency were standardized.",
-                    flawedAnswer: "Napoleon conquered Europe and made good rules.\nHe stopped feudalism and helped trade."
-                }
-            ],
-            SS10_GEO_01: [
-                {
-                    title: "Soil Conservation Strategies", marks: 3,
-                    text: "Describe any three measures for soil conservation that can be applied in hilly and mountainous terrains.",
-                    rubric: [
-                        { step: "Step 1: Contour ploughing along the contour lines to decelerate water flow", marks: 1.0 },
-                        { step: "Step 2: Terrace farming by cutting steps on slopes to restrict erosion", marks: 1.0 },
-                        { step: "Step 3: Strip cropping and planting of shelter belts to break the force of wind", marks: 1.0 }
-                    ],
-                    idealAnswer: "Measures for soil conservation in hilly terrains:\n1. Contour Ploughing: Ploughing along the contour lines decelerates the flow of water down the slopes.\n2. Terrace Cultivation: Steps are cut out on slopes making terraces, which restricts runoff and soil erosion (practiced in Western and Central Himalayas).\n3. Strip Cropping: Large fields are divided into strips with grass left to grow between crops, breaking the kinetic force of wind and surface runoff.",
-                    flawedAnswer: "Plant more trees on hills.\nDo farming properly so mud does not wash away."
-                }
-            ]
-        };
-
-        function renderMicroEvaluator(chapterKey) {
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-            const ch = chapters[chapterKey] || chapters[Object.keys(chapters)[0]];
-            if (!ch) return;
-
-            const tag = document.getElementById('tab3ChapterTag');
-            if (tag) tag.innerText = `Active: ${ch.code} (${ch.name})`;
-
-            const select = document.getElementById('evalProblemSelect');
-            const fallbackKey = Object.keys(evalProblemBank)[0];
-            const problems = evalProblemBank[chapterKey] || evalProblemBank[fallbackKey];
-            
-            if (select) {
-                let html = '';
-                problems.forEach((p, idx) => {
-                    html += `<option value="${idx}">${p.title} (${p.marks} Marks)</option>`;
-                });
-                select.innerHTML = html;
-                select.value = "0";
-            }
-
-            loadEvalProblem();
-        }
-
-        function loadEvalProblem() {
-            const select = document.getElementById('evalProblemSelect');
-            const pIdx = select ? parseInt(select.value) : 0;
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const fallbackKey = Object.keys(evalProblemBank)[0];
-            const problems = evalProblemBank[currentChapterKey] || evalProblemBank[fallbackKey];
-            const prob = problems[pIdx] || problems[0];
-            if (!prob) return;
-
-            document.getElementById('evalTotalMarks').innerText = `${prob.marks} Marks Total`;
-            document.getElementById('evalProblemText').innerText = prob.text;
-
-            let rubricHtml = '';
-            prob.rubric.forEach(r => {
-                rubricHtml += `
-                    <div class="p-2.5 rounded-lg bg-surfaceLight border border-slate-700/60 flex items-start justify-between gap-3">
-                        <span class="text-slate-300">${r.step}</span>
-                        <span class="text-[11px] font-bold text-purple-300 shrink-0 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">${r.marks}M</span>
-                    </div>
-                `;
-            });
-            document.getElementById('evalModelRubric').innerHTML = rubricHtml;
-
-            loadSampleAnswer('ideal');
-
-            if (window.renderMathInElement) {
-                renderMathInElement(document.getElementById('workspace-3'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-            }
-        }
-
-        function loadSampleAnswer(type) {
-            const select = document.getElementById('evalProblemSelect');
-            const pIdx = select ? parseInt(select.value) : 0;
-            const fallbackKey = Object.keys(evalProblemBank)[0];
-            const problems = evalProblemBank[currentChapterKey] || evalProblemBank[fallbackKey];
-            const prob = problems[pIdx] || problems[0];
-            if (!prob) return;
-
-            const input = document.getElementById('studentSolutionInput');
-            if (input) {
-                input.value = (type === 'ideal') ? prob.idealAnswer : prob.flawedAnswer;
-            }
-
-            const btnIdeal = document.getElementById('btnIdealAnswer');
-            const btnFlawed = document.getElementById('btnFlawedAnswer');
-
-            if (type === 'ideal') {
-                if (btnIdeal) btnIdeal.className = "text-[11px] px-3 py-1 rounded-lg bg-emerald-950/70 border-2 border-emerald-500 text-emerald-200 font-bold shadow-md shadow-emerald-950/50 flex items-center gap-1.5 transition-all";
-                if (btnFlawed) btnFlawed.className = "text-[11px] px-3 py-1 rounded-lg bg-surfaceLight/50 border border-slate-700 text-slate-400 opacity-60 hover:opacity-100 flex items-center gap-1.5 transition-all";
-            } else {
-                if (btnFlawed) btnFlawed.className = "text-[11px] px-3 py-1 rounded-lg bg-amber-950/70 border-2 border-amber-500 text-amber-200 font-bold shadow-md shadow-amber-950/50 flex items-center gap-1.5 transition-all";
-                if (btnIdeal) btnIdeal.className = "text-[11px] px-3 py-1 rounded-lg bg-surfaceLight/50 border border-slate-700 text-slate-400 opacity-60 hover:opacity-100 flex items-center gap-1.5 transition-all";
-            }
-
-            const results = document.getElementById('evalResultsContainer');
-            if (results) results.classList.add('hidden');
-        }
-
-        function runMicroEvaluation() {
-            const select = document.getElementById('evalProblemSelect');
-            const pIdx = select ? parseInt(select.value) : 0;
-            const fallbackKey = Object.keys(evalProblemBank)[0];
-            const problems = evalProblemBank[currentChapterKey] || evalProblemBank[fallbackKey];
-            const prob = problems[pIdx] || problems[0];
-            const studentText = document.getElementById('studentSolutionInput').value.trim();
-
-            if (!studentText) {
-                alert("Please enter or load student solution steps first.");
-                return;
-            }
-
-            const userTier = getCurrentUserTier();
-            const isIdealPreset = (studentText === prob.idealAnswer);
-            const isFlawedPreset = (studentText === prob.flawedAnswer);
-
-            if (userTier === 'FREE' && !isIdealPreset && !isFlawedPreset) {
-                showUpgradeModal("Live evaluation of custom student answers is a Pro Learner feature. Free Demo is limited to inspecting standard preset samples.");
-                return;
-            }
-
-            const resultsContainer = document.getElementById('evalResultsContainer');
-            const scoreDisplay = document.getElementById('evalScoreDisplay');
-            const statusBadge = document.getElementById('evalStatusBadge');
-            const stepBreakdown = document.getElementById('evalStepBreakdown');
-
-            const lower = studentText.toLowerCase();
-            let awardedMarks = 0.0;
-            let stepHtml = '';
-
-            const isIdeal = (studentText === prob.idealAnswer);
-
-            prob.rubric.forEach((r, idx) => {
-                let stepPassed = false;
-                let stepFeedback = '';
-
-                if (isIdeal) {
-                    stepPassed = true;
-                    stepFeedback = "Full Credit: Correct formulation, standard academic terminology, and complete step logic.";
-                } else {
-                    if (idx === 0) {
-                        stepPassed = lower.includes('let') || lower.includes('given') || lower.includes('=') || lower.includes('1.') || lower.includes('step 1') || lower.includes('oxid') || lower.includes('reform');
-                        stepFeedback = stepPassed ? "Full Credit: Premise stated or key concept defined." : "Deduction Applied: Omitted initial variable declaration or core definition.";
-                    } else if (idx === prob.rubric.length - 1) {
-                        const hasUnits = lower.includes('km/h') || lower.includes('cm') || lower.includes('anode') || lower.includes('cathode') || lower.includes('fuel') || lower.includes('wind') || lower.includes('therefore');
-                        if (hasUnits) {
-                            stepPassed = true;
-                            stepFeedback = "Full Credit: Valid conclusion provided with proper terminology/units.";
-                        } else {
-                            stepPassed = false;
-                            stepFeedback = "Deduction Applied: Incomplete final conclusion or missing units/conditions.";
-                        }
-                    } else {
-                        stepPassed = (studentText.length > 35 && !lower.includes('error'));
-                        stepFeedback = stepPassed ? "Full Credit: Intermediate logic executed accurately." : "Deduction Applied: Incomplete explanation or procedural flaw.";
-                    }
-                }
-
-                const marksGiven = stepPassed ? r.marks : 0.0;
-                awardedMarks += marksGiven;
-
-                stepHtml += `
-                    <div class="p-3.5 rounded-xl ${stepPassed ? 'bg-emerald-950/30 border border-emerald-800/60' : 'bg-rose-950/30 border border-rose-800/60'} space-y-1">
-                        <div class="flex items-center justify-between font-bold">
-                            <span class="${stepPassed ? 'text-emerald-300' : 'text-rose-300'}">Step ${idx + 1}: ${stepPassed ? 'Marks Awarded' : 'Deduction Applied'}</span>
-                            <span class="${stepPassed ? 'text-emerald-400' : 'text-rose-400'} font-mono">${marksGiven.toFixed(1)} / ${r.marks.toFixed(1)} Marks</span>
-                        </div>
-                        <p class="text-slate-300 text-[11px] leading-relaxed">${stepFeedback}</p>
-                    </div>
-                `;
-            });
-
-            awardedMarks = Math.min(prob.marks, Math.round(awardedMarks * 10) / 10);
-            scoreDisplay.innerText = `${awardedMarks.toFixed(1)} / ${prob.marks.toFixed(1)} Marks`;
-            const percentage = (awardedMarks / prob.marks) * 100;
-
-            const evalScoreCard = document.getElementById('evalScoreCard');
-            if (percentage === 100) {
-                evalScoreCard.className = "p-5 rounded-xl border border-emerald-700 bg-emerald-950/40 flex items-center justify-between shadow-sm";
-                scoreDisplay.className = "text-2xl font-black mt-0.5 text-emerald-400";
-                statusBadge.className = "text-xs px-3 py-1.5 rounded-lg font-bold border border-emerald-600 bg-emerald-900/60 text-emerald-200";
-                statusBadge.innerText = "✓ 100% Full Credit";
-            } else if (percentage >= 50) {
-                evalScoreCard.className = "p-5 rounded-xl border border-amber-700 bg-amber-950/40 flex items-center justify-between shadow-sm";
-                scoreDisplay.className = "text-2xl font-black mt-0.5 text-amber-400";
-                statusBadge.className = "text-xs px-3 py-1.5 rounded-lg font-bold border border-amber-600 bg-amber-900/60 text-amber-200";
-                statusBadge.innerText = "⚠️ Partial Credit";
-            } else {
-                evalScoreCard.className = "p-5 rounded-xl border border-rose-700 bg-rose-950/40 flex items-center justify-between shadow-sm";
-                scoreDisplay.className = "text-2xl font-black mt-0.5 text-rose-400";
-                statusBadge.className = "text-xs px-3 py-1.5 rounded-lg font-bold border border-rose-600 bg-rose-900/60 text-rose-200";
-                statusBadge.innerText = "✗ Significant Deductions";
-            }
-
-            stepBreakdown.innerHTML = stepHtml;
-            resultsContainer.classList.remove('hidden');
-
-            if (window.renderMathInElement) {
-                renderMathInElement(stepBreakdown, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-            }
-        }
-
-	// -------------------------------------------------------------------------
-        // TAB 4: SUBJECT-AWARE DYNAMIC STRATEGY & SELF-DISCRIMINATION
-        // -------------------------------------------------------------------------
-        const subjectUnitsMap = {
-            MATH: [
-                { id: "unit1", name: "Unit I: Number Systems", weight: 6, chapterKeys: ["M10_CH01"], color: "bg-indigo-500" },
-                { id: "unit2", name: "Unit II: Algebra", weight: 20, chapterKeys: ["M10_CH02", "M10_CH03", "M10_CH04", "M10_CH05"], color: "bg-purple-500" },
-                { id: "unit3", name: "Unit III: Coordinate Geometry", weight: 6, chapterKeys: ["M10_CH07"], color: "bg-cyan-500" },
-                { id: "unit4", name: "Unit IV: Geometry", weight: 15, chapterKeys: ["M10_CH06", "M10_CH10"], color: "bg-rose-500" },
-                { id: "unit5", name: "Unit V: Trigonometry", weight: 12, chapterKeys: ["M10_CH08", "M10_CH09"], color: "bg-amber-500" },
-                { id: "unit6", name: "Unit VI: Mensuration", weight: 10, chapterKeys: ["M10_CH11", "M10_CH12"], color: "bg-emerald-500" },
-                { id: "unit7", name: "Unit VII: Statistics & Probability", weight: 11, chapterKeys: ["M10_CH13", "M10_CH14"], color: "bg-blue-500" }
-            ],
-            SCI: [
-                { id: "sci_u1", name: "Unit I: Chemical Substances - Nature & Behaviour", weight: 25, chapterKeys: ["S10_CH01", "S10_CH02"], color: "bg-indigo-500" },
-                { id: "sci_u2", name: "Unit II: World of Living", weight: 25, chapterKeys: ["S10_CH06", "S10_CH07", "S10_CH08", "S10_CH09"], color: "bg-emerald-500" },
-                { id: "sci_u3", name: "Unit III: Natural Phenomena", weight: 12, chapterKeys: ["S10_CH10", "S10_CH11"], color: "bg-cyan-500" },
-                { id: "sci_u4", name: "Unit IV: Effects of Current", weight: 13, chapterKeys: ["S10_CH12", "S10_CH13"], color: "bg-amber-500" },
-                { id: "sci_u5", name: "Unit V: Natural Resources", weight: 5, chapterKeys: ["S10_CH15"], color: "bg-rose-500" }
-            ],
-            SST: [
-                { id: "sst_u1", name: "Unit I: India & the Contemporary World - II (History)", weight: 20, chapterKeys: ["SS10_HIS_01"], color: "bg-purple-500" },
-                { id: "sst_u2", name: "Unit II: Contemporary India - II (Geography)", weight: 20, chapterKeys: ["SS10_GEO_01"], color: "bg-emerald-500" },
-                { id: "sst_u3", name: "Unit III: Democratic Politics - II (Political Science)", weight: 20, chapterKeys: ["SS10_POL_01"], color: "bg-blue-500" },
-                { id: "sst_u4", name: "Unit IV: Understanding Economic Development (Economics)", weight: 20, chapterKeys: ["SS10_ECO_01"], color: "bg-amber-500" }
-            ]
-        };
-
-        let studentChapterRatings = {
-            M10_CH01: 'mastered', M10_CH02: 'developing', M10_CH03: 'developing', M10_CH04: 'developing',
-            M10_CH05: 'mastered', M10_CH06: 'weak', M10_CH07: 'mastered', M10_CH08: 'developing',
-            M10_CH09: 'weak', M10_CH10: 'developing', M10_CH11: 'developing', M10_CH12: 'developing',
-            M10_CH13: 'mastered', M10_CH14: 'mastered',
-            S10_CH01: 'developing', S10_CH02: 'developing',
-            SS10_HIS_01: 'developing', SS10_GEO_01: 'developing'
-        };
-
-        const ratingWeights = {
-            weak: 0.40,
-            developing: 0.70,
-            mastered: 0.95
-        };
-
-        function renderRoadmap() {
-            try {
-                const saved = localStorage.getItem('cbse_self_eval');
-                if (saved) studentChapterRatings = JSON.parse(saved);
-                loadChecklistState();
-            } catch (e) {}
-
-            renderChapterSelfEvalGrid();
-            recalculateRoadmap();
-
-            if (window.renderMathInElement) {
-                renderMathInElement(document.getElementById('workspace-4'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-            }
-        }
-
-        function renderChapterSelfEvalGrid() {
-            const container = document.getElementById('selfEvalChapterGrid');
-            if (!container) return;
-
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-
-            let html = '';
-            for (const key in chapters) {
-                const ch = chapters[key];
-                const currentRating = studentChapterRatings[key] || 'developing';
-
-                html += `
-                    <div class="p-3 rounded-xl bg-surfaceLight border border-slate-700/60 flex items-center justify-between gap-2 shadow-sm">
-                        <div class="truncate pr-2">
-                            <div class="text-[10px] font-mono text-slate-400 font-semibold">${ch.code} • ${ch.weight}M</div>
-                            <div class="text-xs font-bold text-white truncate">${ch.name}</div>
-                        </div>
-                        <div class="flex items-center gap-1 shrink-0 bg-slate-900/80 p-1 rounded-lg border border-slate-800">
-                            <button onclick="setChapterRating('${key}', 'weak')" title="Needs Focus (40%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'weak' ? 'bg-rose-600 text-white shadow-sm ring-1 ring-rose-400' : 'text-slate-500 hover:text-slate-300'}">🔴</button>
-                            <button onclick="setChapterRating('${key}', 'developing')" title="Developing (70%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'developing' ? 'bg-amber-600 text-white shadow-sm ring-1 ring-amber-400' : 'text-slate-500 hover:text-slate-300'}">🟡</button>
-                            <button onclick="setChapterRating('${key}', 'mastered')" title="Exam Ready (95%)" class="w-6 h-6 rounded flex items-center justify-center text-xs transition ${currentRating === 'mastered' ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400' : 'text-slate-500 hover:text-slate-300'}">🟢</button>
-                        </div>
-                    </div>
-                `;
-            }
-            container.innerHTML = html;
-        }
-
-        function setChapterRating(key, rating) {
-            studentChapterRatings[key] = rating;
-            try {
-                localStorage.setItem('cbse_self_eval', JSON.stringify(studentChapterRatings));
-            } catch (e) {}
-            renderChapterSelfEvalGrid();
-            recalculateRoadmap();
-        }
-
-        function resetSelfAssessment() {
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-            for (const key in chapters) {
-                studentChapterRatings[key] = 'developing';
-            }
-            try {
-                localStorage.setItem('cbse_self_eval', JSON.stringify(studentChapterRatings));
-            } catch (e) {}
-            renderChapterSelfEvalGrid();
-            recalculateRoadmap();
-        }
-
-        function recalculateRoadmap() {
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-            const units = subjectUnitsMap[currentSubject] || subjectUnitsMap.MATH;
-
-            let totalWeightedMarks = 0;
-            let masteredCount = 0;
-            let totalChapters = Object.keys(chapters).length;
-            let weakChapters = [];
-            let developingChapters = [];
-            let masteredChapters = [];
-
-            const unitListContainer = document.getElementById('roadmapUnitList');
-            let unitsHtml = '';
-
-            units.forEach(u => {
-                let unitEarned = 0;
-                let unitWeightTotal = 0;
-                let chapterNames = [];
-
-                u.chapterKeys.forEach(chKey => {
-                    const ch = chapters[chKey];
-                    if (ch) {
-                        chapterNames.push(ch.name);
-                        const rating = studentChapterRatings[chKey] || 'developing';
-                        const fraction = ratingWeights[rating];
-                        unitEarned += ch.weight * fraction;
-                        unitWeightTotal += ch.weight;
-
-                        if (rating === 'mastered') masteredCount++;
-                        if (rating === 'weak') weakChapters.push({ name: ch.name, weight: ch.weight, key: chKey });
-                        if (rating === 'developing') developingChapters.push({ name: ch.name, weight: ch.weight, key: chKey });
-                        if (rating === 'mastered') masteredChapters.push({ name: ch.name, weight: ch.weight, key: chKey });
-                    }
-                });
-
-                const unitPercent = unitWeightTotal > 0 ? Math.round((unitEarned / unitWeightTotal) * 100) : 0;
-                totalWeightedMarks += unitEarned;
-
-                unitsHtml += `
-                    <div class="p-3.5 rounded-xl bg-surfaceLight border border-slate-700/60 space-y-2">
-                        <div class="flex items-center justify-between text-xs">
-                            <div>
-                                <strong class="text-white">${u.name}</strong>
-                                <span class="text-slate-400 text-[11px] block sm:inline sm:ml-2">(${chapterNames.join(', ')})</span>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <span class="font-bold text-white">${u.weight} Marks</span>
-                                <span class="text-[10px] text-slate-400 block">${unitPercent}% Prepared</span>
-                            </div>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                            <div class="h-full ${u.color} rounded-full transition-all duration-500" style="width: ${unitPercent}%"></div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            if (unitListContainer) unitListContainer.innerHTML = unitsHtml;
-
-            const projectedScore = Math.round(totalWeightedMarks);
-            const scoreDisplay = document.getElementById('roadmapScore');
-            const percentDisplay = document.getElementById('roadmapPercent');
-            const masteredDisplay = document.getElementById('roadmapMasteredCount');
-            const riskDisplay = document.getElementById('roadmapTopRiskDomain');
-            const nextAction = document.getElementById('roadmapNextAction');
-            const nextActionDetail = document.getElementById('roadmapNextActionDetail');
-
-            if (scoreDisplay) scoreDisplay.innerText = `${projectedScore} / 80`;
-            if (percentDisplay) percentDisplay.innerText = `${((projectedScore / 80) * 100).toFixed(1)}% Projected Score`;
-            if (masteredDisplay) masteredDisplay.innerText = `${masteredCount} / ${totalChapters}`;
-
-            weakChapters.sort((a, b) => b.weight - a.weight);
-            developingChapters.sort((a, b) => b.weight - a.weight);
-
-            if (weakChapters.length > 0) {
-                if (riskDisplay) riskDisplay.innerText = weakChapters[0].name;
-                if (nextAction) nextAction.innerText = "Target Theory & Proofs";
-                if (nextActionDetail) nextActionDetail.innerText = `Study ${weakChapters[0].name} in Tab 1`;
-            } else if (developingChapters.length > 0) {
-                if (riskDisplay) riskDisplay.innerText = developingChapters[0].name;
-                if (nextAction) nextAction.innerText = "Fix Step Traps";
-                if (nextActionDetail) nextActionDetail.innerText = `Inspect ${developingChapters[0].name} in Tab 2`;
-            } else {
-                if (riskDisplay) riskDisplay.innerText = "None (Full Mastery)";
-                if (nextAction) nextAction.innerText = "Timed Mocks";
-                if (nextActionDetail) nextActionDetail.innerText = "Attempt Timed Mock in Tab 6";
-            }
-
-            const urgentBadge = document.getElementById('urgentCountBadge');
-            const urgentText = document.getElementById('urgentChaptersText');
-            const moderateBadge = document.getElementById('moderateCountBadge');
-            const moderateText = document.getElementById('moderateChaptersText');
-            const masteredBadge = document.getElementById('masteredCountBadge');
-            const masteredText = document.getElementById('masteredChaptersText');
-
-            if (urgentBadge) urgentBadge.innerText = `${weakChapters.length} Chapter${weakChapters.length === 1 ? '' : 's'}`;
-            if (urgentText) urgentText.innerText = weakChapters.length > 0
-                ? weakChapters.map(c => `${c.name} (${c.weight}M)`).join(', ')
-                : "No urgent chapters. Great job!";
-
-            if (moderateBadge) moderateBadge.innerText = `${developingChapters.length} Chapter${developingChapters.length === 1 ? '' : 's'}`;
-            if (moderateText) moderateText.innerText = developingChapters.length > 0
-                ? developingChapters.map(c => `${c.name} (${c.weight}M)`).join(', ')
-                : "No moderate-risk chapters.";
-
-            if (masteredBadge) masteredBadge.innerText = `${masteredChapters.length} Chapter${masteredChapters.length === 1 ? '' : 's'}`;
-            if (masteredText) masteredText.innerText = masteredChapters.length > 0
-                ? masteredChapters.map(c => `${c.name} (${c.weight}M)`).join(', ')
-                : "No chapters marked as mastered yet.";
-        }
-
-        function saveChecklistState() {
-            const state = {
-                chk1: document.getElementById('chk1') ? document.getElementById('chk1').checked : false,
-                chk2: document.getElementById('chk2') ? document.getElementById('chk2').checked : false,
-                chk3: document.getElementById('chk3') ? document.getElementById('chk3').checked : false,
-                chk4: document.getElementById('chk4') ? document.getElementById('chk4').checked : false
-            };
-            try {
-                localStorage.setItem('cbse_checklist_state', JSON.stringify(state));
-            } catch (e) {}
-        }
-
-        function loadChecklistState() {
-            try {
-                const saved = localStorage.getItem('cbse_checklist_state');
-                if (saved) {
-                    const state = JSON.parse(saved);
-                    for (const id in state) {
-                        const el = document.getElementById(id);
-                        if (el) el.checked = state[id];
-                    }
-                }
-            } catch (e) {}
-        }
-
-	// -------------------------------------------------------------------------
-        // TAB 5: SUBJECT-AWARE AI DOUBT SOLVER ENGINE
-        // -------------------------------------------------------------------------
-        let doubtSessionHistory = [];
-
-        function fillDoubt(text) {
-            const input = document.getElementById('doubtInput');
-            if (input) {
-                input.value = text;
-                input.focus();
-            }
-        }
-
-        function clearDoubtInput() {
-            const input = document.getElementById('doubtInput');
-            if (input) input.value = '';
-        }
-
-        function clearDoubtHistory() {
-            doubtSessionHistory = [];
-            const container = document.getElementById('doubtHistoryContainer');
-            if (container) {
-                container.innerHTML = `<p class="text-[11px] text-slate-500 italic">No doubts logged in this session yet.</p>`;
-            }
-        }
-
-        const chapterDoubtBank = {
-            // Mathematics
-            M10_CH01: [
-                { chip: "HCF × LCM = a × b proof", q: "How do we prove that HCF(a, b) × LCM(a, b) = a × b for two positive integers?" },
-                { chip: "√5 Irrationality 5-step proof", q: "Write down the formal 5-step proof by contradiction showing that √5 is an irrational number." },
-                { chip: "Why 6^n cannot end with 0", q: "Explain why 6^n cannot end with the digit 0 for any natural number n." }
-            ],
-            M10_CH04: [
-                { chip: "Negative root discard rationale", q: "Why do we reject the negative root in speed and dimension quadratic word problems?" },
-                { chip: "Completing square formula derivation", q: "Derive Sridharacharya's quadratic formula using completing the square." },
-                { chip: "Sign trap in b^2 - 4ac", q: "How to avoid the negative sign mistake in b^2 - 4ac when b is negative?" }
-            ],
-
-            // Science
-            S10_CH01: [
-                { chip: "Balancing Fe + H2O equation", q: "How do you balance Fe + H2O -> Fe3O4 + H2 using the step-by-step atom inventory method?" },
-                { chip: "Redox identification in MnO2 + HCl", q: "Identify substance oxidized, reduced, oxidizing agent, and reducing agent in MnO2 + 4HCl -> MnCl2 + 2H2O + Cl2." },
-                { chip: "Why respiration is exothermic", q: "Explain with chemical equation why cellular respiration is classified as an exothermic reaction." }
-            ],
-            S10_CH02: [
-                { chip: "Why dry HCl doesn't change litmus", q: "Why does dry HCl gas not turn dry blue litmus paper red while dilute HCl does?" },
-                { chip: "Chlor-Alkali electrode products", q: "What products are formed at the anode and cathode during the Chlor-Alkali electrolysis of brine?" },
-                { chip: "Plaster of Paris half water rationale", q: "Explain why Plaster of Paris is written with half a molecule of water of crystallization (CaSO4·1/2H2O)." }
-            ],
-
-            // Social Science
-            SS10_HIS_01: [
-                { chip: "Napoleonic Code (1804) features", q: "What were the major administrative and legal reforms introduced by the Civil Code of 1804 (Napoleonic Code)?" },
-                { chip: "Balkan nationalist tension causes", q: "Why did the Balkan region become the most serious source of nationalist tension in Europe after 1871?" }
-            ],
-            SS10_GEO_01: [
-                { chip: "Bangar vs Khadar alluvium", q: "Differentiate between Bangar and Khadar alluvial soils on the basis of age, texture, and fertility." },
-                { chip: "Black soil formation & cotton", q: "Describe the formation, climatic factors, and chemical properties of Black Soil (Regur Soil)." }
-            ]
-        };
-
-        function renderDoubtTab(chapterKey) {
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const chapters = activeSubj.chapters || {};
-            const ch = chapters[chapterKey];
-            if (!ch) return;
-
-            const tag = document.getElementById('tab5ChapterTag');
-            if (tag) tag.innerText = `Context: ${ch.name}`;
-
-            const header = document.getElementById('doubtChipsHeader');
-            if (header) header.innerText = `${ch.code} (${ch.name}) Frequent Doubts & Shortcuts:`;
-
-            const chipsContainer = document.getElementById('doubtQuickChips');
-            if (chipsContainer) {
-                const chips = chapterDoubtBank[chapterKey] || [
-                    { chip: "Important Board Questions", q: `What are the most frequent 3-mark and 5-mark board exam questions from ${ch.name}?` },
-                    { chip: "Core Definitions", q: `Explain the fundamental definitions and key principles of ${ch.name}.` }
-                ];
-                let html = '';
-                chips.forEach(item => {
-                    html += `
-                        <button onclick="fillDoubt('${item.q.replace(/'/g, "\\'")}')" class="text-xs px-3 py-1.5 rounded-lg bg-surfaceLight border border-slate-700 hover:border-indigo-500 text-slate-300 transition flex items-center gap-1.5">
-                            <span class="text-indigo-400">⚡</span> ${item.chip}
-                        </button>
-                    `;
-                });
-                chipsContainer.innerHTML = html;
-            }
-        }
-
-        async function solveDoubt() {
-            const userTier = getCurrentUserTier();
-            const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-            const allowedDemoChapters = activeSubj.freeChapters || [];
-
-            if (userTier === 'FREE' && !allowedDemoChapters.includes(currentChapterKey)) {
-                showUpgradeModal(`The AI Doubt Solver is limited to free demo chapters on the Free tier. Upgrade to Pro for full solutions across all ${activeSubj.name} topics.`);
-                return;
-            }
-
-            const input = document.getElementById('doubtInput');
-            const question = input ? input.value.trim() : '';
-            if (!question) {
-                alert("Please type or select a question first.");
-                return;
-            }
-
-            const btn = document.getElementById('doubtSubmitBtn');
-            const idleState = document.getElementById('doubtIdleState');
-            const activeContent = document.getElementById('doubtActiveContent');
-            const answerBody = document.getElementById('doubtAnswerBody');
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `<span>⏳</span> Solving...`;
-            }
-
-            let solutionText = "";
-
-            try {
-                const response = await fetch('http://127.0.0.1:8001/api/solve-doubt', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question: question, chapter_id: currentChapterKey })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    solutionText = data.solution_markdown || data.solution;
-                } else {
-                    throw new Error("Backend response error");
-                }
-            } catch (err) {
-                solutionText = generateFallbackDoubtSolution(question);
-            }
-
-            if (idleState) idleState.classList.add('hidden');
-            if (activeContent) activeContent.classList.remove('hidden');
-            if (answerBody) {
-                answerBody.innerHTML = solutionText;
+                feedback.innerHTML = `<div class="flex items-center gap-2 mb-1"><span class="text-base font-bold text-emerald-400">✓ Spot On!</span> <span class="font-bold text-white">Step ${faultyStep} contains the examiner trap.</span></div>
+                    <div class="text-slate-300">${chlg.deductionReason}</div>`;
                 if (window.renderMathInElement) {
-                    renderMathInElement(answerBody, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
+                    window.renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
                 }
             }
-
-            doubtSessionHistory.unshift(question);
-            updateDoubtHistoryUI();
-
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = `<span>🚀</span> Resolve Doubt`;
+        } else {
+            // INCORRECT: Step chosen is innocent; let student keep trying!
+            if (clickedBtn) {
+                clickedBtn.disabled = true;
+                clickedBtn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-rose-950/80 border border-rose-600 text-rose-300 text-xs font-semibold";
+                clickedBtn.innerHTML = "✗ Step " + selectedStep + " is Correct";
             }
-        }
 
-function generateFallbackDoubtSolution(q) {
-            const lower = q.toLowerCase();
-
-            // 1. Social Science (SST) Queries
-            if (currentSubject === 'SST' || lower.includes('balkan') || lower.includes('napoleon') || lower.includes('1804') || lower.includes('bangar') || lower.includes('khadar') || lower.includes('soil') || lower.includes('swaraj') || lower.includes('treaty') || lower.includes('congress') || lower.includes('movement')) {
-                if (lower.includes('balkan')) {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-amber-300 text-sm">Causes of Nationalist Tensions in the Balkan Region (Post-1871):</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>1. Ethnic & Geographical Diversity:</strong> The Balkans was a region of enormous geographical and ethnic variation comprising modern-day Romania, Bulgaria, Albania, Greece, Macedonia, Croatia, Bosnia-Herzegovina, Slovenia, Serbia, and Montenegro, whose inhabitants were broadly known as the Slavs.</p>
-                                <p><strong>2. Disintegration of the Ottoman Empire:</strong> A large part of the Balkans was under the control of the Ottoman Empire. The spread of romantic nationalism coupled with the disintegration of the Ottoman Empire made this region explosive.</p>
-                                <p><strong>3. Mutual Jealousy & Territorial Ambition:</strong> As Slavic nationalities struggled to define their identity and independence, the Balkan states were fiercely jealous of each other and each hoped to gain more territory at the expense of others.</p>
-                                <p><strong>4. Big Power Rivalry:</strong> The area became the scene of intense rivalry among European powers (Russia, Germany, England, and Austro-Hungary) over trade supremacy and territorial control, culminating in World War I.</p>
-                            </div>
-                        </div>
-                    `;
-                } else if (lower.includes('napoleon') || lower.includes('1804')) {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-amber-300 text-sm">Civil Code of 1804 (Napoleonic Code) - Core Provisions:</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>1. Equality before the Law:</strong> Abolished all privileges based on birth and established legal equality.</p>
-                                <p><strong>2. Right to Property:</strong> Secured private property rights for French citizens.</p>
-                                <p><strong>3. Feudal Abolition:</strong> Freed peasants from serfdom, manorial dues, and feudal obligations.</p>
-                                <p><strong>4. Administrative Uniformity:</strong> Standardized weights, measures, and a unified national currency.</p>
-                            </div>
-                        </div>
-                    `;
-                } else if (lower.includes('bangar') || lower.includes('khadar')) {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-amber-300 text-sm">Comparison: Bangar vs Khadar Alluvial Soils:</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>• Bangar (Old Alluvium):</strong> Found in higher terraces away from river valleys; contains higher concentration of calcareous deposits (kankar nodules); less fertile.</p>
-                                <p><strong>• Khadar (New Alluvium):</strong> Found in low floodplains renewed annually by seasonal silt; fine-grained texture; highly fertile for intensive agriculture.</p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-indigo-300 text-sm">CBSE Social Science Step-by-Step Resolution</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>Point 1: Historical / Constitutional Context:</strong> Clearly define the core event, policy, treaty, or geographical feature referenced in the question.</p>
-                                <p><strong>Point 2: Primary Socio-Economic & Political Factors:</strong> State 2 to 3 substantive points supported by historical dates, locations, or economic data.</p>
-                                <p><strong>Point 3: Long-term Impact & Conclusion:</strong> Conclude with the national outcome or policy relevance to secure full marks according to CBSE rubrics.</p>
-                            </div>
-                        </div>
-                    `;
+            if (feedback) {
+                feedback.className = "p-3.5 rounded-xl text-xs leading-relaxed bg-rose-950/70 text-rose-200 border border-rose-800";
+                feedback.innerHTML = `<strong>Not quite:</strong> Step ${selectedStep} is correct according to CBSE rules. Check the calculations in the remaining steps!`;
+                if (window.renderMathInElement) {
+                    window.renderMathInElement(feedback, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
                 }
             }
-
-            // 2. Science (SCI) Queries
-            if (currentSubject === 'SCI' || lower.includes('fe') || lower.includes('reaction') || lower.includes('acid') || lower.includes('lens') || lower.includes('ohm') || lower.includes('current') || lower.includes('respiration')) {
-                if (lower.includes('fe') && lower.includes('h2o')) {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-indigo-300 text-sm">Balancing Iron and Steam Reaction Step-by-Step</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>Step 1: Skeletal Equation:</strong> $\\text{Fe} + \\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + \\text{H}_2$</p>
-                                <p><strong>Step 2: Balance Oxygen:</strong> $4\\text{H}_2\\text{O} \\implies \\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + \\text{H}_2$</p>
-                                <p><strong>Step 3: Balance Hydrogen:</strong> Multiply $\\text{H}_2$ by 4 $\\implies \\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + 4\\text{H}_2$</p>
-                                <p><strong>Step 4: Balance Iron:</strong> Multiply $\\text{Fe}$ by 3 $\\implies 3\\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + 4\\text{H}_2$</p>
-                                <p><strong>Final Equation with Physical States:</strong> $3\\text{Fe(s)} + 4\\text{H}_2\\text{O(g)} \\rightarrow \\text{Fe}_3\\text{O}_4\\text{(s)} + 4\\text{H}_2\\text{(g)}$</p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    return `
-                        <div class="space-y-3 font-sans">
-                            <p class="font-bold text-indigo-300 text-sm">CBSE Science Step-by-Step Resolution</p>
-                            <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                                <p><strong>Step 1: Governing Scientific Principle / Definition:</strong> State the scientific law, ray diagram rule, or reaction category.</p>
-                                <p><strong>Step 2: Mathematical Working or Balanced Chemical Equation:</strong> Provide step calculations or balanced reactions complete with physical states ($s, l, g, aq$).</p>
-                                <p><strong>Step 3: Observation & Standard Scientific Units:</strong> Clearly mention the final unit (e.g., $\\text{cm}, \\text{D}, \\Omega, \\text{A}$) or qualitative observation.</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-
-            // 3. Mathematics (MATH) Queries
-            if (lower.includes('negative root') || lower.includes('speed') || lower.includes('reject')) {
-                return `
-                    <div class="space-y-3 font-sans">
-                        <p class="font-bold text-indigo-300 text-sm">CBSE Examiner Rationale: Rejecting Negative Roots in Real-World Word Problems</p>
-                        <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                            <p><strong>Step 1: Domain Definition:</strong> Variables denote non-negative scalar physical quantities ($v > 0$, $\\text{dimensions} > 0$).</p>
-                            <p><strong>Step 2: Algebraic Roots:</strong> A quadratic model produces two roots: $x = 6$ and $x = -54$.</p>
-                            <p><strong>Step 3: Marking Rubric Penalty:</strong> In CBSE rubrics, leaving both roots without an explicit rejection statement forfeits 1 mark. State:</p>
-                            <blockquote class="p-2.5 bg-surface border-l-4 border-amber-500 rounded text-slate-300 font-mono text-xs">
-                                "Since physical speed cannot be negative, $x = -54$ is discarded. Therefore, stream speed = $6\\text{ km/h}$."
-                            </blockquote>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="space-y-3 font-sans">
-                    <p class="font-bold text-indigo-300 text-sm">CBSE Step-by-Step Resolution</p>
-                    <div class="p-3 rounded-xl bg-surfaceLight/80 border border-slate-700/60 space-y-2 text-xs leading-relaxed text-slate-200">
-                        <p><strong>Step 1: Identify Given Equations & Domain Restrictions:</strong> Analyze the problem statement, establish standard variable declarations, and state boundary conditions.</p>
-                        <p><strong>Step 2: Apply Governing NCERT Formula or Principle:</strong> State the primary mathematical theorem explicitly before numeric substitution.</p>
-                        <p><strong>Step 3: Concluding Verification & Units:</strong> Verify values, calculate final steps, and ensure final units are written.</p>
-                    </div>
-                </div>
-            `;
         }
-
-        function updateDoubtHistoryUI() {
-            const container = document.getElementById('doubtHistoryContainer');
-            if (!container) return;
-
-            let html = '';
-            doubtSessionHistory.forEach((q, idx) => {
-                html += `
-                    <div onclick="fillDoubt('${q.replace(/'/g, "\\'")}')" class="p-2 rounded-lg bg-surfaceLight hover:bg-slate-700/60 cursor-pointer border border-slate-700/60 truncate transition">
-                        <span class="text-indigo-400 font-mono text-[10px] mr-1">#${idx + 1}</span>
-                        <span class="text-slate-300">${q}</span>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        function copyDoubtSolution() {
-            const answerBody = document.getElementById('doubtAnswerBody');
-            const btn = document.getElementById('copySolutionBtn');
-            if (!answerBody) return;
-
-            navigator.clipboard.writeText(answerBody.innerText).then(() => {
-                if (btn) {
-                    btn.innerHTML = `<span>✓</span> Copied!`;
-                    setTimeout(() => {
-                        btn.innerHTML = `<span>📋</span> Copy Solution`;
-                    }, 2000);
-                }
-            });
-        }
-
-        // -------------------------------------------------------------------------
-        // TAB 6: SUBJECT-AWARE TIMED MOCK TEST ENGINE
-        // -------------------------------------------------------------------------
-        let mockMode = 'chapter';
-        let mockTimerInterval = null;
-        let mockTotalSeconds = 2700;
-        let mockSecondsLeft = 2700;
-        let mockStartTime = null;
-        let activeMockQuestions = [];
-        let currentMockTestNo = 1;
-        let lastEvaluationResults = null;
-        let examSourceMode = 'blueprint';
-
-        function setExamSource(source) {
-    const userTier = (getCurrentUserTier() || '').toUpperCase();
-    const isInstitutional = (userTier === 'ENTERPRISE' || userTier === 'INSTITUTIONAL');
-
-    if (source === 'pyq' && !isInstitutional) {
-        showUpgradeModal("Authentic CBSE Past Year Board Papers and School Cohort Diagnostics require an Institutional (ENTERPRISE) plan.");
-        return;
     }
 
-    examSourceMode = source;
-    const bpBtn = document.getElementById('sourceBlueprintBtn');
-    const pyqBtn = document.getElementById('sourcePyqBtn');
-    const pastPaperContainer = document.getElementById('pastPaperContainer');
-    const formatGrid = document.querySelector('#mockTestStartCard .grid.grid-cols-1.md\\:grid-cols-3');
-
-    if (source === 'blueprint') {
-        if (bpBtn) bpBtn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-md shadow-amber-900/30 transition";
-        if (pyqBtn) pyqBtn.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-surfaceLight border border-slate-700 text-slate-400 hover:text-white transition";
-        if (pastPaperContainer) pastPaperContainer.classList.add('hidden');
-        if (formatGrid) formatGrid.classList.remove('hidden');
-        setMockMode(mockMode || 'quick');
-    } else {
-        if (pyqBtn) pyqBtn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-md shadow-amber-900/30 transition";
-        if (bpBtn) bpBtn.className = "px-4 py-1.5 rounded-xl text-xs font-semibold bg-surfaceLight border border-slate-700 text-slate-400 hover:text-white transition";
-        if (pastPaperContainer) pastPaperContainer.classList.remove('hidden');
-        if (formatGrid) formatGrid.classList.add('hidden');
-        loadAvailablePastPapers();
-    }
-}
-
-        async function loadAvailablePastPapers() {
-            try {
-                const response = await fetch(`http://127.0.0.1:8001/api/mock-test/past-papers?subject_code=${currentSubject}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    const select = document.getElementById('pastPaperSelect');
-                    if (select && data.papers && data.papers.length > 0) {
-                        let html = '';
-                        data.papers.forEach(p => {
-                            html += `<option value="${p.year}_${p.set}">${p.label || `${p.year} (${p.set}) • ${p.total_marks}M`}</option>`;
-                        });
-                        select.innerHTML = html;
-                        onPastPaperChanged();
-                    } else if (select) {
-                        select.innerHTML = `<option value="">No past papers available for ${currentSubject}</option>`;
-                    }
-                }
-            } catch (e) {
-                console.warn("Could not load past papers list:", e);
-            }
-        }
-
-        function onPastPaperChanged() {
-            mockTotalSeconds = 5400;
-            mockSecondsLeft = 5400;
-            document.getElementById('secALabel').innerText = "3 × 1M";
-            document.getElementById('secBLabel').innerText = "3 × 2M";
-            document.getElementById('secCLabel').innerText = "3 × 3M";
-            document.getElementById('secDLabel').innerText = "3 × 5M";
-        }
-
-        function setMockMode(mode) {
-            const userTier = getCurrentUserTier();
-            if (mode === 'quick' && userTier === 'FREE') {
-                showUpgradeModal("40-Mark timed drills require a Pro Learner or Institutional subscription.");
-                return;
-            }
-            if (mode === 'full_80' && userTier === 'FREE') {
-                showUpgradeModal("Comprehensive 80-Mark (3-Hour) board simulations require a Pro Learner or Institutional subscription.");
-                return;
-            }
-            mockMode = mode;
-            const chBtn = document.getElementById('mockModeChapterBtn');
-            const quickBtn = document.getElementById('mockModeQuickBtn');
-            const full80Btn = document.getElementById('mockModeFull80Btn');
-
-            const inactiveClass = "p-4 rounded-xl border border-slate-700 bg-surfaceLight text-slate-400 hover:text-white transition flex flex-col gap-1 text-left";
-            if (chBtn) chBtn.className = inactiveClass;
-            if (quickBtn) quickBtn.className = inactiveClass;
-            if (full80Btn) full80Btn.className = inactiveClass;
-
-            if (mode === 'chapter') {
-                mockTotalSeconds = 2700;
-                mockSecondsLeft = 2700;
-                if (chBtn) chBtn.className = "p-4 rounded-xl border-2 border-sky-500 bg-sky-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-sky-950/40 text-left";
-                document.getElementById('secALabel').innerText = "2 × 1M";
-                document.getElementById('secBLabel').innerText = "2 × 2M";
-                document.getElementById('secCLabel').innerText = "3 × 3M";
-                document.getElementById('secDLabel').innerText = "1 × 5M";
-            } else if (mode === 'quick') {
-                mockTotalSeconds = 5400;
-                mockSecondsLeft = 5400;
-                if (quickBtn) quickBtn.className = "p-4 rounded-xl border-2 border-amber-500 bg-amber-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-amber-950/40 text-left";
-                document.getElementById('secALabel').innerText = "4 × 1M";
-                document.getElementById('secBLabel').innerText = "3 × 2M";
-                document.getElementById('secCLabel').innerText = "5 × 3M";
-                document.getElementById('secDLabel').innerText = "3 × 5M";
-            } else if (mode === 'full_80') {
-                mockTotalSeconds = 10800;
-                mockSecondsLeft = 10800;
-                if (full80Btn) full80Btn.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/30 text-white transition flex flex-col gap-1 shadow-md shadow-emerald-950/40 text-left";
-                document.getElementById('secALabel').innerText = "20 × 1M";
-                document.getElementById('secBLabel').innerText = "5 × 2M";
-                document.getElementById('secCLabel').innerText = "6 × 3M";
-                document.getElementById('secDLabel').innerText = "4 × 5M";
-            }
-        }
-
-        async function generateMockTest() {
-            const isChapter = (typeof mockMode !== 'undefined' && mockMode === 'chapter');
-            const targetChapter = isChapter ? currentChapterKey : 'ALL';
-            const queryMode = isChapter ? 'chapter' : 'full';
-            const examFmt = (typeof mockMode !== 'undefined') ? mockMode : 'quick';
-
-            const candidateName = document.getElementById('candidateNameInput')?.value || "Rohan Kumar";
-            const activeCandidate = document.getElementById('activeCandidateName');
-            const activeTag = document.getElementById('activeExamModeTag');
-            if (activeCandidate) activeCandidate.innerText = candidateName;
-            if (activeTag) {
-                if (typeof examSourceMode !== 'undefined' && examSourceMode === 'pyq') {
-                    const select = document.getElementById('pastPaperSelect');
-                    activeTag.innerText = select ? select.options[select.selectedIndex]?.text.split('•')[0].trim() : "Official Board Paper";
-                } else {
-                    if (mockMode === 'chapter') activeTag.innerText = "Chapter Focus Drill (20M)";
-                    else if (mockMode === 'quick') activeTag.innerText = "Quick Board Drill (40M)";
-                    else activeTag.innerText = "Comprehensive Board Mock (80M)";
+    
+    // ==========================================
+    // PAST PAPERS LOADER (CBSE PYQ REPOSITORY)
+    // ==========================================
+    async function loadAvailablePastPapers() {
+        const select = document.getElementById('pastPaperSelect');
+        if (!select) return;
+        
+        try {
+            const subj = typeof currentSubject !== 'undefined' ? currentSubject : 'MATH';
+            const res = await fetch(`http://127.0.0.1:8001/api/mock-test/past-papers?subject_code=${subj}`);
+            if (res.ok) {
+                const data = await res.json();
+                const papers = data.papers || [];
+                if (papers.length > 0) {
+                    select.innerHTML = papers.map(p => 
+                        `<option value="${p.year}_${p.set}">${p.year} • ${p.set} (${p.subject || subj})</option>`
+                    ).join('');
+                    return;
                 }
             }
-
-            let questions = [];
-
-            try {
-                let response;
-                if (typeof examSourceMode !== 'undefined' && examSourceMode === 'pyq') {
-                    const select = document.getElementById('pastPaperSelect');
-                    const [pyqYear, pyqSet] = (select ? select.value : "2023_Delhi Set 1").split('_');
-                    response = await fetch(`http://127.0.0.1:8001/api/mock-test/generate-pyq/${pyqYear}?pyq_set=${encodeURIComponent(pyqSet)}&subject_code=${currentSubject}`);
-                } else {
-                    response = await fetch(`http://127.0.0.1:8001/api/mock-test/generate/${targetChapter}?mode=${queryMode}&exam_format=${examFmt}&subject_code=${currentSubject}`);
-                }
-
-                if (response.ok) {
-                    const data = await response.json();
-                    questions = (data.questions || []).map(q => ({
-                        id: q.question_id,
-                        marks: q.total_marks,
-                        text: q.question_text,
-                        section: q.section || (q.total_marks === 1 ? "Section A" : (q.total_marks === 2 ? "Section B" : (q.total_marks === 3 ? "Section C" : "Section D"))),
-                        model: q.ideal_solution || (typeof q.marking_rubric === 'string' ? q.marking_rubric : JSON.stringify(q.marking_rubric)),
-                        sourceTag: (q.pyq_year && q.pyq_set) ? `CBSE ${q.pyq_year} • ${q.pyq_set}` : null,
-                        lossCategory: "Calculation / Step Omission",
-                        remedy: `Revise chapter concepts in Tab 1`
-                    }));
-                }
-            } catch (e) {
-                console.warn("Backend API offline or failed, falling back to local pool:", e);
-            }
-
-            if (!questions || questions.length === 0) {
-                questions = buildChapterMock(currentChapterKey);
-            }
-
-            if (!questions || questions.length === 0) {
-                alert("No questions found for this topic.");
-                return;
-            }
-
-            activeMockQuestions = questions;
-
-            let html = '';
-            questions.forEach((q, idx) => {
-                html += `
-                    <div class="p-5 bg-surfaceLight border border-slate-700/70 rounded-2xl shadow-sm space-y-3">
-                        <div class="flex justify-between items-center text-xs text-slate-400 font-mono">
-                            <div class="flex items-center gap-2">
-                                <span class="font-bold text-white">Question ${idx + 1}</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${q.section}</span>
-                                ${q.sourceTag ? `<span class="text-[10px] px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 font-bold">${q.sourceTag}</span>` : ''}
-                            </div>
-                            <span class="text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2.5 py-0.5 rounded font-bold">${q.marks} Mark${q.marks > 1 ? 's' : ''}</span>
-                        </div>
-                        <p class="text-xs sm:text-sm font-medium text-slate-200 leading-relaxed">${q.text}</p>
-                        <textarea name="q_${q.id}" rows="${q.marks > 2 ? 4 : 2}" class="w-full p-3 text-xs font-mono border border-slate-700 rounded-xl bg-background text-slate-200 focus:border-amber-500 outline-none leading-relaxed" placeholder="Write step-by-step solution and final answer..."></textarea>
-                    </div>
-                `;
-            });
-
-            document.getElementById('mockTestQuestions').innerHTML = html;
-            document.getElementById('mockTestStartCard').classList.add('hidden');
-            document.getElementById('mockTestResults').classList.add('hidden');
-            document.getElementById('mockTestForm').classList.remove('hidden');
-            document.getElementById('mockTimerBadge').classList.remove('hidden');
-
-            mockStartTime = Date.now();
-            startMockTimer();
-
-            if (window.renderMathInElement) {
-                renderMathInElement(document.getElementById('mockTestQuestions'), { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
-            }
+        } catch (e) {
+            console.warn("Using offline past paper fallbacks:", e);
         }
 
-        function buildChapterMock(chKey) {
-    const activeSubj = subjectsRegistry[currentSubject] || subjectsRegistry.MATH;
-    const chapters = activeSubj.chapters || {};
-    const ch = chapters[chKey] || chapters[Object.keys(chapters)[0]];
-    if (!ch) return [];
-
-    const diagnostics = ch.diagnostics || [];
-
-    // 1. Science Fallback Blueprint
-    if (currentSubject === 'SCI') {
-        return [
-            {
-                id: 101, section: "Section A", marks: 1,
-                text: diagnostics[0] ? diagnostics[0].q : `Identify the observation or gas evolved during chemical reaction in ${ch.name}.`,
-                model: diagnostics[0] ? diagnostics[0].solution : "State observation and give balanced reaction with physical state symbols.",
-                keywords: ["gas", "color", "solution", "acid", "salt", "reaction"],
-                lossCategory: "Conceptual Slip / Missing Observation",
-                remedy: `Revise ${ch.name} concept notes in Tab 1`
-            },
-            {
-                id: 102, section: "Section A", marks: 1,
-                text: diagnostics[1] ? diagnostics[1].q : `State the governing scientific principle or definition for ${ch.name}.`,
-                model: diagnostics[1] ? diagnostics[1].solution : "Clear statement of law or definition.",
-                keywords: ["law", "principle", "definition", "therefore"],
-                lossCategory: "Law Formulation Slip",
-                remedy: `Review core definitions in Tab 1`
-            },
-            {
-                id: 103, section: "Section B", marks: 2,
-                text: `Write the balanced chemical equation with state symbols or state the governing law for ${ch.name}.`,
-                model: ch.exp1 || "Write balanced formulation with physical state symbols (s, l, g, aq).",
-                keywords: ["equation", "balanced", "step", "reaction"],
-                lossCategory: "Omitted State Symbols / Unbalanced Equation",
-                remedy: `Practice balanced chemical equations in Tab 3`
-            },
-            {
-                id: 104, section: "Section C", marks: 3,
-                text: `Explain the experimental procedure, mechanism, or ray diagram/biological pathway in ${ch.name}.`,
-                model: ch.exp2 || "Structured 3-step scientific explanation or ray diagram deduction.",
-                keywords: ["diagram", "anode", "cathode", "pathway", "step 1", "step 2"],
-                lossCategory: "Incomplete Working Steps",
-                remedy: `Inspect step rubric in Tab 3`
-            },
-            {
-                id: 105, section: "Section D", marks: 5,
-                text: `Comprehensive scenario-based analytical question on industrial/biological applications of ${ch.name}.`,
-                model: "Structured multi-part explanation covering principle, reaction/mechanism, and everyday applications.",
-                keywords: ["application", "because", "reaction", "therefore"],
-                lossCategory: "Incomplete Explanation",
-                remedy: `Review 5-mark long answer format in Tab 1`
-            }
-        ];
+        // Standard CBSE Board PYQ fallback sets
+        select.innerHTML = `
+            <option value="2024_Delhi Set 1">2024 • Delhi Set 1 (Official)</option>
+            <option value="2024_All India Set 2">2024 • All India Set 2 (Official)</option>
+            <option value="2023_Delhi Set 1">2023 • Delhi Set 1 (Official)</option>
+            <option value="2023_All India Set 3">2023 • All India Set 3 (Official)</option>
+        `;
     }
 
-    // 2. Social Science Fallback Blueprint
-    if (currentSubject === 'SST') {
-        return [
-            {
-                id: 201, section: "Section A", marks: 1,
-                text: diagnostics[0] ? diagnostics[0].q : `State the significant historical event or geographical term in ${ch.name}.`,
-                model: diagnostics[0] ? diagnostics[0].solution : "Specific historical date, term, or constitutional provision.",
-                keywords: ["year", "treaty", "soil", "party", "movement"],
-                lossCategory: "Factual Slip",
-                remedy: `Revise ${ch.name} timeline in Tab 1`
-            },
-            {
-                id: 202, section: "Section B", marks: 2,
-                text: `Differentiate between two key concepts or examine two causes related to ${ch.name}.`,
-                model: "Two distinct points of difference or two clear historical/economic causes.",
-                keywords: ["first", "second", "difference", "cause"],
-                lossCategory: "Incomplete Points",
-                remedy: `Review 2-mark points in Tab 1`
-            },
-            {
-                id: 203, section: "Section C", marks: 3,
-                text: `Analyze three arguments, consequences, or measures regarding ${ch.name}.`,
-                model: "Three well-elaborated points with supporting examples.",
-                keywords: ["1.", "2.", "3.", "consequence", "measure"],
-                lossCategory: "Missing Examiner Rationale",
-                remedy: `Inspect 3-point structure in Tab 1`
-            },
-            {
-                id: 204, section: "Section D", marks: 5,
-                text: `Detailed essay-type question examining the multidimensional impact or institutional reforms in ${ch.name}.`,
-                model: "Introduction, 5 structured analytical points with historical/constitutional context, and conclusion.",
-                keywords: ["impact", "movement", "constitution", "reform", "growth"],
-                lossCategory: "Insufficient Elaboration",
-                remedy: `Review long answer structures in Tab 4`
-            }
-        ];
-    }
-
-    // 3. Mathematics Default Blueprint
-    return [
-        {
-            id: 11, section: "Section A", marks: 1,
-            text: diagnostics[0] ? diagnostics[0].q : `State fundamental definition or law for ${ch.name}.`,
-            model: diagnostics[0] ? diagnostics[0].solution : "State fundamental principle and core conditions.",
-            keywords: ["step", "equation", "formula", "because", "true"],
-            lossCategory: "Conceptual Definition Slip",
-            remedy: `Review ${ch.code} Concept Map in Tab 1`
-        },
-        {
-            id: 12, section: "Section A", marks: 1,
-            text: diagnostics[1] ? diagnostics[1].q : `Calculate parameter or observation for ${ch.name}.`,
-            model: diagnostics[1] ? diagnostics[1].solution : "Direct calculation step.",
-            keywords: ["value", "ratio", "formula"],
-            lossCategory: "Calculation Slip",
-            remedy: `Practice ${ch.code} Fundamentals in Tab 1`
-        },
-        {
-            id: 21, section: "Section B", marks: 2,
-            text: `Solve with supporting relation or formula the primary mechanism in ${ch.name}.`,
-            model: ch.exp1 || "Write complete formula with step substitution.",
-            keywords: ["step 1", "step 2", "formula"],
-            lossCategory: "Incomplete Working Steps",
-            remedy: `Inspect step rubric in Tab 3`
-        },
-        {
-            id: 31, section: "Section C", marks: 3,
-            text: `Provide structured line-by-line derivation, proof, or numerical resolution for ${ch.name}.`,
-            model: ch.exp2 || "Given, To Prove, and step-by-step mathematical deduction.",
-            keywords: ["proof", "given", "to prove", "hence proved"],
-            lossCategory: "Proof Structure Incompleteness",
-            remedy: `Practice line-by-line proof in Tab 1`
-        },
-        {
-            id: 41, section: "Section D", marks: 5,
-            text: `Comprehensive scenario-based board problem modeling practical application from ${ch.name}.`,
-            model: "Declare variable/context, formulate primary equation, resolve steps, discard extraneous values with reason, state units.",
-            keywords: ["let", "discard", "units", "because"],
-            lossCategory: "Omission of Examiner Rationale / Units",
-            remedy: `Review 5M word problem traps in Tab 3`
-        }
-    ];
-}
-
-        function startMockTimer() {
+    function startMockTimer() {
             clearInterval(mockTimerInterval);
             mockSecondsLeft = mockTotalSeconds;
 
@@ -2640,6 +1619,11 @@ function generateFallbackDoubtSolution(q) {
             clearInterval(mockTimerInterval);
 
             const elapsedSecs = Math.max(1, Math.round((Date.now() - mockStartTime) / 1000));
+
+        const subjCode = (currentSubject || 'MATH') === 'SCI' ? 'SCI086' : ((currentSubject || 'MATH') === 'SST' ? 'SST087' : 'MTH041');
+        const randHex = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const testAssessmentId = `CBSE-2026-${subjCode}-${randHex}`;
+        
             const elapsedMins = Math.floor(elapsedSecs / 60);
             const remainingSecs = elapsedSecs % 60;
             const timeString = `${elapsedMins}m ${remainingSecs}s`;
@@ -2720,7 +1704,7 @@ function generateFallbackDoubtSolution(q) {
                     earned: earned,
                     loss: loss,
                     lossReason: lossReason,
-                    model: q.model,
+                    model: q.model, rubric: q.rubric,
                     studentAns: studentAns || "(No response submitted)",
                     remedy: q.remedy || `Revise ${q.section} concepts in Tab 1`
                 });
@@ -2730,6 +1714,7 @@ function generateFallbackDoubtSolution(q) {
             const percentage = ((evaluatedScore / maxExamMarks) * 100).toFixed(1);
 
             lastEvaluationResults = {
+            testId: typeof testAssessmentId !== 'undefined' ? testAssessmentId : `CBSE-2026-${Date.now().toString().slice(-6)}`,
                 candidate: candidateName,
                 mode: mockMode,
                 score: evaluatedScore,
@@ -2741,43 +1726,353 @@ function generateFallbackDoubtSolution(q) {
                 paceColor: paceColor,
                 breakdown: itemizedBreakdown
             };
+        // Milestone 2: Save to LocalStorage History
+        try {
+            saveMockAttemptToHistory(lastEvaluationResults);
+        } catch(e) { console.warn("Failed to persist mock test:", e); }
+    
 
             renderMockResultsView('all');
         }
 
-	function formatRubricSteps(rawText) {
-    if (!rawText) return '<span class="text-slate-500 italic">No rubric provided</span>';
-    
-    let text = rawText;
-    if (typeof text === 'object') {
-        text = Object.entries(text).map(([k, v]) => `• ${k.replace(/_/g, ' ')}: ${v}`).join('\n');
-    }
+	function formatRubricSteps(rawModel, rawRubric) {
+    let outHtml = '';
 
-    const lines = text
-        .split(/\r?\n+/)
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
-
-    if (lines.length <= 1) {
-        const stepSplit = text.split(/(?=Step\s*\d+:|Case\s*\d+:|\d+\.\s+)/i);
-        if (stepSplit.length > 1) {
-            return stepSplit.map(s => `
-                <div class="p-2 rounded-lg bg-surface/80 border border-indigo-900/40 text-[11px] leading-relaxed text-indigo-200">
-                    ${s.trim()}
-                </div>
-            `).join('');
+    // Parse structured rubric if provided
+    let rubricItems = [];
+    if (rawRubric) {
+        if (Array.isArray(rawRubric)) {
+            rubricItems = rawRubric;
+        } else if (typeof rawRubric === 'object') {
+            rubricItems = Object.entries(rawRubric).map(([k, v]) => ({ step: `${k.replace(/_/g, ' ')}: ${v}`, marks: '' }));
+        } else if (typeof rawRubric === 'string' && rawRubric.trim()) {
+            try {
+                const parsed = JSON.parse(rawRubric);
+                if (Array.isArray(parsed)) rubricItems = parsed;
+                else if (typeof parsed === 'object') {
+                    rubricItems = Object.entries(parsed).map(([k, v]) => ({ step: `${k.replace(/_/g, ' ')}: ${v}`, marks: '' }));
+                }
+            } catch (e) {}
         }
     }
 
-    return lines.map((line) => {
-        const isHeader = line.toLowerCase().startsWith('step') || line.match(/^\d+[\.\)]/);
-        return `
-            <div class="p-2 rounded-lg ${isHeader ? 'bg-indigo-950/40 border border-indigo-900/60 font-semibold text-indigo-200' : 'bg-surface/60 text-slate-300'} text-[11px] leading-relaxed">
-                ${line}
-            </div>
-        `;
-    }).join('');
+    // Render Answer Body (splits by line breaks cleanly)
+    const textBody = (typeof rawModel === 'string' ? rawModel : JSON.stringify(rawModel || '')).trim();
+    if (textBody && textBody !== '""') {
+        const paragraphs = textBody.split('\n').map(p => p.trim()).filter(Boolean);
+        outHtml += '<div class="space-y-2 mb-3">';
+        paragraphs.forEach(p => {
+            const isHeader = p.toLowerCase().startsWith('step') || p.startsWith('1.') || p.startsWith('2.') || p.startsWith('3.') || p.startsWith('4.') || p.startsWith('5.') || p.startsWith('(i)') || p.startsWith('(ii)') || p.startsWith('(iii)');
+            outHtml += `
+                <div class="p-2.5 rounded-lg ${isHeader ? 'bg-indigo-950/40 border border-indigo-900/60 font-semibold text-indigo-200' : 'bg-surface/90 border border-slate-800 text-slate-200'} text-[11px] leading-relaxed">
+                    ${p}
+                </div>
+            `;
+        });
+        outHtml += '</div>';
+    }
+
+    // Render Explicit CBSE Step Marks Breakdown
+    if (rubricItems.length > 0) {
+        outHtml += '<div class="pt-2 border-t border-indigo-900/60 space-y-1.5">';
+        outHtml += '<span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider block mb-1">Official CBSE Step Allocation:</span>';
+        rubricItems.forEach((r, idx) => {
+            const stepText = r.step || r.description || JSON.stringify(r);
+            const markBadge = r.marks ? `<span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 font-mono text-[10px] font-bold border border-indigo-800 shrink-0">${r.marks}M</span>` : '';
+            outHtml += `
+                <div class="p-2 rounded-lg bg-indigo-950/20 border border-indigo-900/40 flex items-start justify-between gap-2 text-[11px] text-indigo-200">
+                    <span class="leading-relaxed"><strong>Step ${idx + 1}:</strong> ${stepText}</span>
+                    ${markBadge}
+                </div>
+            `;
+        });
+        outHtml += '</div>';
+    }
+
+    return outHtml || '<span class="text-slate-500 italic">No detailed rubric available</span>';
 }
+
+        
+        // =======================================================
+        // CBSE OFFICIAL DIAGNOSTIC PDF MARKSHEET GENERATOR
+        // =======================================================
+        // =======================================================
+        // PERSISTENT MOCK HISTORY & PERFORMANCE TRENDS (TAB 4)
+        // =======================================================
+        function saveMockAttemptToHistory(evalRes) {
+            if (!evalRes) return;
+            const history = JSON.parse(localStorage.getItem('cbse_mock_history') || '[]');
+            const record = {
+                testId: evalRes.testId || `CBSE-${Date.now().toString().slice(-6)}`,
+                date: new Date().toISOString(),
+                subject: currentSubject || 'MATH',
+                score: evalRes.score,
+                maxMarks: evalRes.maxMarks,
+                percentage: evalRes.percentage,
+                pacePerMark: evalRes.pacePerMark,
+                paceVerdict: evalRes.paceVerdict || 'Standard',
+                format: evalRes.mode === 'full_80' ? 'Board Mock (80M)' : (evalRes.mode === 'quick' ? 'Quick Drill (40M)' : 'Focus Drill (20M)')
+            };
+            history.unshift(record); // newest first
+            if (history.length > 20) history.pop(); // keep last 20 attempts
+            localStorage.setItem('cbse_mock_history', JSON.stringify(history));
+            renderMockHistoryInTab4();
+        }
+
+        function renderMockHistoryInTab4() {
+            const container = document.getElementById('mockHistoryContainer');
+            if (!container) return;
+
+            const history = JSON.parse(localStorage.getItem('cbse_mock_history') || '[]');
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="text-xs text-slate-500 italic p-4 text-center border border-dashed border-slate-800 rounded-xl">
+                        No mock test attempts recorded yet. Take an exam in Tab 6 to start your trendline!
+                    </div>`;
+                return;
+            }
+
+            let rows = '';
+            history.forEach(item => {
+                const dt = new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                const isPassed = item.percentage >= 60;
+                rows += `
+                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/30 text-xs transition">
+                        <td class="py-2.5 font-mono text-indigo-400 font-bold">${item.testId}</td>
+                        <td class="py-2.5 text-slate-400">${dt}</td>
+                        <td class="py-2.5 font-semibold text-slate-200">${item.subject}</td>
+                        <td class="py-2.5 text-slate-300">${item.format}</td>
+                        <td class="py-2.5 text-right font-bold ${isPassed ? 'text-emerald-400' : 'text-amber-400'}">${item.score} / ${item.maxMarks}</td>
+                        <td class="py-2.5 text-right font-mono font-bold ${isPassed ? 'text-emerald-400' : 'text-rose-400'}">${item.percentage}%</td>
+                        <td class="py-2.5 text-right text-slate-400">${item.pacePerMark}s</td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[10px] uppercase font-bold text-slate-500 border-b border-slate-700/60 tracking-wider">
+                                <th class="pb-2">Test ID</th>
+                                <th class="pb-2">Date</th>
+                                <th class="pb-2">Subject</th>
+                                <th class="pb-2">Format</th>
+                                <th class="pb-2 text-right">Score</th>
+                                <th class="pb-2 text-right">Aggregate</th>
+                                <th class="pb-2 text-right">Pace</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function downloadPdfMarksheet() {
+            if (!lastEvaluationResults || !lastEvaluationResults.breakdown) {
+                alert("Please complete and submit a mock test first to generate your marksheet.");
+                return;
+            }
+
+            const data = lastEvaluationResults;
+            const subj = currentSubject || 'MATH';
+            const subjName = subj === 'SCI' ? 'Science (086)' : (subj === 'SST' ? 'Social Science (087)' : 'Mathematics Standard (041)');
+            const candidateName = data.candidate || document.getElementById('activeCandidateName')?.innerText || "Aarav Gupta";
+            const dateStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            // Generate clean unique filename components
+            const now = new Date();
+            const dateStamp = now.getFullYear().toString() +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0');
+            const timeStamp = String(now.getHours()).padStart(2, '0') +
+                String(now.getMinutes()).padStart(2, '0') +
+                String(now.getSeconds()).padStart(2, '0');
+            const cleanTestId = (data.testId || 'CBSE-2026-MOCK').replace(/[^a-zA-Z0-9_-]/g, '_');
+            const cleanCandidate = candidateName.replace(/\s+/g, '_');
+            const uniqueReportTitle = `CBSE_Marksheet_${cleanTestId}_${dateStamp}_${timeStamp}_${cleanCandidate}`;
+
+            let rowsHtml = '';
+            data.breakdown.forEach(item => {
+                const isFull = item.loss === 0;
+                const statusColor = isFull ? '#059669' : '#e11d48';
+                const statusText = isFull ? '✓ Full Credit' : `▲ Mark Deduction (-${item.loss.toFixed(1)}M)`;
+
+                let modelFormatted = '';
+                if (typeof item.model === 'string') {
+                    modelFormatted = item.model.replace(/\n/g, '<br/>');
+                } else {
+                    modelFormatted = JSON.stringify(item.model);
+                }
+
+                rowsHtml += `
+                    <div style="border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 18px; padding: 14px; page-break-inside: avoid; background-color: #ffffff;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px;">
+                            <div>
+                                <strong style="font-size: 13pt; color: #0f172a;">Question ${item.qNo}</strong>
+                                <span style="font-size: 9pt; background-color: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600;">${item.section || 'General'}</span>
+                                <span style="font-size: 9pt; color: ${statusColor}; font-weight: bold; margin-left: 10px;">${statusText}</span>
+                            </div>
+                            <div style="font-size: 12pt; font-weight: bold; color: #0f172a;">
+                                ${item.earned} / ${item.totalMarks} Marks
+                            </div>
+                        </div>
+
+                        <div style="font-size: 10.5pt; color: #1e293b; margin-bottom: 12px; font-weight: 500; line-height: 1.4;">
+                            ${item.text}
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+                            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+                                <div style="font-size: 8.5pt; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                                    Candidate's Submitted Working
+                                </div>
+                                <div style="font-size: 9.5pt; color: #0f172a; white-space: pre-wrap; font-family: monospace; line-height: 1.4;">${item.studentAns || '(No response submitted)'}</div>
+                            </div>
+
+                            <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px;">
+                                <div style="font-size: 8.5pt; font-weight: bold; text-transform: uppercase; color: #1d4ed8; margin-bottom: 6px; border-bottom: 1px solid #dbeafe; padding-bottom: 4px;">
+                                    Official CBSE Marking Scheme & Ideal Solution
+                                </div>
+                                <div style="font-size: 9.5pt; color: #1e3a8a; line-height: 1.4;">${modelFormatted}</div>
+                            </div>
+                        </div>
+
+                        ${item.loss > 0 ? `
+                            <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 8px 12px; font-size: 9pt; color: #9f1239; margin-top: 6px;">
+                                <strong>Examiner Slip Diagnosis:</strong> ${item.lossReason || 'Omitted critical derivation steps'} | 
+                                <strong>Remedy:</strong> ${item.remedy || 'Review NCERT theorem statements in Tab 1'}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert("Pop-up blocked! Please allow pop-ups for this page to download the PDF marksheet.");
+                return;
+            }
+
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${uniqueReportTitle}</title>
+                    <meta charset="utf-8" />
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+                    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+                    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"><\/script>
+                    <style>
+                        @page { size: A4; margin: 12mm 15mm; }
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                            color: #0f172a;
+                            background-color: #ffffff;
+                            margin: 0;
+                            padding: 0;
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
+                        }
+                        .header-box {
+                            border-bottom: 2px solid #0f172a;
+                            padding-bottom: 12px;
+                            margin-bottom: 16px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: flex-end;
+                        }
+                        .summary-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 10px;
+                            background-color: #f8fafc;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 8px;
+                            padding: 12px;
+                            margin-bottom: 20px;
+                        }
+                        .stat-item {
+                            text-align: center;
+                        }
+                        .stat-label {
+                            font-size: 8pt;
+                            text-transform: uppercase;
+                            color: #64748b;
+                            font-weight: 700;
+                            letter-spacing: 0.5px;
+                        }
+                        .stat-val {
+                            font-size: 14pt;
+                            font-weight: 800;
+                            color: #0f172a;
+                            margin-top: 2px;
+                        }
+                        @media print {
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print" style="background-color: #1e1b4b; color: white; padding: 12px 20px; text-align: center; margin-bottom: 20px; border-radius: 6px;">
+                        <span style="font-size: 11pt; font-weight: 600;">Print Preview Ready!</span>
+                        <p style="font-size: 9pt; margin: 4px 0 10px 0; opacity: 0.8;">Click the button below or press <strong>Ctrl + P</strong> to save your customized report.</p>
+                        <button onclick="window.print()" style="background-color: #6366f1; color: white; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                            🖨️ Save as PDF / Print Marksheet
+                        </button>
+                    </div>
+
+                    <div class="header-box">
+                        <div>
+                            <div style="font-size: 8.5pt; font-weight: 800; color: #4338ca; letter-spacing: 1.5px; text-transform: uppercase;">GOALisB CBSE Evaluation Engine</div>
+                            <div style="font-size: 18pt; font-weight: 900; color: #0f172a; margin: 2px 0;">Official CBSE Diagnostic Marksheet</div>
+                            <div style="font-size: 9.5pt; color: #475569;">
+                                Candidate: <strong>${candidateName}</strong> | Test ID: <strong style="color: #4338ca; font-family: monospace;">${data.testId || "CBSE-2026-MOCK"}</strong> | Class 10 | Subject: <strong>${subjName}</strong> | Date: ${dateStr}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 24pt; font-weight: 900; color: #059669;">${data.score} <span style="font-size: 14pt; color: #64748b; font-weight: 600;">/ ${data.maxMarks}</span></div>
+                            <div style="font-size: 10pt; font-weight: 700; color: #475569;">${data.percentage}% Aggregate</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Assessment Format</div>
+                            <div class="stat-val" style="font-size: 11pt;">${data.mode === 'full_80' ? 'Board Mock (80M)' : (data.mode === 'quick' ? 'Board Drill (40M)' : 'Focus Drill (20M)')}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Time Consumed</div>
+                            <div class="stat-val" style="font-size: 11pt;">${data.timeString || 'N/A'}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Pacing Rate</div>
+                            <div class="stat-val" style="font-size: 11pt;">${data.pacePerMark}s / mark</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Speed Assessment</div>
+                            <div class="stat-val" style="font-size: 10pt; color: #4338ca;">${data.paceVerdict || 'Standard'}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px; font-size: 11pt; font-weight: 800; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+                        Itemized Question Derivations & Model Marking Schemes
+                    </div>
+
+                    ${rowsHtml}
+
+                    <div style="margin-top: 25px; border-top: 1px solid #cbd5e1; padding-top: 10px; font-size: 8pt; color: #94a3b8; display: flex; justify-content: space-between;">
+                        <span>Generated by CBSE AI Micro-Evaluator Platform</span>
+                        <span>Official NCERT / CBSE Marking Scheme Verified</span>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            // Also explicitly set title on the new window document after write
+            printWindow.document.title = uniqueReportTitle;
+        }
 
         function renderMockResultsView(filter) {
             const data = lastEvaluationResults;
@@ -2833,7 +2128,7 @@ function generateFallbackDoubtSolution(q) {
                                     <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-900/80 text-indigo-300 font-mono">NCERT Verified</span>
                                 </div>
                                 <div class="space-y-1.5 font-sans">
-                                    ${formatRubricSteps(item.model)}
+                                    ${formatRubricSteps(item.model, item.rubric)}
                                 </div>
                             </div>
 
@@ -2844,6 +2139,14 @@ function generateFallbackDoubtSolution(q) {
                             <div class="p-2.5 bg-rose-950/40 border border-rose-900/50 rounded-xl flex flex-wrap items-center justify-between gap-2 text-[11px]">
                                 <span class="text-rose-300"><strong>Mark Leakage Reason:</strong> ${item.lossReason}</span>
                                 <span class="text-indigo-400 font-semibold">Recommended: ${item.remedy}</span>
+                    <div class="flex items-center gap-2 mt-1">
+                        <button type="button" onclick="switchTab(1)" class="px-2 py-0.5 rounded bg-indigo-900/60 hover:bg-indigo-700/80 text-[10px] text-indigo-200 border border-indigo-700/60 cursor-pointer">
+                            🎯 Revise in Tab 1 (Tuition)
+                        </button>
+                        <button type="button" onclick="switchTab(2)" class="px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-700/80 text-[10px] text-rose-200 border border-rose-700/60 cursor-pointer">
+                            🔍 Inspect Trap in Tab 2 (Error Finder)
+                        </button>
+                    </div>
                             </div>
                         ` : ''}
 
@@ -2859,7 +2162,7 @@ function generateFallbackDoubtSolution(q) {
                                 Exam Evaluated Successfully
                             </span>
                             <h3 class="text-2xl sm:text-3xl font-black text-white mt-2">Official CBSE Diagnostic Score Card</h3>
-                            <p class="text-xs text-slate-400">Candidate: <strong class="text-white">${data.candidate}</strong> • Format: <strong>${data.mode === 'full_80' ? 'Comprehensive Board Mock (80M)' : (data.mode === 'quick' ? 'Quick Board Drill (40M)' : 'Chapter Focus Drill (20M)')}</strong></p>
+                            <p class="text-xs text-slate-400">Candidate: <strong class="text-white">${data.candidate}</strong> • Test ID: <span class="font-mono text-indigo-400 font-bold bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/80">${data.testId || "CBSE-MOCK-001"}</span> • Format: <strong>${data.mode === 'full_80' ? 'Comprehensive Board Mock (80M)' : (data.mode === 'quick' ? 'Quick Board Drill (40M)' : 'Chapter Focus Drill (20M)')}</strong></p>
                         </div>
                         <div class="text-right">
                             <div class="text-4xl sm:text-5xl font-black text-emerald-400">${data.score} <span class="text-xl sm:text-2xl text-slate-400 font-bold">/ ${data.maxMarks}</span></div>
@@ -2887,7 +2190,10 @@ function generateFallbackDoubtSolution(q) {
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Question-Wise Mark Evaluation & Correct Solutions</h4>
                         <div class="flex items-center gap-1.5 bg-surfaceLight p-1 rounded-lg border border-slate-700 text-xs font-medium">
-                            <button onclick="renderMockResultsView('all')" class="px-2.5 py-1 rounded ${filter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
+                            <button type="button" onclick="downloadPdfMarksheet()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 border border-indigo-400/30 mr-2">
+                        <span>📄</span> Download PDF Marksheet
+                    </button>
+                    <button onclick="renderMockResultsView('all')" class="px-2.5 py-1 rounded ${filter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
                                 All (${data.breakdown.length})
                             </button>
                             <button onclick="renderMockResultsView('lost')" class="px-2.5 py-1 rounded ${filter === 'lost' ? 'bg-rose-600 text-white font-bold' : 'text-slate-400 hover:text-white'}">
@@ -3348,7 +2654,12 @@ function launchRazorpayCheckout() {
     alert("Online payment gateway is being finalized. Please use the 'Promo / Access Voucher' (e.g., GOALPRO) or UPI verification above.");
 }
 
-    </script>
+    
+// Bridge external bank to evalProblemBank if loaded asynchronously
+if (typeof window !== 'undefined' && window.dbQuestionBank) {
+    evalProblemBank = window.dbQuestionBank;
+}
+</script>
 <!-- EXPANDED AUTH MODAL: Student & Institution Console -->
 <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 hidden">
     <div class="bg-surface border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl text-white space-y-4">
