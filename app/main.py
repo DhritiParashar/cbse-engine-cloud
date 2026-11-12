@@ -64,6 +64,8 @@ async def log_feedback(fb: FeedbackPayload, pool = Depends(get_db_pool)):
 # Static and Frontend File Serving
 DATA_DIR = Path(__file__).resolve().parent.parent / "frontend" / "data"
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
+JS_DIR = Path(__file__).resolve().parent.parent / "frontend" / "js"
+app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
 
 FRONTEND_FILE = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
 
