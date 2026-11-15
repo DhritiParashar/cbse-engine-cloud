@@ -159,6 +159,27 @@
   body.light-mode .text-amber-300,
   body.light-mode .text-amber-400 { color: #b45309 !important; }
 
+    /* Catch inline dark backgrounds, custom hexes (#0B0F19, #0F172A, #151B2B, #1E293B), and worked-step boxes */
+  body.light-mode [style*="background:#0"],
+  body.light-mode [style*="background: #0"],
+  body.light-mode [style*="background:#1"],
+  body.light-mode [style*="background: #1"],
+  body.light-mode [style*="background-color:#0"],
+  body.light-mode [style*="background-color: #0"],
+  body.light-mode [style*="background-color:#1"],
+  body.light-mode [style*="background-color: #1"],
+  body.light-mode [style*="rgba(15, 23, 42"],
+  body.light-mode [style*="rgba(11, 15, 25"],
+  body.light-mode [class*="bg-[#0"],
+  body.light-mode [class*="bg-[#1"],
+  body.light-mode [class*="bg-[#2"],
+  body.light-mode .rounded-xl.p-4 > div[class*="rounded"],
+  body.light-mode .rounded-2xl > div[class*="rounded-xl"] {
+    background: #f8fafc !important;
+    background-color: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+  }
   header h1 { white-space: nowrap; }
 </style>
 <script>
