@@ -74,6 +74,16 @@
   body.light-mode .text-slate-300,
   body.light-mode .text-slate-400 { color: #334155 !important; }
   header h1 { white-space: nowrap; }
+  /* Fix active chapter button on left sidebar in Light Mode */
+  body.light-mode [class*="bg-surfaceLight"],
+  body.light-mode [class*="bg-[#1"],
+  body.light-mode [class*="bg-[#0"],
+  body.light-mode aside button[class*="border-indigo"],
+  body.light-mode #chapterList button[class*="border-indigo"] {
+    background-color: #eef2ff !important;
+    background-image: none !important;
+    color: #1e1b4b !important;
+  }
 </style>
 <script>
   window.applyCbseTheme = function(mode) {
