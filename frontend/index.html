@@ -49,7 +49,7 @@
   body.light-mode [class*="bg-surface"] { background-color: #ffffff !important; color: #0f172a !important; }
   body.light-mode [class*="border-slate-800"],
   body.light-mode [class*="border-slate-700"] { border-color: #cbd5e1 !important; }
-  body.light-mode .text-white:not(.bg-indigo-600):not(.bg-emerald-600):not(.bg-rose-600) { color: #0f172a !important; }
+  body.light-mode .text-white:not([class*="bg-indigo"]):not([class*="bg-emerald"]):not([class*="bg-rose"]) { color: #0f172a !important; }
   body.light-mode .text-slate-200,
   body.light-mode .text-slate-300,
   body.light-mode .text-slate-400 { color: #475569 !important; }
@@ -5067,39 +5067,7 @@ window.downloadDiagnosticMarksheet = function() {
     doc += '.text-rose-400, .text-rose-300 { color: #e11d48 !important; }';
     doc += '.bg-slate-900, .bg-slate-800, .bg-surface { background: #f8fafc !important; }';
     doc += '.rounded-2xl { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 12px !important; margin-bottom: 14px !important; }';
-    doc += '</style><style>
-  body.light-mode { background-color: #f1f5f9 !important; color: #0f172a !important; }
-  body.light-mode header { background-color: rgba(255, 255, 255, 0.96) !important; border-color: #cbd5e1 !important; }
-  body.light-mode [class*="bg-slate-950"] { background-color: #f8fafc !important; }
-  body.light-mode [class*="bg-slate-900"] { background-color: #ffffff !important; }
-  body.light-mode [class*="bg-slate-800"],
-  body.light-mode [class*="bg-surface"] { background-color: #ffffff !important; color: #0f172a !important; }
-  body.light-mode [class*="border-slate-800"],
-  body.light-mode [class*="border-slate-700"] { border-color: #cbd5e1 !important; }
-  body.light-mode .text-white:not(.bg-indigo-600):not(.bg-emerald-600):not(.bg-rose-600) { color: #0f172a !important; }
-  body.light-mode .text-slate-200,
-  body.light-mode .text-slate-300,
-  body.light-mode .text-slate-400 { color: #475569 !important; }
-  header h1 { white-space: nowrap; }
-</style>
-<script>
-  window.applyCbseTheme = function(mode) {
-    const isLight = mode === "light";
-    document.documentElement.classList.toggle("dark", !isLight);
-    document.body.classList.toggle("light-mode", isLight);
-    const btn = document.getElementById("cbseThemeToggleBtn");
-    if (btn) btn.innerHTML = isLight ? "&#127769; Dark Mode" : "&#9728;&#65039; Light Mode";
-    localStorage.setItem("cbse_tutor_theme", mode);
-  };
-  window.toggleCbseTheme = function() {
-    const next = document.body.classList.contains("light-mode") ? "dark" : "light";
-    window.applyCbseTheme(next);
-  };
-  document.addEventListener("DOMContentLoaded", () => {
-    window.applyCbseTheme(localStorage.getItem("cbse_tutor_theme") || "dark");
-  });
-</script>
-</head><body>';
+    doc += '</style></head><body>';
     doc += '<div class="header">';
     doc += '  <h1 class="title">GOALisB CBSE EVALUATION ENGINE</h1>';
     doc += '  <p class="subtitle">Official CBSE Diagnostic Marksheet | Candidate: <strong>' + candidate + '</strong> | Test ID: <strong>' + testId + '</strong> | Class 10 | Subject: Mathematics Standard (041) | Date: ' + displayDate + '</p>';
