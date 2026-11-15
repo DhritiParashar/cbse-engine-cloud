@@ -263,3 +263,98 @@ async def login_student(payload: StudentLoginRequest, pool: asyncpg.Pool = Depen
             "user": token_payload,
             "portal": "GOALisB Master Engine"
         }
+
+# ---------------- Optimized 2-Step & Recovery OTP Engine ----------------
+import os, secrets, smtplib
+from email.message import EmailMessage
+
+class OtpRequestModel(BaseModel):
+    email: EmailStr
+    full_name: Optional[str] = "Student"
+    phone: Optional[str] = ""
+
+class OtpResetModel(BaseModel):
+    email: EmailStr
+    otp: str
+    new_password: str
+
+def _dispatch_smtp_otp(to_email: str, code: str, purpose: str) -> bool:
+    host = os.environ.get("SMTP_HOST", "").strip()
+    user = os.environ.get("SMTP_USER", "").strip()
+    pwd = os.environ.get("SMTP_PASS", "").strip()
+    if not (host and user and pwd):
+        return False
+    try:
+        msg = EmailMessage()
+        msg["Subject"] = f"GOALisB Master Tutor - {purpose} OTP: {code}"
+        msg["From"] = user
+        msg["To"] = to_email
+        msg.set_content(f"Your GOALisB verification code is {code}. Valid for 15 minutes.")
+        with smtplib.SMTP_SSL(host, int(os.environ.get("SMTP_PORT", "465")), timeout=10) as s:
+            s.login(user, pwd)
+            s.send_message(msg)
+        return True
+    except Exception:
+        return False
+
+async def _ensure_otp_table(conn):
+    await conn.execute('''
+        CREATE TABLE IF NOT EXISTS otp_challenges (
+            challenge_id SERIAL PRIMARY KEY,
+            email TEXT NOT NULL,
+            otp_code TEXT NOT NULL,
+            purpose TEXT NOT NULL DEFAULT 'verify',
+            verified BOOLEAN NOT NULL DEFAULT FALSE,
+            expires_at TIMESTAMP NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        );
+    ''')
+
+@router.post("/forgot-password")
+@router.post("/password-reset/init")
+async def initiate_password_reset(payload: OtpRequestModel, pool: asyncpg.Pool = Depends(get_db_pool)):
+    clean_email = payload.email.strip().lower()
+    async with pool.acquire() as conn:
+        await _ensure_otp_table(conn)
+        user = await conn.fetchrow("SELECT user_id, full_name FROM users WHERE LOWER(email) = ", clean_email)
+        if not user:
+            raise HTTPException(status_code=404, detail="No student account found with this email.")
+        otp_code = f"{secrets.randbelow(900000) + 100000}"
+        expires_at = datetime.utcnow() + timedelta(minutes=15)
+        row = await conn.fetchrow(
+            "INSERT INTO otp_challenges (email, otp_code, purpose, expires_at) VALUES (, , 'reset', ) RETURNING challenge_id",
+            clean_email, otp_code, expires_at
+        )
+        sent = _dispatch_smtp_otp(clean_email, otp_code, "Password Recovery")
+        resp = {"status": "success", "ok": True, "challenge_id": row["challenge_id"], "email_sent": sent}
+        if not sent:
+            resp["demo_otp"] = otp_code
+            resp["message"] = f"Instant Demo Recovery OTP: {otp_code}"
+        else:
+            resp["message"] = "6-digit recovery OTP sent to your registered email."
+        return resp
+
+@router.post("/reset-password")
+@router.post("/password-reset/complete")
+async def complete_password_reset(payload: OtpResetModel, pool: asyncpg.Pool = Depends(get_db_pool)):
+    if len(payload.new_password) < 4:
+        raise HTTPException(status_code=400, detail="New password must be at least 4 characters.")
+    clean_email = payload.email.strip().lower()
+    async with pool.acquire() as conn:
+        await _ensure_otp_table(conn)
+        ch = await conn.fetchrow(
+            '''
+            SELECT challenge_id, otp_code, expires_at FROM otp_challenges
+            WHERE LOWER(email) =  AND verified = FALSE
+            ORDER BY challenge_id DESC LIMIT 1
+            ''',
+            clean_email
+        )
+        if not ch or ch["otp_code"] != payload.otp.strip():
+            raise HTTPException(status_code=400, detail="Invalid OTP code. Please check and try again.")
+        if ch["expires_at"] < datetime.utcnow():
+            raise HTTPException(status_code=400, detail="OTP expired. Please request a new code.")
+        hashed_pw = hash_password(payload.new_password)
+        await conn.execute("UPDATE users SET password_hash =  WHERE LOWER(email) = ", hashed_pw, clean_email)
+        await conn.execute("UPDATE otp_challenges SET verified = TRUE WHERE challenge_id = ", ch["challenge_id"])
+        return {"status": "success", "ok": True, "message": "Password updated successfully. You can now log in."}

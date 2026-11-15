@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="h-full dark">
 <head>
     <meta charset="UTF-8">
@@ -40,6 +40,37 @@
         .main-tab-active { background-color: #6366f1 !important; color: white !important; border-color: #6366f1 !important; }
         .sub-tab-active { border-bottom: 3px solid #6366f1; color: #818cf8; font-weight: 700; }
     </style>
+<style>
+  body.light-mode { background-color: #f1f5f9 !important; color: #0f172a !important; }
+  body.light-mode header { background-color: rgba(255, 255, 255, 0.96) !important; border-color: #cbd5e1 !important; }
+  body.light-mode [class*="bg-slate-950"] { background-color: #f8fafc !important; }
+  body.light-mode [class*="bg-slate-900"] { background-color: #ffffff !important; }
+  body.light-mode [class*="bg-slate-800"],
+  body.light-mode [class*="bg-surface"] { background-color: #ffffff !important; color: #0f172a !important; }
+  body.light-mode [class*="border-slate-800"],
+  body.light-mode [class*="border-slate-700"] { border-color: #cbd5e1 !important; }
+  body.light-mode .text-white { color: #0f172a !important; }
+  body.light-mode .text-slate-200,
+  body.light-mode .text-slate-300,
+  body.light-mode .text-slate-400 { color: #475569 !important; }
+</style>
+<script>
+  window.applyCbseTheme = function(mode) {
+    const isLight = mode === "light";
+    document.documentElement.classList.toggle("dark", !isLight);
+    document.body.classList.toggle("light-mode", isLight);
+    const btn = document.getElementById("cbseThemeToggleBtn");
+    if (btn) btn.innerHTML = isLight ? "&#127769; Dark Mode" : "&#9728;&#65039; Light Mode";
+    localStorage.setItem("cbse_tutor_theme", mode);
+  };
+  window.toggleCbseTheme = function() {
+    const next = document.body.classList.contains("light-mode") ? "dark" : "light";
+    window.applyCbseTheme(next);
+  };
+  document.addEventListener("DOMContentLoaded", () => {
+    window.applyCbseTheme(localStorage.getItem("cbse_tutor_theme") || "dark");
+  });
+</script>
 </head>
 <body class="h-full bg-background text-slate-200 transition-colors duration-200 font-sans overflow-hidden">
 
@@ -96,6 +127,7 @@
                 <button type="button" id="voiceTutorToggleBtn" onclick="toggleVoiceTutor()" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-surfaceLight border border-slate-700 hover:border-cyan-500 text-slate-300 hover:text-white transition flex items-center gap-2 cursor-pointer shadow-sm">
                     <span id="voiceTutorIcon">🔇</span> <span id="voiceTutorText">Voice Tutor: Off</span>
                 </button>
+          <button type="button" id="cbseThemeToggleBtn" onclick="toggleCbseTheme()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:border-amber-400 text-amber-300 transition flex items-center gap-1.5 cursor-pointer shadow-sm">&#9728;&#65039; Light Mode</button>
             </div>
         </header>
 
@@ -4168,7 +4200,7 @@ if(document.getElementById(String.fromCharCode(115,101,99,65,76,97,98,101,108)))
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:8005/api/auth/student/login', {
+        const response = await fetch('/api/auth/student/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, institution_code: instCode })
@@ -4312,7 +4344,7 @@ async function requestPasswordResetOtp() {
     btn.disabled = true;
     btn.innerText = "Sending Code...";
     try {
-        const res = await fetch('http://127.0.0.1:8005/api/auth/forgot-password', {
+        const res = await fetch('/api/auth/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
@@ -4355,7 +4387,7 @@ async function confirmPasswordReset() {
     btn.disabled = true;
     btn.innerText = "Updating Password...";
     try {
-        const res = await fetch('http://127.0.0.1:8005/api/auth/reset-password', {
+        const res = await fetch('/api/auth/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, otp, new_password: newPassword })
@@ -4435,7 +4467,7 @@ async function handleStudentRegister(e) {
     btn.innerText = "Creating Account...";
 
     try {
-        const response = await fetch('http://127.0.0.1:8005/api/auth/student/register', {
+        const response = await fetch('/api/auth/student/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -4485,7 +4517,7 @@ async function handleInstitutionAction(e) {
     btn.innerText = "Registering Institution...";
 
     try {
-        const response = await fetch('http://127.0.0.1:8005/api/auth/institution/register', {
+        const response = await fetch('/api/auth/institution/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -5034,7 +5066,38 @@ window.downloadDiagnosticMarksheet = function() {
     doc += '.text-rose-400, .text-rose-300 { color: #e11d48 !important; }';
     doc += '.bg-slate-900, .bg-slate-800, .bg-surface { background: #f8fafc !important; }';
     doc += '.rounded-2xl { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 12px !important; margin-bottom: 14px !important; }';
-    doc += '</style></head><body>';
+    doc += '</style><style>
+  body.light-mode { background-color: #f1f5f9 !important; color: #0f172a !important; }
+  body.light-mode header { background-color: rgba(255, 255, 255, 0.96) !important; border-color: #cbd5e1 !important; }
+  body.light-mode [class*="bg-slate-950"] { background-color: #f8fafc !important; }
+  body.light-mode [class*="bg-slate-900"] { background-color: #ffffff !important; }
+  body.light-mode [class*="bg-slate-800"],
+  body.light-mode [class*="bg-surface"] { background-color: #ffffff !important; color: #0f172a !important; }
+  body.light-mode [class*="border-slate-800"],
+  body.light-mode [class*="border-slate-700"] { border-color: #cbd5e1 !important; }
+  body.light-mode .text-white { color: #0f172a !important; }
+  body.light-mode .text-slate-200,
+  body.light-mode .text-slate-300,
+  body.light-mode .text-slate-400 { color: #475569 !important; }
+</style>
+<script>
+  window.applyCbseTheme = function(mode) {
+    const isLight = mode === "light";
+    document.documentElement.classList.toggle("dark", !isLight);
+    document.body.classList.toggle("light-mode", isLight);
+    const btn = document.getElementById("cbseThemeToggleBtn");
+    if (btn) btn.innerHTML = isLight ? "&#127769; Dark Mode" : "&#9728;&#65039; Light Mode";
+    localStorage.setItem("cbse_tutor_theme", mode);
+  };
+  window.toggleCbseTheme = function() {
+    const next = document.body.classList.contains("light-mode") ? "dark" : "light";
+    window.applyCbseTheme(next);
+  };
+  document.addEventListener("DOMContentLoaded", () => {
+    window.applyCbseTheme(localStorage.getItem("cbse_tutor_theme") || "dark");
+  });
+</script>
+</head><body>';
     doc += '<div class="header">';
     doc += '  <h1 class="title">GOALisB CBSE EVALUATION ENGINE</h1>';
     doc += '  <p class="subtitle">Official CBSE Diagnostic Marksheet | Candidate: <strong>' + candidate + '</strong> | Test ID: <strong>' + testId + '</strong> | Class 10 | Subject: Mathematics Standard (041) | Date: ' + displayDate + '</p>';
