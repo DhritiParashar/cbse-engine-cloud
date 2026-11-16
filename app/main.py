@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends
@@ -14,6 +14,19 @@ from app.routes import subscription
 
 # Initialize FastAPI instance FIRST
 app = FastAPI(title="CBSE Master Tutor Engine", version="2.0.0")
+
+# UptimeRobot HEAD & Health Check Support (200 OK)
+from fastapi import Response as _UptimeResponse
+
+@app.middleware("http")
+async def _uptime_head_middleware(request, call_next):
+    if request.method == "HEAD":
+        return _UptimeResponse(status_code=200)
+    return await call_next(request)
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def _health_check():
+    return {"status": "ok"}
 
 app.add_middleware(
     CORSMiddleware,
