@@ -264,9 +264,27 @@ async def login_student(payload: StudentLoginRequest, pool: asyncpg.Pool = Depen
             "portal": "GOALisB Master Engine"
         }
 
-# ---------------- Optimized 2-Step & Recovery OTP Engine ----------------
-import os, secrets, smtplib
-from email.message import EmailMessage
+# ---------------- Brevo HTTPS 2-Step Registration & Recovery OTP Engine ----------------
+import os, json, secrets, urllib.request, urllib.error
+
+OTP_VALIDITY_SECONDS = 600  # 10 minutes
+
+class CbseRegOtpInitModel(BaseModel):
+    full_name: str
+    email: EmailStr
+    password: str
+    institution_code: str = "DIRECT"
+    student_class: int = 10
+    math_track: Optional[str] = "Standard"
+
+class CbseRegOtpVerifyModel(BaseModel):
+    challenge_id: int
+    email: EmailStr
+    otp: str
+
+class CbseResendOtpModel(BaseModel):
+    challenge_id: int
+    purpose: str = "Account Registration"
 
 class OtpRequestModel(BaseModel):
     email: EmailStr
@@ -277,84 +295,345 @@ class OtpResetModel(BaseModel):
     email: EmailStr
     otp: str
     new_password: str
+    challenge_id: Optional[int] = None
 
-def _dispatch_smtp_otp(to_email: str, code: str, purpose: str) -> bool:
-    host = os.environ.get("SMTP_HOST", "").strip()
-    user = os.environ.get("SMTP_USER", "").strip()
-    pwd = os.environ.get("SMTP_PASS", "").strip()
-    if not (host and user and pwd):
-        return False
-    try:
-        msg = EmailMessage()
-        msg["Subject"] = f"GOALisB Master Tutor - {purpose} OTP: {code}"
-        msg["From"] = user
-        msg["To"] = to_email
-        msg.set_content(f"Your GOALisB verification code is {code}. Valid for 15 minutes.")
-        with smtplib.SMTP_SSL(host, int(os.environ.get("SMTP_PORT", "465")), timeout=10) as s:
-            s.login(user, pwd)
-            s.send_message(msg)
-        return True
-    except Exception:
-        return False
+def _dispatch_cbse_otp_https(to_email: str, full_name: str, otp_code: str, purpose: str, ref_id: int):
+    brevo_key = os.environ.get("BREVO_API_KEY", "").strip()
+    resend_key = os.environ.get("RESEND_API_KEY", "").strip()
+    sender_email = os.environ.get("OTP_SENDER_EMAIL", "contact@goalisb.com").strip()
+    sender_name = os.environ.get("OTP_SENDER_NAME", "GOALisB CBSE Master").strip()
 
-async def _ensure_otp_table(conn):
-    await conn.execute('''
+    subject = f"GOALisB CBSE Verification Code: {otp_code} ({purpose}) [Ref #{ref_id}]"
+    html_body = (
+        f'<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;">'
+        f'<div style="display:flex;justify-content:space-between;align-items:center;">'
+        f'<h2 style="color:#1e1b4b;margin:0;">GOALisB {purpose} Verification</h2>'
+        f'<span style="font-size:11px;font-weight:700;color:#4f46e5;background:#eef2ff;padding:3px 8px;border-radius:6px;">Ref #{ref_id}</span></div>'
+        f'<p style="color:#334155;font-size:14px;margin-top:14px;">Hi {full_name or "Student"},</p>'
+        f'<p style="color:#334155;font-size:14px;">Use the 6-digit verification code below to verify your email and activate your single-student CBSE workspace:</p>'
+        f'<div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:16px;text-align:center;margin:18px 0;">'
+        f'<span style="font-size:28px;font-weight:800;letter-spacing:6px;color:#3730a3;">{otp_code}</span></div>'
+        f'<p style="color:#64748b;font-size:12px;">Valid for <strong>10 minutes</strong> (Session Ref #{ref_id}). Resending within 10 minutes sends this same code.</p></div>'
+    )
+
+    if brevo_key:
+        try:
+            payload = json.dumps({
+                "sender": {"name": sender_name, "email": sender_email},
+                "to": [{"email": to_email, "name": full_name or "Student"}],
+                "subject": subject,
+                "htmlContent": html_body
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.brevo.com/v3/smtp/email",
+                data=payload,
+                headers={"api-key": brevo_key, "Content-Type": "application/json", "Accept": "application/json"},
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                if 200 <= resp.status < 300:
+                    return True, "Brevo"
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode("utf-8", errors="ignore")[:180]
+            return False, f"Brevo HTTP {he.code}: {err_body}"
+        except Exception as exc:
+            return False, f"Brevo error: {exc}"
+
+    if resend_key:
+        try:
+            payload = json.dumps({
+                "from": f"{sender_name} <{sender_email}>",
+                "to": [to_email],
+                "subject": subject,
+                "html": html_body
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=payload,
+                headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                if 200 <= resp.status < 300:
+                    return True, "Resend"
+        except Exception as exc:
+            return False, f"Resend error: {exc}"
+
+    return False, "Set BREVO_API_KEY and OTP_SENDER_EMAIL in Render Environment Variables."
+
+async def _ensure_cbse_otp_and_session_tables(conn):
+    await conn.execute("""
         CREATE TABLE IF NOT EXISTS otp_challenges (
             challenge_id SERIAL PRIMARY KEY,
             email TEXT NOT NULL,
             otp_code TEXT NOT NULL,
-            purpose TEXT NOT NULL DEFAULT 'verify',
+            purpose TEXT NOT NULL DEFAULT 'register',
+            payload_json TEXT DEFAULT '{}',
             verified BOOLEAN NOT NULL DEFAULT FALSE,
             expires_at TIMESTAMP NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         );
-    ''')
+    """)
+    await conn.execute("ALTER TABLE otp_challenges ADD COLUMN IF NOT EXISTS payload_json TEXT DEFAULT '{}'")
+    await conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS active_session_token TEXT DEFAULT ''")
+
+@router.post("/student/register-otp/init")
+async def init_cbse_student_reg_otp(payload: CbseRegOtpInitModel, pool: asyncpg.Pool = Depends(get_db_pool)):
+    if payload.student_class != 10:
+        raise HTTPException(status_code=400, detail=f"Class {payload.student_class} is currently locked. Only Class 10 is activated.")
+    if len(payload.password.strip()) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters.")
+
+    clean_email = payload.email.strip().lower()
+    code_clean = (payload.institution_code or "DIRECT").strip().upper()
+
+    async with pool.acquire() as conn:
+        await _ensure_cbse_otp_and_session_tables(conn)
+
+        existing = await conn.fetchval("SELECT 1 FROM users WHERE LOWER(email) = $1", clean_email)
+        if existing:
+            return {
+                "ok": False,
+                "already_registered": True,
+                "email": clean_email,
+                "detail": "This email is already registered. Please sign in instead."
+            }
+
+        inst = await conn.fetchrow(
+            "SELECT institution_id, name, is_active FROM institutions WHERE UPPER(institution_code) = $1",
+            code_clean
+        )
+        if not inst:
+            raise HTTPException(status_code=400, detail=f"Institution with code '{code_clean}' does not exist.")
+        if not inst["is_active"]:
+            raise HTTPException(status_code=403, detail="The parent institution is inactive.")
+
+        now_utc = datetime.utcnow()
+        active_ch = await conn.fetchrow(
+            """
+            SELECT challenge_id, otp_code, expires_at FROM otp_challenges
+            WHERE LOWER(email) = $1 AND purpose = 'register' AND verified = FALSE AND expires_at > $2
+            ORDER BY challenge_id DESC LIMIT 1
+            """,
+            clean_email, now_utc
+        )
+
+        reg_blob = json.dumps({
+            "full_name": payload.full_name.strip(),
+            "email": clean_email,
+            "password_hash": hash_password(payload.password.strip()),
+            "institution_code": code_clean,
+            "institution_id": inst["institution_id"],
+            "institution_name": inst["name"],
+            "student_class": payload.student_class,
+            "math_track": payload.math_track or "Standard"
+        })
+
+        if active_ch:
+            await conn.execute(
+                "UPDATE otp_challenges SET payload_json = $1 WHERE challenge_id = $2",
+                reg_blob, active_ch["challenge_id"]
+            )
+            cid = active_ch["challenge_id"]
+            otp_code = active_ch["otp_code"]
+            expires_in = max(60, int((active_ch["expires_at"] - now_utc).total_seconds()))
+            reused = True
+        else:
+            otp_code = f"{secrets.randbelow(900000) + 100000}"
+            expires_at = now_utc + timedelta(seconds=OTP_VALIDITY_SECONDS)
+            row = await conn.fetchrow(
+                """
+                INSERT INTO otp_challenges (email, otp_code, purpose, payload_json, expires_at)
+                VALUES ($1, $2, 'register', $3, $4) RETURNING challenge_id
+                """,
+                clean_email, otp_code, reg_blob, expires_at
+            )
+            cid = row["challenge_id"]
+            expires_in = OTP_VALIDITY_SECONDS
+            reused = False
+
+        sent, info = _dispatch_cbse_otp_https(clean_email, payload.full_name.strip(), otp_code, "Account Registration", cid)
+        if not sent:
+            raise HTTPException(status_code=502, detail=f"Email OTP dispatch failed ({info})")
+
+        return {
+            "ok": True,
+            "challenge_id": cid,
+            "ref_id": cid,
+            "email": clean_email,
+            "reused_same_otp": reused,
+            "expires_in": expires_in
+        }
+
+@router.post("/otp/resend")
+async def resend_cbse_otp(payload: CbseResendOtpModel, pool: asyncpg.Pool = Depends(get_db_pool)):
+    async with pool.acquire() as conn:
+        await _ensure_cbse_otp_and_session_tables(conn)
+        ch = await conn.fetchrow(
+            "SELECT challenge_id, email, otp_code, purpose, payload_json, expires_at FROM otp_challenges WHERE challenge_id = $1",
+            int(payload.challenge_id)
+        )
+        if not ch:
+            raise HTTPException(status_code=404, detail="OTP session not found. Please submit your details again.")
+
+        now_utc = datetime.utcnow()
+        if ch["expires_at"] > now_utc:
+            otp_code = ch["otp_code"]
+            expires_in = max(60, int((ch["expires_at"] - now_utc).total_seconds()))
+            reused = True
+        else:
+            otp_code = f"{secrets.randbelow(900000) + 100000}"
+            new_exp = now_utc + timedelta(seconds=OTP_VALIDITY_SECONDS)
+            await conn.execute(
+                "UPDATE otp_challenges SET otp_code = $1, expires_at = $2, created_at = $3 WHERE challenge_id = $4",
+                otp_code, new_exp, now_utc, ch["challenge_id"]
+            )
+            expires_in = OTP_VALIDITY_SECONDS
+            reused = False
+
+        full_name = "Student"
+        try:
+            meta = json.loads(ch["payload_json"] or "{}")
+            full_name = meta.get("full_name") or "Student"
+        except Exception:
+            pass
+
+        sent, info = _dispatch_cbse_otp_https(ch["email"], full_name, otp_code, payload.purpose, ch["challenge_id"])
+        if not sent:
+            raise HTTPException(status_code=502, detail=f"Resend failed ({info})")
+
+        return {
+            "ok": True,
+            "challenge_id": ch["challenge_id"],
+            "ref_id": ch["challenge_id"],
+            "email": ch["email"],
+            "reused_same_otp": reused,
+            "expires_in": expires_in
+        }
+
+@router.post("/student/register-otp/verify", status_code=status.HTTP_201_CREATED)
+async def verify_cbse_student_reg_otp(payload: CbseRegOtpVerifyModel, pool: asyncpg.Pool = Depends(get_db_pool)):
+    clean_email = payload.email.strip().lower()
+    async with pool.acquire() as conn:
+        await _ensure_cbse_otp_and_session_tables(conn)
+        ch = await conn.fetchrow(
+            "SELECT challenge_id, email, otp_code, payload_json, verified, expires_at FROM otp_challenges WHERE challenge_id = $1",
+            int(payload.challenge_id)
+        )
+        if not ch or ch["email"].lower() != clean_email:
+            raise HTTPException(status_code=400, detail="OTP session expired or mismatched. Please register again.")
+        if ch["expires_at"] < datetime.utcnow():
+            raise HTTPException(status_code=400, detail=f"OTP (Ref #{ch['challenge_id']}) expired after 10 minutes. Click Resend OTP.")
+        if ch["otp_code"] != payload.otp.strip():
+            raise HTTPException(status_code=400, detail=f"Incorrect OTP for Ref #{ch['challenge_id']}. Check the 6-digit code in your email.")
+
+        existing = await conn.fetchval("SELECT 1 FROM users WHERE LOWER(email) = $1", clean_email)
+        if existing:
+            raise HTTPException(status_code=409, detail="This email is already registered. Please sign in.")
+
+        meta = json.loads(ch["payload_json"] or "{}")
+        session_nonce = secrets.token_hex(16)
+        user_record = await conn.fetchrow(
+            """
+            INSERT INTO users (institution_id, full_name, email, password_hash, role, math_track, student_class, active_subjects, active_session_token)
+            VALUES ($1, $2, $3, $4, 'student', $5, $6, ARRAY['Mathematics'], $7)
+            RETURNING user_id, full_name, email, institution_id, math_track, student_class, active_subjects;
+            """,
+            meta["institution_id"], meta["full_name"], clean_email, meta["password_hash"],
+            meta.get("math_track", "Standard"), int(meta.get("student_class", 10)), session_nonce
+        )
+        await conn.execute("UPDATE otp_challenges SET verified = TRUE WHERE challenge_id = $1", ch["challenge_id"])
+
+        token_payload = {
+            "user_id": str(user_record["user_id"]),
+            "institution_id": user_record["institution_id"],
+            "institution_name": meta.get("institution_name", "Direct Learner"),
+            "full_name": user_record["full_name"],
+            "email": user_record["email"],
+            "student_class": user_record["student_class"],
+            "math_track": user_record["math_track"],
+            "active_subjects": user_record["active_subjects"],
+            "role": "student",
+            "plan_tier": "Institutional",
+            "plan": "Institutional",
+            "session_nonce": session_nonce
+        }
+        return {
+            "status": "success",
+            "access_token": create_access_token(token_payload),
+            "user": token_payload
+        }
 
 @router.post("/forgot-password")
 @router.post("/password-reset/init")
 async def initiate_password_reset(payload: OtpRequestModel, pool: asyncpg.Pool = Depends(get_db_pool)):
     clean_email = payload.email.strip().lower()
     async with pool.acquire() as conn:
-        await _ensure_otp_table(conn)
-        user = await conn.fetchrow("SELECT user_id, full_name FROM users WHERE LOWER(email) = ", clean_email)
+        await _ensure_cbse_otp_and_session_tables(conn)
+        user = await conn.fetchrow("SELECT user_id, full_name FROM users WHERE LOWER(email) = $1", clean_email)
         if not user:
             raise HTTPException(status_code=404, detail="No student account found with this email.")
-        otp_code = f"{secrets.randbelow(900000) + 100000}"
-        expires_at = datetime.utcnow() + timedelta(minutes=15)
-        row = await conn.fetchrow(
-            "INSERT INTO otp_challenges (email, otp_code, purpose, expires_at) VALUES (, , 'reset', ) RETURNING challenge_id",
-            clean_email, otp_code, expires_at
+
+        now_utc = datetime.utcnow()
+        active_ch = await conn.fetchrow(
+            """
+            SELECT challenge_id, otp_code, expires_at FROM otp_challenges
+            WHERE LOWER(email) = $1 AND purpose = 'reset' AND verified = FALSE AND expires_at > $2
+            ORDER BY challenge_id DESC LIMIT 1
+            """,
+            clean_email, now_utc
         )
-        sent = _dispatch_smtp_otp(clean_email, otp_code, "Password Recovery")
-        resp = {"status": "success", "ok": True, "challenge_id": row["challenge_id"], "email_sent": sent}
-        if not sent:
-            resp["demo_otp"] = otp_code
-            resp["message"] = f"Instant Demo Recovery OTP: {otp_code}"
+        if active_ch:
+            cid = active_ch["challenge_id"]
+            otp_code = active_ch["otp_code"]
+            expires_in = max(60, int((active_ch["expires_at"] - now_utc).total_seconds()))
+            reused = True
         else:
-            resp["message"] = "6-digit recovery OTP sent to your registered email."
-        return resp
+            otp_code = f"{secrets.randbelow(900000) + 100000}"
+            expires_at = now_utc + timedelta(seconds=OTP_VALIDITY_SECONDS)
+            row = await conn.fetchrow(
+                "INSERT INTO otp_challenges (email, otp_code, purpose, payload_json, expires_at) VALUES ($1, $2, 'reset', $3, $4) RETURNING challenge_id",
+                clean_email, otp_code, json.dumps({"full_name": user["full_name"]}), expires_at
+            )
+            cid = row["challenge_id"]
+            expires_in = OTP_VALIDITY_SECONDS
+            reused = False
+
+        sent, info = _dispatch_cbse_otp_https(clean_email, user["full_name"], otp_code, "Password Recovery", cid)
+        if not sent:
+            raise HTTPException(status_code=502, detail=f"Recovery email failed ({info})")
+
+        return {
+            "status": "success",
+            "ok": True,
+            "challenge_id": cid,
+            "ref_id": cid,
+            "reused_same_otp": reused,
+            "expires_in": expires_in,
+            "message": f"6-digit recovery OTP (Ref #{cid}) sent to {clean_email}."
+        }
 
 @router.post("/reset-password")
 @router.post("/password-reset/complete")
 async def complete_password_reset(payload: OtpResetModel, pool: asyncpg.Pool = Depends(get_db_pool)):
-    if len(payload.new_password) < 4:
-        raise HTTPException(status_code=400, detail="New password must be at least 4 characters.")
+    if len(payload.new_password.strip()) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
     clean_email = payload.email.strip().lower()
     async with pool.acquire() as conn:
-        await _ensure_otp_table(conn)
+        await _ensure_cbse_otp_and_session_tables(conn)
         ch = await conn.fetchrow(
-            '''
+            """
             SELECT challenge_id, otp_code, expires_at FROM otp_challenges
-            WHERE LOWER(email) =  AND verified = FALSE
+            WHERE LOWER(email) = $1 AND purpose = 'reset' AND verified = FALSE
             ORDER BY challenge_id DESC LIMIT 1
-            ''',
+            """,
             clean_email
         )
         if not ch or ch["otp_code"] != payload.otp.strip():
-            raise HTTPException(status_code=400, detail="Invalid OTP code. Please check and try again.")
+            raise HTTPException(status_code=400, detail="Invalid OTP code. Please check your email and try again.")
         if ch["expires_at"] < datetime.utcnow():
-            raise HTTPException(status_code=400, detail="OTP expired. Please request a new code.")
-        hashed_pw = hash_password(payload.new_password)
-        await conn.execute("UPDATE users SET password_hash =  WHERE LOWER(email) = ", hashed_pw, clean_email)
-        await conn.execute("UPDATE otp_challenges SET verified = TRUE WHERE challenge_id = ", ch["challenge_id"])
-        return {"status": "success", "ok": True, "message": "Password updated successfully. You can now log in."}
+            raise HTTPException(status_code=400, detail=f"OTP (Ref #{ch['challenge_id']}) expired. Click Resend Recovery OTP.")
+        hashed_pw = hash_password(payload.new_password.strip())
+        await conn.execute("UPDATE users SET password_hash = $1, active_session_token = '' WHERE LOWER(email) = $2", hashed_pw, clean_email)
+        await conn.execute("UPDATE otp_challenges SET verified = TRUE WHERE challenge_id = $1", ch["challenge_id"])
+        return {"status": "success", "ok": True, "message": "Password updated successfully. You can now sign in."}

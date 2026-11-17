@@ -850,3 +850,191 @@
         hydrateStudentSession();
     }
 })();
+
+// ==============================================================================
+// CBSE BREVO HTTPS OTP + 10-MIN TIME-BOXED RESEND (REF #ID) + DUPLICATE GUARD
+// ==============================================================================
+(function () {
+  window._CBSE_REG_CHALLENGE_ID = null;
+  window._CBSE_RESET_CHALLENGE_ID = null;
+  window._CBSE_RESEND_COOLDOWN = 0;
+
+  function cbseNotice(msg, isErr) {
+    const b = document.getElementById("authPromptBanner") || document.getElementById("authNoticeBanner");
+    if (!b) { alert(msg); return; }
+    b.className = isErr
+      ? "text-xs p-3 rounded-xl border border-rose-800 bg-rose-950/60 text-rose-300 block"
+      : "text-xs p-3 rounded-xl border border-emerald-800 bg-emerald-950/60 text-emerald-300 block";
+    const t = document.getElementById("authPromptText");
+    if (t) t.innerText = msg; else b.innerText = msg;
+    const act = document.getElementById("authPromptActionBtn");
+    if (act) act.innerText = "";
+    b.classList.remove("hidden");
+  }
+
+  window.resendCbseOtp = async function (purpose) {
+    const now = Date.now();
+    if (now < window._CBSE_RESEND_COOLDOWN) {
+      const s = Math.ceil((window._CBSE_RESEND_COOLDOWN - now) / 1000);
+      cbseNotice(`Please wait ${s}s before requesting another resend.`, true);
+      return;
+    }
+    const cid = purpose === "Password Recovery" ? window._CBSE_RESET_CHALLENGE_ID : window._CBSE_REG_CHALLENGE_ID;
+    if (!cid) {
+      cbseNotice("No active OTP session found. Please submit your email first.", true);
+      return;
+    }
+    cbseNotice(`Re-dispatching OTP for Ref #${cid}...`, false);
+    try {
+      const res = await fetch("/api/auth/otp/resend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challenge_id: cid, purpose })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.detail || "Resend failed.");
+      window._CBSE_RESEND_COOLDOWN = Date.now() + 30000;
+      const mins = Math.max(1, Math.round((data.expires_in || 600) / 60));
+      cbseNotice(
+        data.reused_same_otp
+          ? `Same active OTP (Ref #${data.ref_id}) re-sent to ${data.email} — valid for ~${mins} min.`
+          : `New OTP (Ref #${data.ref_id}) sent to ${data.email} — valid for 10 min.`,
+        false
+      );
+    } catch (err) {
+      cbseNotice(err.message, true);
+    }
+  };
+
+  window.handleStudentRegister = async function (e) {
+    if (e) e.preventDefault();
+    const fullName = (document.getElementById("regFullName")?.value || "").trim();
+    const email = (document.getElementById("regEmail")?.value || "").trim().toLowerCase();
+    const instCode = (document.getElementById("regInstCode")?.value || "DIRECT").trim().toUpperCase();
+    const mathTrack = document.getElementById("regMathTrack")?.value || "Standard";
+    const password = (document.getElementById("regPassword")?.value || "").trim();
+    const studentClass = parseInt(document.getElementById("regStudentClass")?.value || "10", 10);
+    const btn = document.getElementById("regSubmitBtn");
+
+    if (btn) { btn.disabled = true; btn.innerText = "Sending Email OTP..."; }
+    try {
+      const res = await fetch("/api/auth/student/register-otp/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: fullName, email, password,
+          institution_code: instCode, student_class: studentClass, math_track: mathTrack
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to send OTP.");
+      if (data.already_registered) {
+        if (typeof switchAuthConsole === "function") switchAuthConsole("student_login");
+        const loginEmail = document.getElementById("authEmail");
+        if (loginEmail) loginEmail.value = data.email || email;
+        cbseNotice(data.detail || "This email is already registered. Please sign in.", true);
+        return;
+      }
+
+      window._CBSE_REG_CHALLENGE_ID = data.challenge_id;
+      window._CBSE_RESEND_COOLDOWN = Date.now() + 30000;
+      sessionStorage.setItem("pending_reg_email", email);
+
+      const formReg = document.getElementById("formStudentRegister");
+      let step2 = document.getElementById("cbseRegOtpStep2");
+      if (!step2 && formReg) {
+        step2 = document.createElement("div");
+        step2.id = "cbseRegOtpStep2";
+        step2.className = "space-y-3 pt-2 border-t border-slate-800";
+        step2.innerHTML = `
+          <div id="cbseRegOtpBanner" class="p-3 rounded-xl bg-indigo-950/60 border border-indigo-800 text-xs text-indigo-200"></div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">6-Digit Email OTP</label>
+            <input type="text" id="cbseRegOtpInput" maxlength="6" placeholder="123456" class="w-full text-center tracking-[0.4em] text-base font-black font-mono py-2 rounded-xl bg-background border border-indigo-500 text-white outline-none">
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-400">Valid for 10 min (same OTP on resend)</span>
+            <button type="button" onclick="window.resendCbseOtp('Account Registration')" class="px-2.5 py-1 rounded bg-indigo-600 text-white font-bold hover:bg-indigo-500 cursor-pointer">Resend Email OTP</button>
+          </div>
+          <button type="button" id="cbseVerifyRegOtpBtn" onclick="window.verifyCbseRegOtp()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold text-xs rounded-xl shadow-lg text-white cursor-pointer">
+            Verify Email OTP &amp; Create Account
+          </button>
+        `;
+        formReg.appendChild(step2);
+      }
+      if (btn) btn.classList.add("hidden");
+      const bannerEl = document.getElementById("cbseRegOtpBanner");
+      if (bannerEl) {
+        bannerEl.innerHTML = `<strong>OTP Sent (Ref #${data.ref_id}):</strong> Enter the 6-digit code sent to <u>${data.email}</u>.`;
+      }
+      cbseNotice(`6-digit OTP (Ref #${data.ref_id}) dispatched to ${data.email}. Check Inbox or Spam.`, false);
+    } catch (err) {
+      cbseNotice(err.message, true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerText = "Create Student Account & Enter"; }
+    }
+  };
+
+  window.verifyCbseRegOtp = async function () {
+    const email = (sessionStorage.getItem("pending_reg_email") || document.getElementById("regEmail")?.value || "").trim().toLowerCase();
+    const otp = (document.getElementById("cbseRegOtpInput")?.value || "").trim();
+    const vBtn = document.getElementById("cbseVerifyRegOtpBtn");
+    if (!otp || otp.length !== 6) { cbseNotice("Enter the 6-digit OTP from your email.", true); return; }
+    if (vBtn) { vBtn.disabled = true; vBtn.innerText = "Verifying OTP..."; }
+    try {
+      const res = await fetch("/api/auth/student/register-otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challenge_id: window._CBSE_REG_CHALLENGE_ID, email, otp })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "OTP verification failed.");
+      localStorage.setItem("goalisb_token", data.access_token);
+      localStorage.setItem("goalisb_user", JSON.stringify(data.user));
+      if (typeof hydrateStudentUI === "function") hydrateStudentUI();
+      if (typeof closeLoginModal === "function") closeLoginModal();
+      location.reload();
+    } catch (err) {
+      cbseNotice(err.message, true);
+    } finally {
+      if (vBtn) { vBtn.disabled = false; vBtn.innerText = "Verify Email OTP & Create Account"; }
+    }
+  };
+
+  window.requestPasswordResetOtp = async function () {
+    const email = (document.getElementById("fpEmail")?.value || "").trim().toLowerCase();
+    const btn = document.getElementById("fpSendBtn");
+    if (!email) { cbseNotice("Please enter your registered email.", true); return; }
+    if (btn) { btn.disabled = true; btn.innerText = "Sending Code..."; }
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Unable to send reset code.");
+      window._CBSE_RESET_CHALLENGE_ID = data.challenge_id;
+      window._CBSE_RESEND_COOLDOWN = Date.now() + 30000;
+      cbseNotice(data.message || `Reset OTP (Ref #${data.ref_id}) sent to ${email}.`, false);
+      document.getElementById("fpStep1")?.classList.add("hidden");
+      const step2 = document.getElementById("fpStep2");
+      if (step2) {
+        step2.classList.remove("hidden");
+        if (!document.getElementById("cbseFpResendBtn")) {
+          const rBtn = document.createElement("button");
+          rBtn.id = "cbseFpResendBtn";
+          rBtn.type = "button";
+          rBtn.innerText = "Resend Recovery OTP (Same Code within 10m)";
+          rBtn.className = "text-[11px] text-indigo-400 hover:text-indigo-300 font-bold underline cursor-pointer";
+          rBtn.onclick = () => window.resendCbseOtp("Password Recovery");
+          step2.appendChild(rBtn);
+        }
+      }
+    } catch (err) {
+      cbseNotice(err.message, true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerText = "Send Reset Code"; }
+    }
+  };
+})();
