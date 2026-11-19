@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Explicit fallback ensures Render never defaults to localhost:5432
-NEON_FALLBACK = "postgresql://neondb_owner:npg_YFcvx8b0CZRU@ep-plain-glitter-b3wqaugf-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+NEON_FALLBACK = ""
 DATABASE_URL = os.getenv("DATABASE_URL") or NEON_FALLBACK
 
 _db_pool = None
