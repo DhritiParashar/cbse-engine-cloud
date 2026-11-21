@@ -1353,7 +1353,7 @@
 
         // 1. TOP TAB NAVIGATION
         function switchMainTab(tabIndex) {
-        if (typeof speechSynth !== 'undefined' && speechSynth) speechSynth.cancel();
+            if (typeof speechSynth !== 'undefined' && speechSynth) speechSynth.cancel();
             currentMainTab = tabIndex;
             for (let i = 1; i <= 8; i++) {
                 const btn = document.getElementById(`mainTab${i}`);
@@ -1370,14 +1370,14 @@
                 }
             }
 
-            	if (typeof renderSidebar === 'function') renderSidebar();
+            if (typeof renderSidebar === 'function') renderSidebar();
             if (tabIndex === 2) {
-            	   renderErrorFinder(currentChapterKey);
-       			} else if (tabIndex === 3) {
-            renderMicroEvaluator(currentChapterKey);
-        	} else if (tabIndex === 4) {
-            	   renderRoadmap();
-       			} else if (tabIndex === 5) {
+                renderErrorFinder(currentChapterKey);
+            } else if (tabIndex === 3) {
+                renderMicroEvaluator(currentChapterKey);
+            } else if (tabIndex === 4) {
+                renderRoadmap();
+            } else if (tabIndex === 5) {
                 renderDoubtTab(currentChapterKey);
             } else if (tabIndex === 6) {
                 if (typeof window.openCbseChapterPracticeTab === 'function') window.openCbseChapterPracticeTab();
@@ -1386,13 +1386,8 @@
             } else if (tabIndex === 8) {
                 if (typeof window.renderCbseBoardForecaster === 'function') window.renderCbseBoardForecaster();
             }
-            } else if (tabIndex === 6) {
-                if (typeof renderCbseMockLedger === 'function') renderCbseMockLedger();
-            } else if (tabIndex === 7) {
-                if (typeof renderCbseBoardForecaster === 'function') renderCbseBoardForecaster();
-            }
-	    }
-        
+        }
+
         // 2. INNER SUB-TAB NAVIGATION (TAB 1)
         function switchSubTab(tabIndex) {
             currentSubTab = tabIndex;
@@ -5280,6 +5275,6 @@ window.downloadDiagnosticMarksheet = function() {
 <script src="/js/core/auth.js?v=20261117cbse"></script>
     <script src="data/curriculumManifest.js"></script>
     <script src="js/classSwitcher.js"></script>
-    <script src="/js/modules/cbse_unified_v25.js?v=20261121v31"></script>
+    <script src="/js/modules/cbse_unified_v25.js?v=20261121v32"></script>
 </body>
 </html>
