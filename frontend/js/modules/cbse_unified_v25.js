@@ -503,7 +503,7 @@
       const defaults = buildDefaultSectionTargets(sMeta.maxTheory);
       st.draft = { ...defaults };
       st.locked = { ...defaults };
-      st.lockedAt = "Reset to 92% Distinction Benchmark";
+      st.lockedAt = "Reset to 92% Merit Benchmark";
       st.toast = `Restored default ${sMeta.label} section benchmarks.`;
     }
     saveSubjectSectionStore(cls, subj, st);
@@ -644,7 +644,7 @@
         readinessStage = "0-Score Mock (Needs Valid Attempt)";
         readinessColor = "text-rose-400";
       } else if (chosenMock.percentage >= 90) {
-        readinessStage = "Distinction Ready (A1 • 90%+)";
+        readinessStage = "A1 Merit Ready (90%+)";
         readinessColor = "text-emerald-400";
       } else if (chosenMock.percentage >= 75) {
         readinessStage = "Board Ready (75–89%)";
@@ -724,7 +724,7 @@
                   oninput="window.updateCbseTargetSlider('${sec.key}', this.value)" class="w-full accent-emerald-500 cursor-pointer">
                 <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-0.5">
                   <span>Min: 0</span>
-                  <span class="text-amber-400/90">Distinction: ${sec.cutoff}/${sec.max}</span>
+                  <span class="text-amber-400/90">85% Merit: ${sec.cutoff}/${sec.max}</span>
                   <span>Max: ${sec.max}</span>
                 </div>
               </div>
@@ -743,11 +743,11 @@
             </div>
 
             <div class="p-4 rounded-2xl bg-emerald-950/25 border border-emerald-700/40">
-              <div class="text-[10px] font-extrabold uppercase text-emerald-300">DISTINCTION BAR (${sMeta.cutoff}/${sMeta.maxTheory})</div>
+              <div class="text-[10px] font-extrabold uppercase text-emerald-300">CBSE 85% MERIT BENCHMARK (${sMeta.cutoff}/${sMeta.maxTheory})</div>
               <div class="text-xl font-extrabold ${chosenMock && attainedSubjectTotal >= sMeta.cutoff ? "text-emerald-400" : "text-slate-300"} mt-1">
                 ${!chosenMock ? "Pending Mock" : attainedSubjectTotal >= sMeta.cutoff ? "Achieved (+" + (attainedSubjectTotal - sMeta.cutoff) + "M)" : `Short by ${sMeta.cutoff - attainedSubjectTotal}M`}
               </div>
-              <div class="text-[11px] text-emerald-200 mt-0.5">${subjFullMocks.length} Board Mock(s) / PYQ(s) Logged</div>
+              <div class="text-[11px] text-emerald-700 dark:text-emerald-200 font-semibold mt-0.5">${subjFullMocks.length} Board Mock(s) / PYQ(s) Logged</div>
             </div>
 
             <div class="p-4 rounded-2xl bg-surface border border-slate-800">
