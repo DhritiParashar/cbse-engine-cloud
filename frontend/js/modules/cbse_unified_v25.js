@@ -127,11 +127,16 @@
 
   window.resetCbseBoardTarget = function () {
     const st = loadTargetStore();
-    st.draft = { ...DEFAULT_TARGETS };
-    st.locked = { ...DEFAULT_TARGETS };
-    st.syncedRecord = null;
-    st.lockedAt = "Reset to 95%+ Board Benchmark";
-    st.toast = "All subject sliders, locked targets, and synced mocks reset.";
+    const hasUnsavedDraft = JSON.stringify(st.draft) !== JSON.stringify(st.locked);
+    if (hasUnsavedDraft) {
+      st.draft = { ...st.locked };
+      st.toast = `Draft sliders reverted to your last locked target (${st.lockedAt}). Click Reset Target again to restore 95%+ factory defaults.`;
+    } else {
+      st.draft = { ...DEFAULT_TARGETS };
+      st.locked = { ...DEFAULT_TARGETS };
+      st.lockedAt = "Reset to 95%+ Board Benchmark";
+      st.toast = "Restored factory 95%+ Board Benchmark defaults.";
+    }
     saveTargetStore(st);
     window.renderCbseBoardForecaster();
   };
