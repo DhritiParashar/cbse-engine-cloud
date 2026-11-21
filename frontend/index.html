@@ -332,10 +332,13 @@
                 <span>&#127911;</span> 5. AI Doubt Solver
             </button>
             <button type="button" id="mainTab6" onclick="switchMainTab(6)" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-slate-700 text-slate-400 hover:bg-surfaceLight transition whitespace-nowrap text-xs sm:text-sm font-medium cursor-pointer">
-                <span>&#128196;</span> 6. Timed Mock Exam
+                <span>&#9889;</span> 6. Chapter Practice Mocks
             </button>
             <button type="button" id="mainTab7" onclick="switchMainTab(7)" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-slate-700 text-slate-400 hover:bg-surfaceLight transition whitespace-nowrap text-xs sm:text-sm font-medium cursor-pointer">
-                <span>&#128202;</span> 7. Board Target &amp; Forecaster
+                <span>&#128196;</span> 7. Subject Board Mock
+            </button>
+            <button type="button" id="mainTab8" onclick="switchMainTab(8)" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-slate-700 text-slate-400 hover:bg-surfaceLight transition whitespace-nowrap text-xs sm:text-sm font-medium cursor-pointer">
+                <span>&#128202;</span> 8. Subject Target &amp; Forecaster
             </button>
         </nav>
 
@@ -1047,12 +1050,15 @@
     <!-- Results & Score Breakdown Card -->
     <div id="mockTestResults" class="hidden p-6 sm:p-8 rounded-2xl bg-surface border border-slate-800 shadow-xl space-y-6"></div>
 </div>
-            
                 <!-- ============================================== -->
-                <!-- MAIN TAB 7: BOARD TARGET & SCORE FORECASTER    -->
+                <!-- MAIN TAB 7: SUBJECT-WISE BOARD MOCK EXAM       -->
                 <!-- ============================================== -->
                 <div id="workspace-7" class="hidden h-full flex-1 flex flex-col overflow-y-auto pr-4 pb-16 space-y-6"></div>
 
+                <!-- ============================================== -->
+                <!-- MAIN TAB 8: SUBJECT TARGET & FORECASTER        -->
+                <!-- ============================================== -->
+                <div id="workspace-8" class="hidden h-full flex-1 flex flex-col overflow-y-auto pr-4 pb-16 space-y-6"></div>
             </main>
 
 	<!-- Modular Subject Data Registries -->
@@ -1349,7 +1355,7 @@
         function switchMainTab(tabIndex) {
         if (typeof speechSynth !== 'undefined' && speechSynth) speechSynth.cancel();
             currentMainTab = tabIndex;
-            for (let i = 1; i <= 7; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const btn = document.getElementById(`mainTab${i}`);
                 if (btn) {
                     if (i === tabIndex) {
@@ -1373,6 +1379,13 @@
             	   renderRoadmap();
        			} else if (tabIndex === 5) {
                 renderDoubtTab(currentChapterKey);
+            } else if (tabIndex === 6) {
+                if (typeof window.openCbseChapterPracticeTab === 'function') window.openCbseChapterPracticeTab();
+            } else if (tabIndex === 7) {
+                if (typeof window.openCbseSubjectMockTab === 'function') window.openCbseSubjectMockTab();
+            } else if (tabIndex === 8) {
+                if (typeof window.renderCbseBoardForecaster === 'function') window.renderCbseBoardForecaster();
+            }
             } else if (tabIndex === 6) {
                 if (typeof renderCbseMockLedger === 'function') renderCbseMockLedger();
             } else if (tabIndex === 7) {
@@ -5267,6 +5280,6 @@ window.downloadDiagnosticMarksheet = function() {
 <script src="/js/core/auth.js?v=20261117cbse"></script>
     <script src="data/curriculumManifest.js"></script>
     <script src="js/classSwitcher.js"></script>
-    <script src="/js/modules/cbse_unified_v25.js?v=20261121v29"></script>
+    <script src="/js/modules/cbse_unified_v25.js?v=20261121v31"></script>
 </body>
 </html>

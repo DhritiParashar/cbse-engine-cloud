@@ -19,6 +19,23 @@
     ]
   };
 
+  const SUBJECT_SECTION_BLUEPRINTS = {
+    80: [
+      { key: "secA", label: "Section A: 20 MCQs & Assertion-Reason", max: 20, cutoff: 17, defaultTarget: 19 },
+      { key: "secB", label: "Section B: 5 Very Short Answer (2M)", max: 10, cutoff: 8, defaultTarget: 9 },
+      { key: "secC", label: "Section C: 6 Short Answer Proofs (3M)", max: 18, cutoff: 15, defaultTarget: 17 },
+      { key: "secD", label: "Section D: 4 Long Answer Derivations (5M)", max: 20, cutoff: 17, defaultTarget: 18 },
+      { key: "secE", label: "Section E: 3 Case-Based Studies (4M)", max: 12, cutoff: 10, defaultTarget: 11 }
+    ],
+    70: [
+      { key: "secA", label: "Section A: 16 MCQs & Assertion-Reason", max: 16, cutoff: 14, defaultTarget: 15 },
+      { key: "secB", label: "Section B: 5 Very Short Answer (2M)", max: 10, cutoff: 8, defaultTarget: 9 },
+      { key: "secC", label: "Section C: 7 Short Answer (3M)", max: 21, cutoff: 18, defaultTarget: 19 },
+      { key: "secD", label: "Section D: 2 Case-Based Passages (4M)", max: 8, cutoff: 7, defaultTarget: 7 },
+      { key: "secE", label: "Section E: 3 Long Derivations (5M)", max: 15, cutoff: 13, defaultTarget: 14 }
+    ]
+  };
+
   function getActiveClassNum() {
     try {
       const u = JSON.parse(localStorage.getItem("goalisb_user") || "{}");
@@ -40,24 +57,93 @@
     return CLASS_SUBJECT_SCHEMAS[cls] || CLASS_SUBJECT_SCHEMAS[10];
   }
 
-  function buildDefaultTargets(cls) {
-    const out = {};
-    getSchemaForClass(cls).forEach(s => {
-      out[s.key] = Math.round(s.maxTheory * 0.92); // e.g., 74/80 or 64/70
+  // Host the shared mock engine inside whichever tab is active: Tab 6 (Chapter Practice) or Tab 7 (Subject Board Mock)
+  function mountMockEngineInto(targetWorkspaceId) {
+    const ws6 = document.getElementById("workspace-6");
+    const ws7 = document.getElementById("workspace-7");
+    const targetWs = document.getElementById(targetWorkspaceId);
+    if (!ws6 || !ws7 || !targetWs) return;
+
+    const engineNodes = Array.from(ws6.children).concat(Array.from(ws7.children));
+    engineNodes.forEach(node => {
+      if (node.parentElement !== targetWs) {
+        targetWs.appendChild(node);
+      }
     });
+  }
+
+  window.openCbseChapterPracticeTab = function () {
+    mountMockEngineInto("workspace-6");
+    const ws6 = document.getElementById("workspace-6");
+    if (ws6) {
+      const h2 = ws6.querySelector("h2");
+      const badge = ws6.querySelector("span.rounded");
+      const modeTag = document.getElementById("tab6ChapterTag");
+      if (badge) badge.textContent = "Chapter-Wise Practice Drill";
+      if (h2) h2.textContent = "Chapter-Wise Practice Mocks & Topic Sprints";
+      if (modeTag) modeTag.textContent = "Practice Mode: Active Sidebar Chapter (20M)";
+    }
+    // Show ONLY Chapter Practice card in Tab 6, hiding Full Subject Board cards
+    const chBtn = document.getElementById("mockModeChapterBtn");
+    const qBtn = document.getElementById("mockModeQuickBtn");
+    const fBtn = document.getElementById("mockModeFull80Btn");
+    if (chBtn) {
+      chBtn.classList.remove("hidden");
+      chBtn.parentElement.className = "grid grid-cols-1 gap-3 text-left max-w-md mx-auto";
+    }
+    if (qBtn) qBtn.classList.add("hidden");
+    if (fBtn) fBtn.classList.add("hidden");
+
+    if (typeof setMockMode === "function") setMockMode("chapter");
+    window.renderCbseMockLedger("practice");
+  };
+
+  window.openCbseSubjectMockTab = function () {
+    mountMockEngineInto("workspace-7");
+    const cls = getActiveClassNum();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
+    const ws7 = document.getElementById("workspace-7");
+    if (ws7) {
+      const h2 = ws7.querySelector("h2");
+      const badge = ws7.querySelector("span.rounded");
+      const modeTag = document.getElementById("tab6ChapterTag");
+      if (badge) badge.textContent = `${sMeta.label} • Board Simulation`;
+      if (h2) h2.textContent = `${sMeta.label} — Full-Subject Board Mock Examination`;
+      if (modeTag) modeTag.textContent = `Full Subject Board Mock (${sMeta.maxTheory}M)`;
+    }
+    // Show ONLY Full-Subject Board Mock cards (Half-Paper Sprint & Comprehensive Board Mock), hiding Chapter Drill
+    const chBtn = document.getElementById("mockModeChapterBtn");
+    const qBtn = document.getElementById("mockModeQuickBtn");
+    const fBtn = document.getElementById("mockModeFull80Btn");
+    if (chBtn) chBtn.classList.add("hidden");
+    if (qBtn) {
+      qBtn.classList.remove("hidden");
+      qBtn.parentElement.className = "grid grid-cols-1 md:grid-cols-2 gap-3 text-left";
+    }
+    if (fBtn) fBtn.classList.remove("hidden");
+
+    if (typeof setMockMode === "function") setMockMode("full_80");
+    window.renderCbseMockLedger("subject");
+  };
+
+  function buildDefaultSectionTargets(maxTheory) {
+    const bp = SUBJECT_SECTION_BLUEPRINTS[maxTheory] || SUBJECT_SECTION_BLUEPRINTS[80];
+    const out = {};
+    bp.forEach(s => { out[s.key] = s.defaultTarget; });
     return out;
   }
 
-  function loadTargetStore() {
-    const cls = getActiveClassNum();
-    const defaults = buildDefaultTargets(cls);
+  function loadSubjectSectionStore(cls, subjKey, maxTheory) {
+    const defaults = buildDefaultSectionTargets(maxTheory);
+    const storageKey = `cbse_t8_sec_c${cls}_${subjKey}`;
     try {
-      const saved = JSON.parse(localStorage.getItem(`cbse_t7_subj_store_c${cls}`) || "null");
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
       if (saved && saved.locked) {
         return {
           draft: { ...defaults, ...saved.draft },
           locked: { ...defaults, ...saved.locked },
-          lockedAt: saved.lockedAt || "Default 92% Distinction Target",
+          lockedAt: saved.lockedAt || "Default 92% Subject Goal",
           selectedSerialId: saved.selectedSerialId || null,
           toast: saved.toast || ""
         };
@@ -66,15 +152,14 @@
     return {
       draft: { ...defaults },
       locked: { ...defaults },
-      lockedAt: "Default 92% Distinction Target",
+      lockedAt: "Default 92% Subject Goal",
       selectedSerialId: null,
       toast: ""
     };
   }
 
-  function saveTargetStore(st) {
-    const cls = getActiveClassNum();
-    localStorage.setItem(`cbse_t7_subj_store_c${cls}`, JSON.stringify(st));
+  function saveSubjectSectionStore(cls, subjKey, st) {
+    localStorage.setItem(`cbse_t8_sec_c${cls}_${subjKey}`, JSON.stringify(st));
   }
 
   function getMockHistory() {
@@ -92,10 +177,34 @@
     const arr = getMockHistory();
     arr.push(rec);
     localStorage.setItem(`cbse_mock_ledger_c${cls}`, JSON.stringify(arr));
-    const st = loadTargetStore();
-    st.selectedSerialId = rec.serialId;
-    st.toast = `Logged & synced ${rec.serialId} (${rec.score}/${rec.maxMarks} • ${rec.percentage}%) for ${rec.subject}.`;
-    saveTargetStore(st);
+    if (!rec.isPractice) {
+      const schema = getSchemaForClass(cls);
+      const sMeta = schema.find(x => x.key === rec.subject) || schema[0];
+      const st = loadSubjectSectionStore(cls, rec.subject, sMeta.maxTheory);
+      st.selectedSerialId = rec.serialId;
+      st.toast = `Logged & synced ${rec.serialId} (${rec.subject}: ${rec.score}/${rec.maxMarks} • ${rec.percentage}%) into ${sMeta.label} Forecaster.`;
+      saveSubjectSectionStore(cls, rec.subject, st);
+    }
+  }
+
+  function computeSectionBreakdownFromEval(res) {
+    const out = { secA: null, secB: null, secC: null, secD: null, secE: null };
+    if (!res || !Array.isArray(res.breakdown)) return out;
+    const totals = { secA: [0, 0], secB: [0, 0], secC: [0, 0], secD: [0, 0], secE: [0, 0] };
+    res.breakdown.forEach(item => {
+      const secStr = String(item.section || "");
+      let k = "secA";
+      if (/Section B/i.test(secStr)) k = "secB";
+      else if (/Section C/i.test(secStr)) k = "secC";
+      else if (/Section D/i.test(secStr)) k = "secD";
+      else if (/Section E/i.test(secStr)) k = "secE";
+      totals[k][0] += Number(item.earned || 0);
+      totals[k][1] += Number(item.totalMarks || 0);
+    });
+    Object.keys(totals).forEach(k => {
+      if (totals[k][1] > 0) out[k] = totals[k][0] / totals[k][1];
+    });
+    return out;
   }
 
   function recordLastEvaluationIfMissing() {
@@ -108,21 +217,24 @@
     const subj = getActiveSubjectCode();
     const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const seq = String(getMockHistory().length + 1).padStart(2, "0");
-    const serialId = `CBSE-${cls}-${subj}-${dStr}-#${seq}`;
+    const isChapterDrill = res.mode === "chapter";
+    const serialId = `${isChapterDrill ? "PRAC" : "CBSE"}-${cls}-${subj}-${dStr}-#${seq}`;
     res._loggedSerialId = serialId;
     const rec = {
       serialId,
       classLevel: cls,
       subject: subj,
-      mode: res.mode || "quick",
+      mode: res.mode || "full_80",
+      isPractice: isChapterDrill,
       score: Number(res.score || 0),
-      maxMarks: Number(res.maxMarks || 40),
+      maxMarks: Number(res.maxMarks || 80),
       percentage: Number(res.percentage || 0),
+      secRatios: computeSectionBreakdownFromEval(res),
       timeString: res.timeString || "0m 0s",
       date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
     };
     appendMockHistory(rec);
-    window.renderCbseMockLedger();
+    window.renderCbseMockLedger(isChapterDrill ? "practice" : "subject");
     return rec;
   }
 
@@ -132,109 +244,137 @@
     }
   }, true);
 
-  // Re-render Tab 7 or Tab 6 ledger whenever Subject or Class switches
-  if (typeof window.switchSubject === "function" && !window.switchSubject._v29Hooked) {
+  if (typeof window.switchSubject === "function" && !window.switchSubject._v31Hooked) {
     const origSubj = window.switchSubject;
     window.switchSubject = function () {
       origSubj.apply(this, arguments);
-      if (typeof currentMainTab !== "undefined" && currentMainTab === 7) window.renderCbseBoardForecaster();
-      if (typeof currentMainTab !== "undefined" && currentMainTab === 6) window.renderCbseMockLedger();
+      if (typeof currentMainTab !== "undefined") {
+        if (currentMainTab === 6) window.openCbseChapterPracticeTab();
+        else if (currentMainTab === 7) window.openCbseSubjectMockTab();
+        else if (currentMainTab === 8) window.renderCbseBoardForecaster();
+      }
     };
-    window.switchSubject._v29Hooked = true;
+    window.switchSubject._v31Hooked = true;
   }
 
-  window.syncCbseMockToTab7 = function (serialId) {
+  window.syncCbseMockToTab8 = function (serialId) {
     recordLastEvaluationIfMissing();
-    const hist = getMockHistory();
-    const match = serialId ? (hist.find(h => h.serialId === serialId) || hist[hist.length - 1]) : hist[hist.length - 1];
-    const st = loadTargetStore();
+    const cls = getActiveClassNum();
+    const hist = getMockHistory().filter(h => !h.isPractice);
+    const match = serialId
+      ? (hist.find(h => h.serialId === serialId) || hist[hist.length - 1])
+      : (hist.filter(h => h.subject === getActiveSubjectCode()).slice(-1)[0] || hist[hist.length - 1]);
+
     if (!match) {
-      st.toast = "No timed mocks logged yet — complete a mock in Tab 6 first, then click Sync Mock.";
-      saveTargetStore(st);
+      const schema = getSchemaForClass(cls);
+      const sMeta = schema.find(x => x.key === getActiveSubjectCode()) || schema[0];
+      const st = loadSubjectSectionStore(cls, sMeta.key, sMeta.maxTheory);
+      st.toast = `No Full-Subject Board Mocks logged yet for ${sMeta.label} — take a Subject Board Mock in Tab 7 first, then click Sync Mock.`;
+      saveSubjectSectionStore(cls, sMeta.key, st);
       window.renderCbseBoardForecaster();
       return;
     }
+
+    if (match.subject && match.subject !== getActiveSubjectCode() && typeof window.switchSubject === "function") {
+      window.switchSubject(match.subject);
+    }
+
+    const schema = getSchemaForClass(cls);
+    const sMeta = schema.find(x => x.key === match.subject) || schema[0];
+    const st = loadSubjectSectionStore(cls, match.subject, sMeta.maxTheory);
     st.selectedSerialId = match.serialId;
     st.toast = Number(match.score) <= 0
-      ? `Synced ${match.serialId} (${match.subject}: 0/${match.maxMarks} • 0%): 0-Score Mock — complete a valid scored attempt in Tab 6.`
-      : `Synced ${match.serialId} (${match.subject}: ${match.score}/${match.maxMarks} • ${match.percentage}%) into Subject Attainment Matrix.`;
-    saveTargetStore(st);
-    if (typeof currentMainTab !== "undefined" && currentMainTab !== 7 && typeof switchMainTab === "function") {
-      switchMainTab(7);
+      ? `Synced ${match.serialId} (${match.subject}: 0/${match.maxMarks} • 0%): 0-Score Mock — complete a scored attempt in Tab 7.`
+      : `Synced ${match.serialId} (${match.subject}: ${match.score}/${match.maxMarks} • ${match.percentage}%) into Section A–E Forecaster.`;
+    saveSubjectSectionStore(cls, match.subject, st);
+
+    if (typeof currentMainTab !== "undefined" && currentMainTab !== 8 && typeof switchMainTab === "function") {
+      switchMainTab(8);
     } else {
       window.renderCbseBoardForecaster();
     }
   };
 
   window.lockCbseBoardTarget = function () {
-    const st = loadTargetStore();
+    const cls = getActiveClassNum();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
+    const st = loadSubjectSectionStore(cls, subj, sMeta.maxTheory);
     st.locked = { ...st.draft };
     st.lockedAt = "Locked at " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    st.toast = "Subject Theory Targets locked! Attainment & Deficiency Matrix updated.";
-    saveTargetStore(st);
+    st.toast = `${sMeta.label} Section A–E Targets locked!`;
+    saveSubjectSectionStore(cls, subj, st);
     window.renderCbseBoardForecaster();
   };
 
   window.resetCbseBoardTarget = function () {
     const cls = getActiveClassNum();
-    const st = loadTargetStore();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
+    const st = loadSubjectSectionStore(cls, subj, sMeta.maxTheory);
     const hasUnsavedDraft = JSON.stringify(st.draft) !== JSON.stringify(st.locked);
     if (hasUnsavedDraft) {
       st.draft = { ...st.locked };
-      st.toast = `Draft sliders reverted to your last locked target (${st.lockedAt}). Click Reset Target again to restore 92% defaults.`;
+      st.toast = `Draft section sliders reverted to your last locked target (${st.lockedAt}). Click Reset Target again to restore defaults.`;
     } else {
-      const defaults = buildDefaultTargets(cls);
+      const defaults = buildDefaultSectionTargets(sMeta.maxTheory);
       st.draft = { ...defaults };
       st.locked = { ...defaults };
       st.lockedAt = "Reset to 92% Distinction Benchmark";
-      st.toast = "Restored default 92% subject benchmarks.";
+      st.toast = `Restored default ${sMeta.label} section benchmarks.`;
     }
-    saveTargetStore(st);
+    saveSubjectSectionStore(cls, subj, st);
     window.renderCbseBoardForecaster();
   };
 
-  window.updateCbseTargetSlider = function (key, val) {
-    const st = loadTargetStore();
-    st.draft[key] = Number(val);
-    saveTargetStore(st);
-    window.renderCbseBoardForecaster();
-  };
-
-  window.clearCbseMockLedger = function () {
-    if (!confirm("Clear all logged mocks from the Official CBSE Board Mock Ledger?")) return;
+  window.updateCbseTargetSlider = function (secKey, val) {
     const cls = getActiveClassNum();
-    localStorage.removeItem(`cbse_mock_ledger_c${cls}`);
-    const st = loadTargetStore();
-    st.selectedSerialId = null;
-    st.toast = "Board Mock Ledger cleared.";
-    saveTargetStore(st);
-    window.renderCbseMockLedger();
-    if (typeof currentMainTab !== "undefined" && currentMainTab === 7) window.renderCbseBoardForecaster();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
+    const st = loadSubjectSectionStore(cls, subj, sMeta.maxTheory);
+    st.draft[secKey] = Number(val);
+    saveSubjectSectionStore(cls, subj, st);
+    window.renderCbseBoardForecaster();
   };
 
-  window.renderCbseMockLedger = function () {
-    const ws6 = document.getElementById("workspace-6");
-    if (!ws6) return;
+  window.clearCbseMockLedger = function (scope) {
+    if (!confirm("Clear logged attempts from this ledger?")) return;
+    const cls = getActiveClassNum();
+    const remaining = getMockHistory().filter(h => scope === "practice" ? !h.isPractice : h.isPractice);
+    localStorage.setItem(`cbse_mock_ledger_c${cls}`, JSON.stringify(remaining));
+    window.renderCbseMockLedger(scope);
+    if (typeof currentMainTab !== "undefined" && currentMainTab === 8) window.renderCbseBoardForecaster();
+  };
+
+  window.renderCbseMockLedger = function (scope) {
+    const activeScope = scope || (typeof currentMainTab !== "undefined" && currentMainTab === 6 ? "practice" : "subject");
+    const hostWs = document.getElementById(activeScope === "practice" ? "workspace-6" : "workspace-7") || document.getElementById("workspace-6");
+    if (!hostWs) return;
     let box = document.getElementById("cbse-t6-official-ledger");
     if (!box) {
       box = document.createElement("div");
       box.id = "cbse-t6-official-ledger";
-      ws6.appendChild(box);
     }
+    if (box.parentElement !== hostWs) hostWs.appendChild(box);
+
     const cls = getActiveClassNum();
-    const hist = getMockHistory().slice().reverse();
+    const hist = getMockHistory().slice().reverse().filter(h => activeScope === "practice" ? h.isPractice : !h.isPractice);
     box.innerHTML = `
       <div class="p-5 rounded-2xl bg-surface border border-slate-800 space-y-3 text-xs shadow-lg">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 class="text-sm font-extrabold text-white">Class ${cls} Official Board Mock Attempt Ledger (${hist.length} Logged)</h3>
-            <p class="text-[11px] text-slate-400">Click <strong>Sync Tab 7 &rarr;</strong> on any Serial ID to inspect subject-wise attainment &amp; readiness.</p>
+            <h3 class="text-sm font-extrabold text-white">
+              ${activeScope === "practice" ? `Class ${cls} Chapter-Wise Practice Drill Ledger (${hist.length} Logged)` : `Class ${cls} Full-Subject Board Mock Ledger (${hist.length} Logged)`}
+            </h3>
+            <p class="text-[11px] text-slate-400">
+              ${activeScope === "practice"
+                ? "Chapter drills build topic mastery without affecting your Subject-Wise Board Forecast in Tab 8."
+                : "Click Forecast Tab 8 → on any Full-Subject Board Mock to evaluate Section A–E attainment & readiness."}
+            </p>
           </div>
           <div class="flex items-center gap-2">
-            ${hist.length ? `<button type="button" onclick="window.clearCbseMockLedger()" class="px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-200 text-xs font-bold cursor-pointer">Clear Logs</button>` : ""}
-            <button type="button" onclick="switchMainTab(7)" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">
-              Open Tab 7 Attainment &rarr;
-            </button>
+            ${hist.length ? `<button type="button" onclick="window.clearCbseMockLedger('${activeScope}')" class="px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-200 text-xs font-bold cursor-pointer">Clear Logs</button>` : ""}
+            ${activeScope === "subject" ? `<button type="button" onclick="switchMainTab(8)" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Open Tab 8 Forecaster &rarr;</button>` : ""}
           </div>
         </div>
         ${hist.length ? `
@@ -242,10 +382,10 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
-                  <th class="py-2 pr-2">Serial Mock ID</th>
+                  <th class="py-2 pr-2">Serial ID</th>
                   <th class="py-2 px-2">Date &amp; Time</th>
                   <th class="py-2 px-2">Subject</th>
-                  <th class="py-2 px-2">Raw Score</th>
+                  <th class="py-2 px-2">Score</th>
                   <th class="py-2 px-2">Attained %</th>
                   <th class="py-2 pl-2 text-right">Action</th>
                 </tr>
@@ -253,138 +393,121 @@
               <tbody class="divide-y divide-slate-800/70">
                 ${hist.map(h => `
                   <tr>
-                    <td class="py-2.5 pr-2 font-mono font-bold text-indigo-400 whitespace-nowrap">${h.serialId}</td>
+                    <td class="py-2.5 pr-2 font-mono font-bold ${h.isPractice ? "text-sky-400" : "text-indigo-400"} whitespace-nowrap">${h.serialId}</td>
                     <td class="py-2.5 px-2 text-slate-400 whitespace-nowrap">${h.date}</td>
                     <td class="py-2.5 px-2 font-bold text-white">${h.subject}</td>
                     <td class="py-2.5 px-2 font-bold text-emerald-400 whitespace-nowrap">${h.score} / ${h.maxMarks}</td>
                     <td class="py-2.5 px-2 font-semibold text-slate-200">${h.percentage}%</td>
                     <td class="py-2.5 pl-2 text-right whitespace-nowrap">
-                      <button type="button" onclick="window.syncCbseMockToTab7('${h.serialId}')"
-                        class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">
-                        Sync Tab 7 &rarr;
-                      </button>
+                      ${h.isPractice
+                        ? `<span class="text-[11px] text-sky-300 font-semibold">Chapter Drill Logged</span>`
+                        : `<button type="button" onclick="window.syncCbseMockToTab8('${h.serialId}')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">Forecast Tab 8 &rarr;</button>`}
                     </td>
                   </tr>
                 `).join("")}
               </tbody>
             </table>
           </div>
-        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">No timed mocks logged yet for Class ${cls}. Complete any mock above to log a Serial ID &amp; sync to Tab 7.</div>`}
+        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">${activeScope === "practice" ? "No chapter practice drills logged yet. Select a chapter on the left and start a 20M drill above." : "No Full-Subject Board Mocks logged yet. Complete an 80M/70M or 40M/35M Subject Mock above to sync with Tab 8."}</div>`}
       </div>
     `;
   };
 
-  function getTab4ChapterReadinessPct(subjKey) {
-    try {
-      const ratings = window.studentChapterRatings || JSON.parse(localStorage.getItem("cbse_self_eval") || "{}");
-      const prefix = subjKey === "SCI" ? "S10_" : subjKey === "SST" ? "SS10_" : "M10_";
-      const keys = Object.keys(ratings).filter(k => k.startsWith(prefix));
-      if (!keys.length) return null;
-      const map = { weak: 40, developing: 70, mastered: 95 };
-      const sum = keys.reduce((acc, k) => acc + (map[ratings[k]] || 70), 0);
-      return Math.round(sum / keys.length);
-    } catch (_) {
-      return null;
-    }
-  }
-
   window.renderCbseBoardForecaster = function () {
-    const ws7 = document.getElementById("workspace-7");
-    if (!ws7) return;
+    const ws8 = document.getElementById("workspace-8");
+    if (!ws8) return;
     const cls = getActiveClassNum();
     const activeSubj = getActiveSubjectCode();
     const schema = getSchemaForClass(cls);
-    const st = loadTargetStore();
+    const sMeta = schema.find(x => x.key === activeSubj) || schema[0];
+    const secBp = SUBJECT_SECTION_BLUEPRINTS[sMeta.maxTheory] || SUBJECT_SECTION_BLUEPRINTS[80];
+    const st = loadSubjectSectionStore(cls, sMeta.key, sMeta.maxTheory);
     const d = st.draft;
     const t = st.locked;
-    const hist = getMockHistory().slice().reverse();
     const unsaved = JSON.stringify(d) !== JSON.stringify(t);
 
-    // Evaluate each curriculum subject independently (no cross-subject bleed!)
-    const rows = schema.map(s => {
-      const target = t[s.key];
-      const subjMocks = hist.filter(h => h.subject === s.key);
-      // Prefer explicitly selected mock if it belongs to this subject, otherwise latest mock for this subject
-      const chosenMock = (st.selectedSerialId && subjMocks.find(m => m.serialId === st.selectedSerialId)) || subjMocks[0] || null;
-      const selfEvalPct = cls === 10 ? getTab4ChapterReadinessPct(s.key) : null;
+    const hist = getMockHistory().slice().reverse();
+    const subjFullMocks = hist.filter(h => h.subject === sMeta.key && !h.isPractice);
+    const chosenMock = (st.selectedSerialId && subjFullMocks.find(m => m.serialId === st.selectedSerialId))
+      || subjFullMocks[0]
+      || null;
 
-      let attainedMarks = null;
-      let attainedPct = null;
-      let diff = null;
-      let completionPct = 0;
-      let readinessStage = "Not Attempted in Tab 6";
-      let readinessBadgeClass = "bg-slate-800 text-slate-300";
+    const draftSubjectTotal = secBp.reduce((acc, s) => acc + Number(d[s.key] || 0), 0);
+    const lockedSubjectTotal = secBp.reduce((acc, s) => acc + Number(t[s.key] || 0), 0);
 
+    const sectionRows = secBp.map(sec => {
+      const target = Number(t[sec.key] || 0);
+      let attained = null;
       if (chosenMock) {
-        attainedPct = Number(chosenMock.percentage || 0);
-        attainedMarks = Math.round((attainedPct / 100) * s.maxTheory);
-        diff = attainedMarks - target;
-        completionPct = Math.min(100, Math.round((attainedMarks / Math.max(1, target)) * 100));
-
-        if (Number(chosenMock.score) <= 0) {
-          readinessStage = "0-Score Mock (Needs Valid Attempt)";
-          readinessBadgeClass = "bg-rose-950 text-rose-300 border border-rose-800";
-        } else if (attainedPct >= 90) {
-          readinessStage = "Distinction Ready (A1 • 90%+)";
-          readinessBadgeClass = "bg-emerald-950 text-emerald-300 border border-emerald-800";
-        } else if (attainedPct >= 75) {
-          readinessStage = "Board Ready (75–89%)";
-          readinessBadgeClass = "bg-indigo-950 text-indigo-300 border border-indigo-800";
-        } else {
-          readinessStage = "Developing (<75% — Fix Weak Chapters)";
-          readinessBadgeClass = "bg-amber-950 text-amber-300 border border-amber-800";
-        }
-      } else if (selfEvalPct !== null) {
-        readinessStage = `Self-Eval Only (${selfEvalPct}% • Pending Mock)`;
-        readinessBadgeClass = "bg-cyan-950/60 text-cyan-300 border border-cyan-800/60";
+        const ratio = (chosenMock.secRatios && chosenMock.secRatios[sec.key] !== null && chosenMock.secRatios[sec.key] !== undefined)
+          ? chosenMock.secRatios[sec.key]
+          : (Number(chosenMock.percentage || 0) / 100);
+        attained = Math.round(sec.max * ratio * 10) / 10;
       }
-
-      return {
-        ...s,
-        target,
-        chosenMock,
-        attainedMarks,
-        attainedPct,
-        diff,
-        completionPct,
-        readinessStage,
-        readinessBadgeClass,
-        isActiveSubject: s.key === activeSubj
-      };
+      const diff = attained !== null ? Math.round((attained - target) * 10) / 10 : null;
+      const compPct = attained !== null ? Math.min(100, Math.round((attained / Math.max(1, target)) * 100)) : 0;
+      return { ...sec, target, attained, diff, compPct };
     });
 
-    const activeRow = rows.find(r => r.key === activeSubj) || rows[0];
-    const attemptedCount = rows.filter(r => r.chosenMock !== null).length;
-    const distinctionReadyCount = rows.filter(r => r.chosenMock && r.attainedMarks >= r.cutoff).length;
+    const attainedSubjectTotal = chosenMock
+      ? Math.round((Number(chosenMock.percentage || 0) / 100) * sMeta.maxTheory)
+      : null;
 
-    ws7.innerHTML = `
+    let readinessStage = `Awaiting ${sMeta.label} Mock`;
+    let readinessColor = "text-slate-300";
+    if (chosenMock) {
+      if (Number(chosenMock.score) <= 0) {
+        readinessStage = "0-Score Mock (Needs Valid Attempt)";
+        readinessColor = "text-rose-400";
+      } else if (chosenMock.percentage >= 90) {
+        readinessStage = "Distinction Ready (A1 • 90%+)";
+        readinessColor = "text-emerald-400";
+      } else if (chosenMock.percentage >= 75) {
+        readinessStage = "Board Ready (75–89%)";
+        readinessColor = "text-indigo-400";
+      } else {
+        readinessStage = "Developing (<75% — Revise Weak Sections)";
+        readinessColor = "text-amber-400";
+      }
+    }
+
+    const subjectOverviewRows = schema.map(sub => {
+      const sStore = loadSubjectSectionStore(cls, sub.key, sub.maxTheory);
+      const sBp = SUBJECT_SECTION_BLUEPRINTS[sub.maxTheory] || SUBJECT_SECTION_BLUEPRINTS[80];
+      const sLockedSum = sBp.reduce((a, b) => a + Number(sStore.locked[b.key] || 0), 0);
+      const latest = hist.find(h => h.subject === sub.key && !h.isPractice) || null;
+      const attained = latest ? Math.round((Number(latest.percentage || 0) / 100) * sub.maxTheory) : null;
+      const gap = attained !== null ? attained - sLockedSum : null;
+      return { ...sub, sLockedSum, latest, attained, gap, isActive: sub.key === sMeta.key };
+    });
+
+    ws8.innerHTML = `
       <div class="p-6 rounded-2xl bg-surface border border-slate-800 shadow-lg space-y-2 shrink-0 mt-1">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="px-2.5 py-1 rounded text-xs font-bold bg-indigo-900/50 text-indigo-300 border border-indigo-800/50">
-            Class ${cls} Curriculum Subject Attainment (${schema.length} Active Subjects)
+            Subject-Specific Board Forecaster &bull; Class ${cls}
           </span>
-          <span class="text-xs font-mono text-slate-400">Active Subject Focus: <strong class="text-indigo-300">${activeRow.label}</strong></span>
+          <span class="text-xs font-mono text-slate-400">Active Subject: <strong class="text-indigo-300">${sMeta.label} (${sMeta.maxTheory} Marks Theory)</strong></span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Subject-Wise Attainment &amp; Readiness Forecaster</h2>
-        <p class="text-xs sm:text-sm text-slate-400 max-w-3xl">Evaluates only your enrolled Class ${cls} curriculum subjects—comparing each subject's locked theory goal against actual Tab 6 Timed Mock performance and present readiness level.</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">${sMeta.label} — Section-by-Section Target &amp; Attainment</h2>
+        <p class="text-xs sm:text-sm text-slate-400 max-w-3xl">Evaluates strictly against Full-Subject Board Mocks from Tab 7 across CBSE Sections A–E. Chapter practice drills stay isolated in Tab 6.</p>
       </div>
 
       ${st.toast ? `
         <div class="p-3.5 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 flex items-center justify-between text-xs text-indigo-200">
           <span>&#9989; <strong>Status:</strong> ${st.toast}</span>
-          <button type="button" onclick="const s=JSON.parse(localStorage.getItem('cbse_t7_subj_store_c${cls}')||'{}'); s.toast=''; localStorage.setItem('cbse_t7_subj_store_c${cls}', JSON.stringify(s)); window.renderCbseBoardForecaster();" class="font-bold px-2">&times;</button>
+          <button type="button" onclick="const s=JSON.parse(localStorage.getItem('cbse_t8_sec_c${cls}_${sMeta.key}')||'{}'); s.toast=''; localStorage.setItem('cbse_t8_sec_c${cls}_${sMeta.key}', JSON.stringify(s)); window.renderCbseBoardForecaster();" class="font-bold px-2">&times;</button>
         </div>
       ` : ""}
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <!-- LEFT: CURRICULUM SUBJECT TARGET SLIDERS -->
         <div class="lg:col-span-5 bg-surface border border-slate-800 rounded-2xl p-5 space-y-4 text-xs shadow-lg">
           <div class="flex flex-wrap items-start justify-between gap-2">
             <div>
               <span class="px-2.5 py-0.5 rounded-full ${unsaved ? "bg-amber-500/20 text-amber-300" : "bg-indigo-500/20 text-indigo-300"} text-[10px] font-extrabold uppercase">
-                ${unsaved ? "UNSAVED DRAFT — CLICK SET TARGET" : "LOCKED SUBJECT TARGETS"}
+                ${unsaved ? "UNSAVED DRAFT — CLICK SET TARGET" : "LOCKED SUBJECT TARGET"}
               </span>
-              <h3 class="text-base font-extrabold text-white mt-1.5">Class ${cls} Subject Theory Goals</h3>
+              <h3 class="text-base font-extrabold text-white mt-1.5">${sMeta.label} (${sMeta.maxTheory}M)</h3>
             </div>
             <div class="flex flex-col gap-1.5 shrink-0">
               <button type="button" onclick="window.lockCbseBoardTarget()"
@@ -395,58 +518,57 @@
                 class="px-3.5 py-1.5 rounded-xl bg-surfaceLight text-slate-200 border border-slate-700 text-xs font-bold cursor-pointer">
                 &#8634; Reset Target
               </button>
-              <button type="button" onclick="window.syncCbseMockToTab7()"
+              <button type="button" onclick="window.syncCbseMockToTab8()"
                 class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow cursor-pointer">
                 &#8635; Sync Mock
               </button>
             </div>
           </div>
 
-          <div class="space-y-4 pt-2 border-t border-slate-800">
-            ${rows.map(r => `
-              <div class="p-3 rounded-xl ${r.isActiveSubject ? "bg-indigo-950/25 border border-indigo-500/40" : "bg-surfaceLight/50 border border-slate-800"}">
+          <div class="space-y-3.5 pt-2 border-t border-slate-800">
+            ${secBp.map(sec => `
+              <div>
                 <div class="flex flex-wrap justify-between font-bold mb-1">
-                  <span class="text-slate-200">${r.label} ${r.isActiveSubject ? '<span class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-indigo-600 text-white">ACTIVE</span>' : ""}</span>
+                  <span class="text-slate-200">${sec.label}</span>
                   <span class="font-mono text-emerald-400">
-                    ${d[r.key]} <span class="text-slate-400 font-normal">/ ${r.maxTheory}</span>
-                    <span class="ml-1.5 text-[10px] text-amber-300">Distinction: ${r.cutoff}</span>
-                    <span class="ml-1 text-[10px] text-indigo-300">&bull; Locked: ${t[r.key]}</span>
+                    ${d[sec.key]} <span class="text-slate-400 font-normal">/ ${sec.max}</span>
+                    <span class="ml-1.5 text-[10px] text-amber-300">Bar: ${sec.cutoff}</span>
+                    <span class="ml-1 text-[10px] text-indigo-300">&bull; Locked: ${t[sec.key]}</span>
                   </span>
                 </div>
-                <input type="range" min="30" max="${r.maxTheory}" step="1" value="${d[r.key]}"
-                  oninput="window.updateCbseTargetSlider('${r.key}', this.value)" class="w-full accent-emerald-500 cursor-pointer">
+                <input type="range" min="0" max="${sec.max}" step="1" value="${d[sec.key]}"
+                  oninput="window.updateCbseTargetSlider('${sec.key}', this.value)" class="w-full accent-emerald-500 cursor-pointer">
                 <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-0.5">
-                  <span>Pass: ${Math.round(r.maxTheory * 0.33)}</span>
-                  <span class="text-amber-400/90">Distinction Bar: ${r.cutoff}/${r.maxTheory}</span>
-                  <span>Max: ${r.maxTheory}</span>
+                  <span>Min: 0</span>
+                  <span class="text-amber-400/90">Distinction: ${sec.cutoff}/${sec.max}</span>
+                  <span>Max: ${sec.max}</span>
                 </div>
               </div>
             `).join("")}
           </div>
         </div>
 
-        <!-- RIGHT: SUBJECT-SPECIFIC KPI CARDS + ATTAINMENT & READINESS MATRIX -->
         <div class="lg:col-span-7 space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="p-4 rounded-2xl bg-surface border border-slate-800">
-              <div class="text-[10px] font-extrabold uppercase text-slate-400">${activeRow.label.split("(")[0].trim()} ATTAINMENT</div>
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">${chosenMock ? `ATTAINED (${chosenMock.serialId})` : "TARGET THEORY SCORE"}</div>
               <div class="text-xl font-extrabold text-white mt-1">
-                ${activeRow.chosenMock ? `${activeRow.attainedMarks} / ${activeRow.maxTheory} (${activeRow.attainedPct}%)` : `Target: ${d[activeRow.key]} / ${activeRow.maxTheory}`}
+                ${chosenMock ? `${attainedSubjectTotal} / ${sMeta.maxTheory} (${chosenMock.percentage}%)` : `${draftSubjectTotal} / ${sMeta.maxTheory}`}
               </div>
-              <div class="text-[11px] text-indigo-300 mt-0.5">
-                ${activeRow.chosenMock ? `Mock: ${activeRow.chosenMock.serialId} • Locked: ${activeRow.target}/${activeRow.maxTheory}` : `Locked: ${activeRow.target}/${activeRow.maxTheory} • Awaiting ${activeRow.key} Mock`}
-              </div>
+              <div class="text-[11px] text-indigo-300 mt-0.5">Locked Target: ${lockedSubjectTotal} / ${sMeta.maxTheory}</div>
             </div>
 
             <div class="p-4 rounded-2xl bg-emerald-950/25 border border-emerald-700/40">
-              <div class="text-[10px] font-extrabold uppercase text-emerald-300">CURRICULUM MOCK COVERAGE</div>
-              <div class="text-xl font-extrabold text-emerald-400 mt-1">${attemptedCount} / ${rows.length} Attempted</div>
-              <div class="text-[11px] text-emerald-200 mt-0.5">${distinctionReadyCount} / ${rows.length} at Distinction Bar</div>
+              <div class="text-[10px] font-extrabold uppercase text-emerald-300">DISTINCTION BAR (${sMeta.cutoff}/${sMeta.maxTheory})</div>
+              <div class="text-xl font-extrabold ${chosenMock && attainedSubjectTotal >= sMeta.cutoff ? "text-emerald-400" : "text-slate-300"} mt-1">
+                ${!chosenMock ? "Pending Mock" : attainedSubjectTotal >= sMeta.cutoff ? "Achieved (+" + (attainedSubjectTotal - sMeta.cutoff) + "M)" : `Short by ${sMeta.cutoff - attainedSubjectTotal}M`}
+              </div>
+              <div class="text-[11px] text-emerald-200 mt-0.5">${subjFullMocks.length} Full Subject Mock(s) Logged</div>
             </div>
 
             <div class="p-4 rounded-2xl bg-surface border border-slate-800">
-              <div class="text-[10px] font-extrabold uppercase text-amber-300">ACTIVE SUBJECT READINESS</div>
-              <div class="text-sm font-extrabold text-white mt-1">${activeRow.readinessStage}</div>
+              <div class="text-[10px] font-extrabold uppercase text-amber-300">PRESENT READINESS LEVEL</div>
+              <div class="text-sm font-extrabold ${readinessColor} mt-1">${readinessStage}</div>
               <div class="text-[10px] text-slate-400 mt-0.5">${st.lockedAt}</div>
             </div>
           </div>
@@ -454,54 +576,47 @@
           <div class="bg-surface border border-slate-800 rounded-2xl p-5 space-y-3 text-xs shadow-lg">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <div class="text-xs font-extrabold uppercase tracking-wider text-amber-400">SUBJECT-WISE ATTAINED LEVEL, DEFICIENCY &amp; READINESS MATRIX</div>
-                <div class="text-[11px] text-slate-400">Each subject evaluates strictly against its own Tab 6 mocks — no cross-subject extrapolation.</div>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-amber-400">${sMeta.label} — SECTION A–E ATTAINMENT &amp; DEFICIENCY MATRIX</div>
+                <div class="text-[11px] text-slate-400">${chosenMock ? `Synced: ${chosenMock.serialId} (${chosenMock.score}/${chosenMock.maxMarks} • ${chosenMock.percentage}%)` : `Complete a ${sMeta.label} Mock in Tab 7 or click Sync Mock`}</div>
               </div>
-              ${hist.length ? `
-                <select onchange="if(this.value) window.syncCbseMockToTab7(this.value)" class="px-2.5 py-1.5 rounded-xl bg-background border border-slate-700 text-xs font-mono font-bold text-amber-300">
-                  <option value="">Select Logged Mock (${hist.length})...</option>
-                  ${hist.map(h => `<option value="${h.serialId}" ${st.selectedSerialId === h.serialId ? "selected" : ""}>${h.serialId} (${h.subject} • ${h.score}/${h.maxMarks})</option>`).join("")}
+              ${subjFullMocks.length ? `
+                <select onchange="if(this.value) window.syncCbseMockToTab8(this.value)" class="px-2.5 py-1.5 rounded-xl bg-background border border-slate-700 text-xs font-mono font-bold text-amber-300">
+                  <option value="">Switch ${sMeta.key} Mock (${subjFullMocks.length})...</option>
+                  ${subjFullMocks.map(h => `<option value="${h.serialId}" ${chosenMock && chosenMock.serialId === h.serialId ? "selected" : ""}>${h.serialId} (${h.score}/${h.maxMarks})</option>`).join("")}
                 </select>
-              ` : `<span class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-[11px] font-bold text-slate-400">0 Mocks Logged</span>`}
+              ` : `<span class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-[11px] font-bold text-slate-400">0 ${sMeta.key} Mocks</span>`}
             </div>
 
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
-                    <th class="py-2 pr-2">Subject (Class ${cls})</th>
+                    <th class="py-2 pr-2">CBSE Section</th>
                     <th class="py-2 px-2">Locked</th>
                     <th class="py-2 px-2">Attained</th>
                     <th class="py-2 px-2">Deficiency / Surplus</th>
-                    <th class="py-2 px-2">Present Readiness Level</th>
                     <th class="py-2 pl-2">Completion</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-800/70">
-                  ${rows.map(r => `
-                    <tr class="${r.isActiveSubject ? "bg-indigo-950/15" : ""}">
-                      <td class="py-2.5 pr-2">
-                        <div class="font-bold text-white">${r.label}</div>
-                        <div class="text-[10px] text-slate-400">${r.chosenMock ? `Evaluated on ${r.chosenMock.serialId} (${r.chosenMock.score}/${r.chosenMock.maxMarks})` : r.pattern}</div>
-                      </td>
-                      <td class="py-2.5 px-2 font-mono text-indigo-300 whitespace-nowrap">${r.target} / ${r.maxTheory}</td>
-                      <td class="py-2.5 px-2 font-mono font-bold text-white whitespace-nowrap">${r.attainedMarks !== null ? `${r.attainedMarks} / ${r.maxTheory} (${r.attainedPct}%)` : "&mdash;"}</td>
+                  ${sectionRows.map(r => `
+                    <tr>
+                      <td class="py-2.5 pr-2 font-bold text-white">${r.label}</td>
+                      <td class="py-2.5 px-2 font-mono text-indigo-300 whitespace-nowrap">${r.target} / ${r.max}</td>
+                      <td class="py-2.5 px-2 font-mono font-bold text-white whitespace-nowrap">${r.attained !== null ? `${r.attained} / ${r.max}` : "&mdash;"}</td>
                       <td class="py-2.5 px-2 font-bold whitespace-nowrap ${r.diff === null ? "text-slate-400" : r.diff >= 0 ? "text-emerald-400" : "text-rose-400"}">
                         ${r.diff === null
-                          ? "Awaiting Subject Mock"
-                          : (r.chosenMock && Number(r.chosenMock.score) <= 0)
+                          ? "Pending Mock"
+                          : (chosenMock && Number(chosenMock.score) <= 0)
                             ? "0-Score Mock (Needs Valid Attempt)"
                             : r.diff >= 0
                               ? `+${r.diff} Surplus`
                               : `${r.diff} Deficit`}
                       </td>
-                      <td class="py-2.5 px-2 whitespace-nowrap">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${r.readinessBadgeClass}">${r.readinessStage}</span>
-                      </td>
                       <td class="py-2.5 pl-2">
                         <div class="flex items-center gap-2">
-                          <div class="w-16 h-2 rounded-full bg-slate-800 overflow-hidden"><div class="h-full bg-emerald-500" style="width:${r.completionPct}%"></div></div>
-                          <span class="text-[10px] font-bold text-slate-300">${r.completionPct}%</span>
+                          <div class="w-16 h-2 rounded-full bg-slate-800 overflow-hidden"><div class="h-full bg-emerald-500" style="width:${r.compPct}%"></div></div>
+                          <span class="text-[10px] font-bold text-slate-300">${r.compPct}%</span>
                         </div>
                       </td>
                     </tr>
@@ -510,13 +625,28 @@
               </table>
             </div>
           </div>
+
+          <div class="bg-surface border border-slate-800 rounded-2xl p-5 space-y-3 text-xs shadow-lg">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-300">CLASS ${cls} ENROLLED SUBJECTS — INDIVIDUAL STANDING</div>
+            <div class="grid grid-cols-1 sm:grid-cols-${schema.length} gap-3">
+              ${subjectOverviewRows.map(sub => `
+                <div onclick="switchSubject('${sub.key}')" class="p-3.5 rounded-xl border cursor-pointer transition ${sub.isActive ? "bg-indigo-950/35 border-indigo-500" : "bg-background border-slate-800 hover:border-slate-700"}">
+                  <div class="font-bold text-white truncate">${sub.label.split("(")[0].trim()}</div>
+                  <div class="text-[11px] font-mono text-indigo-300 mt-1">Target: ${sub.sLockedSum} / ${sub.maxTheory}</div>
+                  <div class="text-xs font-extrabold mt-1 ${sub.attained === null ? "text-slate-400" : sub.gap >= 0 ? "text-emerald-400" : "text-rose-400"}">
+                    ${sub.attained === null ? "Awaiting Mock" : `Attained: ${sub.attained}/${sub.maxTheory} (${sub.gap >= 0 ? "+" + sub.gap : sub.gap})`}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
         </div>
       </div>
     `;
   };
 
   document.addEventListener("DOMContentLoaded", () => {
-    window.renderCbseMockLedger();
+    window.renderCbseMockLedger("practice");
     window.renderCbseBoardForecaster();
   });
 })();
