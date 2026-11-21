@@ -380,4 +380,38 @@
     setTimeout(alignHeaderAndInjectTab7, 250);
   });
   document.addEventListener("click", () => setTimeout(alignHeaderAndInjectTab7, 100));
+
+  // v22: Tag brand container & right controls directly so CSS aligns √x horizontally beside title
+  function fixCbseHeaderDomV22() {
+    const allDivs = Array.from(document.querySelectorAll("div"));
+    const vxEl = allDivs.find(el => el.children.length === 0 && (el.textContent || "").trim() === "√x");
+    if (vxEl && vxEl.parentElement) {
+      vxEl.parentElement.classList.add("cbse-brand-row");
+    }
+    const darkBtn = Array.from(document.querySelectorAll("button")).find(b => /Dark Mode|Light Mode/i.test(b.textContent || ""));
+    if (darkBtn && darkBtn.parentElement) {
+      // If Dark Mode is on a second sub-row inside the right header column, merge it into the top control row
+      const rightCol = darkBtn.parentElement.parentElement;
+      if (rightCol && rightCol.children.length === 2 && /Master Scholar/i.test(rightCol.textContent || "")) {
+        const topRow = rightCol.children[0];
+        topRow.classList.add("cbse-right-controls");
+        topRow.appendChild(darkBtn);
+      } else {
+        darkBtn.parentElement.classList.add("cbse-right-controls");
+      }
+    }
+  }
+
+  window.openCbseTab7Direct = function () {
+    const t7 = document.getElementById("cbse-nav-tab7");
+    const bar = t7 ? t7.parentElement : null;
+    if (bar && t7) {
+      window.activateCbseTab7(bar, t7);
+    }
+  };
+
+  fixCbseHeaderDomV22();
+  setTimeout(fixCbseHeaderDomV22, 100);
+  setTimeout(fixCbseHeaderDomV22, 400);
+
 })();
