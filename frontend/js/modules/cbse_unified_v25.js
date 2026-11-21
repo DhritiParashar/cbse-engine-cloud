@@ -1,21 +1,21 @@
 (function () {
   const CLASS_SUBJECT_SCHEMAS = {
     10: [
-      { key: "MATH", label: "Mathematics Standard (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (20 MCQ + 5 VSA + 6 SA + 4 LA + 3 CBQ)" },
-      { key: "SCI",  label: "Science (086 — Phy / Chem / Bio)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (39 Qs across Chem, Bio & Physics)" },
-      { key: "SST",  label: "Social Science (087 — 4 Units)", maxTheory: 80, cutoff: 66, pattern: "80 Theory (History, Geography, Pol. Sci & Economics + Map)" }
+      { key: "MATH", label: "Mathematics Standard (041)", short: "Mathematics (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (20 MCQ + 5 VSA + 6 SA + 4 LA + 3 CBQ)" },
+      { key: "SCI",  label: "Science (086 — Phy / Chem / Bio)", short: "Science (086)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (39 Qs across Chem, Bio & Physics)" },
+      { key: "SST",  label: "Social Science (087 — 4 Units)", short: "Social Science (087)", maxTheory: 80, cutoff: 66, pattern: "80 Theory (History, Geography, Pol. Sci & Economics + Map)" }
     ],
     11: [
-      { key: "MATH", label: "Class 11 Mathematics (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (38 Qs: 20 MCQ + 5 VSA + 6 SA + 4 LA + 3 CBQ)" },
-      { key: "SCI",  label: "Class 11 Physics (042)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: 16 MCQ + 5 VSA + 7 SA + 2 CBQ + 3 LA)" },
-      { key: "SST",  label: "Class 11 Chemistry (043)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Physical, Organic & Inorganic)" },
-      { key: "BIO",  label: "Class 11 Biology (044)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Diversity, Cell, Plant & Human Physiology)" }
+      { key: "MATH", label: "Class 11 Mathematics (041)", short: "Mathematics (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (38 Qs: 20 MCQ + 5 VSA + 6 SA + 4 LA + 3 CBQ)" },
+      { key: "SCI",  label: "Class 11 Physics (042)", short: "Physics (042)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: 16 MCQ + 5 VSA + 7 SA + 2 CBQ + 3 LA)" },
+      { key: "SST",  label: "Class 11 Chemistry (043)", short: "Chemistry (043)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Physical, Organic & Inorganic)" },
+      { key: "BIO",  label: "Class 11 Biology (044)", short: "Biology (044)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Diversity, Cell, Plant & Human Physiology)" }
     ],
     12: [
-      { key: "MATH", label: "Class 12 Mathematics (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (38 Qs: Calculus, Vectors/3D, Algebra & Probability)" },
-      { key: "SCI",  label: "Class 12 Physics (042)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Electrostatics, Magnetism, Optics & Modern)" },
-      { key: "SST",  label: "Class 12 Chemistry (043)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Physical, Electro/Kinetics, d/f-Block & Organic)" },
-      { key: "BIO",  label: "Class 12 Biology (044)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Reproduction, Genetics, Biotech & Ecology)" }
+      { key: "MATH", label: "Class 12 Mathematics (041)", short: "Mathematics (041)", maxTheory: 80, cutoff: 68, pattern: "80 Theory (38 Qs: Calculus, Vectors/3D, Algebra & Probability)" },
+      { key: "SCI",  label: "Class 12 Physics (042)", short: "Physics (042)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Electrostatics, Magnetism, Optics & Modern)" },
+      { key: "SST",  label: "Class 12 Chemistry (043)", short: "Chemistry (043)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Physical, Electro/Kinetics, d/f-Block & Organic)" },
+      { key: "BIO",  label: "Class 12 Biology (044)", short: "Biology (044)", maxTheory: 70, cutoff: 60, pattern: "70 Theory (33 Qs: Reproduction, Genetics, Biotech & Ecology)" }
     ]
   };
 
@@ -57,7 +57,122 @@
     return CLASS_SUBJECT_SCHEMAS[cls] || CLASS_SUBJECT_SCHEMAS[10];
   }
 
-  // Move the shared mock engine cleanly into either Tab 6 (Practice Drills) or Tab 7 (Board Mock & PYQs)
+  // Render in-card Subject Selector inside Tab 7 (and Tab 6) synchronized with top SUBJECT bar
+  function renderInCardSubjectSelector(hostContainer, modeLabel) {
+    if (!hostContainer) return;
+    const cls = getActiveClassNum();
+    const activeSubj = getActiveSubjectCode();
+    const schema = getSchemaForClass(cls);
+
+    let bar = document.getElementById("cbse-mock-incard-subject-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "cbse-mock-incard-subject-bar";
+      const anchor = hostContainer.querySelector("h3");
+      if (anchor && anchor.parentElement) {
+        anchor.parentElement.insertAdjacentElement("afterend", bar);
+      } else {
+        hostContainer.insertBefore(bar, hostContainer.firstChild);
+      }
+    }
+
+    bar.className = "p-3.5 rounded-xl bg-slate-950/70 border border-indigo-500/30 space-y-2 text-left";
+    bar.innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-1 text-[10px] font-extrabold uppercase tracking-wider">
+        <span class="text-indigo-300">1. Select Subject for ${modeLabel} (Class ${cls})</span>
+        <span class="text-slate-400">Synced with Tab 8 Forecaster</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        ${schema.map(s => {
+          const isSel = s.key === activeSubj;
+          return `
+            <button type="button" onclick="if(typeof switchSubject==='function') switchSubject('${s.key}');"
+              class="px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                isSel
+                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400"
+                  : "bg-surface border border-slate-700 text-slate-300 hover:border-indigo-400 hover:text-white"
+              }">
+              ${s.short} <span class="ml-1 text-[10px] font-mono opacity-80">(${s.maxTheory}M)</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  // Ensure active exam form always has "Exit Without Submission" & "Reset Paper" controls
+  function enhanceActiveMockFormControls() {
+    const form = document.getElementById("mockTestForm");
+    if (!form) return;
+
+    let topBar = document.getElementById("cbse-active-exam-topbar");
+    if (!topBar) {
+      topBar = document.createElement("div");
+      topBar.id = "cbse-active-exam-topbar";
+      form.insertBefore(topBar, form.firstChild);
+    }
+    const cls = getActiveClassNum();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
+
+    topBar.className = "p-3.5 rounded-2xl bg-slate-900/95 border border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs shadow-md";
+    topBar.innerHTML = `
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-1 rounded-lg bg-indigo-950 border border-indigo-700 text-indigo-300 font-bold">${sMeta.label}</span>
+        <span class="text-slate-400 hidden sm:inline">Attempt answers below or exit cleanly without logging a score.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="window.resetActiveCbseExamAnswers()"
+          class="px-3 py-1.5 rounded-xl bg-amber-950/70 hover:bg-amber-900 border border-amber-600/50 text-amber-200 font-bold cursor-pointer">
+          &#8634; Reset Paper
+        </button>
+        <button type="button" onclick="window.exitCbseExamWithoutSubmission()"
+          class="px-3.5 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/60 text-rose-200 font-extrabold cursor-pointer">
+          &#10005; Exit Without Submission
+        </button>
+      </div>
+    `;
+  }
+
+  window.resetActiveCbseExamAnswers = function () {
+    const form = document.getElementById("mockTestForm");
+    if (!form) return;
+    form.querySelectorAll("textarea, input[type='text']").forEach(el => { el.value = ""; });
+    form.querySelectorAll("input[type='radio'], input[type='checkbox']").forEach(el => { el.checked = false; });
+    if (typeof startMockTimer === "function") startMockTimer();
+  };
+
+  window.exitCbseExamWithoutSubmission = function () {
+    if (typeof mockTimerInterval !== "undefined" && mockTimerInterval) clearInterval(mockTimerInterval);
+    const form = document.getElementById("mockTestForm");
+    const badge = document.getElementById("mockTimerBadge");
+    const resDiv = document.getElementById("mockTestResults");
+    const startCard = document.getElementById("mockTestStartCard");
+    if (form) form.classList.add("hidden");
+    if (badge) badge.classList.add("hidden");
+    if (resDiv) resDiv.classList.add("hidden");
+    if (startCard) startCard.classList.remove("hidden");
+  };
+
+  // Inject "Sync to Tab 8 Forecaster ->" directly onto the evaluated Score Card
+  function enhanceEvaluatedScoreCard() {
+    const resDiv = document.getElementById("mockTestResults");
+    if (!resDiv || resDiv.classList.contains("hidden")) return;
+    const dlBtn = Array.from(resDiv.querySelectorAll("button")).find(b => /Download Marksheet/i.test(b.textContent || ""));
+    if (dlBtn && dlBtn.parentElement && !document.getElementById("cbse-scorecard-sync-t8-btn")) {
+      const syncBtn = document.createElement("button");
+      syncBtn.id = "cbse-scorecard-sync-t8-btn";
+      syncBtn.type = "button";
+      syncBtn.className = "flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold rounded-xl shadow-lg border border-emerald-400/40 transition cursor-pointer";
+      syncBtn.innerHTML = "<span>&#128202;</span> <span>Sync to Tab 8 Forecaster &rarr;</span>";
+      syncBtn.onclick = function () {
+        const serial = (typeof lastEvaluationResults !== "undefined" && lastEvaluationResults && lastEvaluationResults._loggedSerialId) || null;
+        window.syncCbseMockToTab8(serial);
+      };
+      dlBtn.parentElement.insertBefore(syncBtn, dlBtn);
+    }
+  }
+
   function mountMockEngineInto(targetWorkspaceId) {
     const ws6 = document.getElementById("workspace-6");
     const ws7 = document.getElementById("workspace-7");
@@ -88,10 +203,11 @@
       if (modeTag) modeTag.textContent = "Practice Mode: Chapter (20M) & Subject Sprint (40M)";
     }
 
+    renderInCardSubjectSelector(document.getElementById("mockTestStartCard"), "Practice Drill");
+
     if (typeof setExamSource === "function") setExamSource("blueprint");
     if (typeof setMockMode === "function") setMockMode("chapter");
 
-    // Enforce visibility via style.display so setMockMode className resets cannot unhide wrong cards
     const bpBtn = document.getElementById("sourceBlueprintBtn");
     const pyqBox = document.getElementById("pastPaperContainer");
     if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.style.display = "none";
@@ -107,14 +223,14 @@
     if (qBtn) {
       qBtn.style.display = "";
       const titleEl = qBtn.querySelector(".font-bold");
-      if (titleEl) titleEl.textContent = `${sMeta.label.split("(")[0].trim()} Subject Practice Sprint`;
+      if (titleEl) titleEl.textContent = `${sMeta.short} Subject Practice Sprint`;
     }
     if (fBtn) fBtn.style.display = "none";
 
     window.renderCbseMockLedger("practice");
   };
 
-  // TAB 7: Comprehensive Full-Subject Board Mock (80M/70M) + Official Past Board Papers (2019–2026 PYQs ONLY; NO 20M/40M Practice Cards)
+  // TAB 7: Comprehensive Full-Subject Board Mock (80M/70M) + Official Past Board Papers (2019–2026 PYQs ONLY)
   window.openCbseSubjectMockTab = function () {
     mountMockEngineInto("workspace-7");
     const cls = getActiveClassNum();
@@ -130,10 +246,11 @@
       if (modeTag) modeTag.textContent = `Board Simulation (${sMeta.maxTheory}M) + 2019–2026 PYQs`;
     }
 
+    renderInCardSubjectSelector(document.getElementById("mockTestStartCard"), "Board Mock & PYQs");
+
     if (typeof setExamSource === "function") setExamSource("blueprint");
     if (typeof setMockMode === "function") setMockMode("full_80");
 
-    // Enforce visibility via style.display so Chapter 20M & Quick 40M practice cards never appear in Tab 7
     const bpBtn = document.getElementById("sourceBlueprintBtn");
     const pyqBtn = document.getElementById("sourcePyqBtn");
     const pyqBox = document.getElementById("pastPaperContainer");
@@ -149,6 +266,10 @@
     if (fBtn) {
       fBtn.style.display = "";
       fBtn.parentElement.className = "grid grid-cols-1 gap-3 text-left max-w-lg mx-auto";
+      const fTitle = fBtn.querySelector(".font-bold");
+      const fBadge = fBtn.querySelector(".font-mono");
+      if (fTitle) fTitle.textContent = `${sMeta.short} Comprehensive Board Mock`;
+      if (fBadge) fBadge.textContent = `${sMeta.maxTheory} Marks`;
     }
 
     window.renderCbseMockLedger("subject");
@@ -244,7 +365,6 @@
     const subj = getActiveSubjectCode();
     const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const seq = String(getMockHistory().length + 1).padStart(2, "0");
-    // Anything executed in Tab 6 is a Practice Drill (PRAC-*); Tab 7 is an Official Board Mock / PYQ (CBSE-*)
     const isPractice = (typeof currentMainTab !== "undefined" && currentMainTab === 6) || res.mode === "chapter" || res.mode === "quick";
     const serialId = `${isPractice ? "PRAC" : "CBSE"}-${cls}-${subj}-${dStr}-#${seq}`;
     res._loggedSerialId = serialId;
@@ -266,13 +386,26 @@
     return rec;
   }
 
+  // Hook generateMockTest & submitMockTest for active exam bar + scorecard Sync button
+  if (typeof window.generateMockTest === "function" && !window.generateMockTest._v35Hooked) {
+    const origGen = window.generateMockTest;
+    window.generateMockTest = async function () {
+      await origGen.apply(this, arguments);
+      enhanceActiveMockFormControls();
+    };
+    window.generateMockTest._v35Hooked = true;
+  }
+
   document.addEventListener("submit", function (ev) {
     if (ev.target && ev.target.id === "mockTestForm") {
-      setTimeout(() => recordLastEvaluationIfMissing(), 60);
+      setTimeout(() => {
+        recordLastEvaluationIfMissing();
+        enhanceEvaluatedScoreCard();
+      }, 60);
     }
   }, true);
 
-  if (typeof window.switchSubject === "function" && !window.switchSubject._v33Hooked) {
+  if (typeof window.switchSubject === "function" && !window.switchSubject._v35Hooked) {
     const origSubj = window.switchSubject;
     window.switchSubject = function () {
       origSubj.apply(this, arguments);
@@ -282,8 +415,30 @@
         else if (currentMainTab === 8) window.renderCbseBoardForecaster();
       }
     };
-    window.switchSubject._v33Hooked = true;
+    window.switchSubject._v35Hooked = true;
   }
+
+  window.downloadLoggedMockMarksheet = function (serialId) {
+    const rec = getMockHistory().find(h => h.serialId === serialId);
+    if (!rec) return;
+    const win = window.open("", "_blank", "width=850,height=700");
+    if (!win) return;
+    const candidate = (document.getElementById("studentNameDisplay") && document.getElementById("studentNameDisplay").innerText.trim()) || "Candidate";
+    win.document.write(`<!DOCTYPE html><html><head><title>CBSE_Marksheet_${rec.serialId}</title>
+      <style>body{font-family:system-ui,sans-serif;padding:28px;color:#0f172a} .box{border:2px solid #0f172a;border-radius:10px;padding:20px} h1{margin:0 0 6px} table{width:100%;border-collapse:collapse;margin-top:16px} td,th{border:1px solid #cbd5e1;padding:10px;text-align:left}</style>
+      </head><body><div class="box">
+      <h1>GOALisB CBSE EVALUATION ENGINE</h1>
+      <p><strong>Official Serialized Board Marksheet</strong> &bull; Candidate: <strong>${candidate}</strong> &bull; Class ${rec.classLevel}</p>
+      <table>
+        <tr><th>Serial Mock ID</th><td>${rec.serialId}</td></tr>
+        <tr><th>Subject</th><td>${rec.subject}</td></tr>
+        <tr><th>Date &amp; Time</th><td>${rec.date}</td></tr>
+        <tr><th>Marks Obtained</th><td><strong>${rec.score} / ${rec.maxMarks} (${rec.percentage}%)</strong></td></tr>
+        <tr><th>Time Taken</th><td>${rec.timeString}</td></tr>
+      </table>
+      </div><script>window.onload=function(){setTimeout(function(){window.print()},300)};<\/script></body></html>`);
+    win.document.close();
+  };
 
   window.syncCbseMockToTab8 = function (serialId) {
     recordLastEvaluationIfMissing();
@@ -366,7 +521,7 @@
   };
 
   window.clearCbseMockLedger = function (scope) {
-    if (!confirm("Clear logged attempts from this ledger?")) return;
+    if (!confirm("Reset & clear all logged attempts from this ledger?")) return;
     const cls = getActiveClassNum();
     const remaining = getMockHistory().filter(h => scope === "practice" ? !h.isPractice : h.isPractice);
     localStorage.setItem(`cbse_mock_ledger_c${cls}`, JSON.stringify(remaining));
@@ -397,11 +552,11 @@
             <p class="text-[11px] text-slate-400">
               ${activeScope === "practice"
                 ? "Chapter (20M) and Subject (40M) practice drills track topic speed without altering your Tab 8 Board Forecast."
-                : "Click Forecast Tab 8 → on any Comprehensive Board Mock or PYQ attempt to evaluate Section A–E attainment & readiness."}
+                : "Download PDF marksheets, reset logs, or click Sync Tab 8 → on any mock to update Section A–E attainment."}
             </p>
           </div>
           <div class="flex items-center gap-2">
-            ${hist.length ? `<button type="button" onclick="window.clearCbseMockLedger('${activeScope}')" class="px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-200 text-xs font-bold cursor-pointer">Clear Logs</button>` : ""}
+            ${hist.length ? `<button type="button" onclick="window.clearCbseMockLedger('${activeScope}')" class="px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-200 text-xs font-bold cursor-pointer">&#8634; Reset / Clear Logs</button>` : ""}
             ${activeScope === "subject" ? `<button type="button" onclick="switchMainTab(8)" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold cursor-pointer">Open Tab 8 Forecaster &rarr;</button>` : ""}
           </div>
         </div>
@@ -415,7 +570,7 @@
                   <th class="py-2 px-2">Subject</th>
                   <th class="py-2 px-2">Score</th>
                   <th class="py-2 px-2">Attained %</th>
-                  <th class="py-2 pl-2 text-right">Action</th>
+                  <th class="py-2 pl-2 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-800/70">
@@ -426,17 +581,18 @@
                     <td class="py-2.5 px-2 font-bold text-white">${h.subject}</td>
                     <td class="py-2.5 px-2 font-bold text-emerald-400 whitespace-nowrap">${h.score} / ${h.maxMarks}</td>
                     <td class="py-2.5 px-2 font-semibold text-slate-200">${h.percentage}%</td>
-                    <td class="py-2.5 pl-2 text-right whitespace-nowrap">
+                    <td class="py-2.5 pl-2 text-right whitespace-nowrap space-x-1.5">
+                      <button type="button" onclick="window.downloadLoggedMockMarksheet('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-[10px] font-bold cursor-pointer">&#11015; Marksheet</button>
                       ${h.isPractice
-                        ? `<span class="text-[11px] text-sky-300 font-semibold">Practice Logged</span>`
-                        : `<button type="button" onclick="window.syncCbseMockToTab8('${h.serialId}')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">Forecast Tab 8 &rarr;</button>`}
+                        ? `<span class="text-[11px] text-sky-300 font-semibold">Logged</span>`
+                        : `<button type="button" onclick="window.syncCbseMockToTab8('${h.serialId}')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">Sync Tab 8 &rarr;</button>`}
                     </td>
                   </tr>
                 `).join("")}
               </tbody>
             </table>
           </div>
-        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">${activeScope === "practice" ? "No practice drills logged yet. Choose a Chapter Drill (20M) or Subject Sprint (40M) above." : "No Comprehensive Board Mocks or PYQs logged yet. Complete an 80M/70M Board Mock or Past Paper above to correlate with Tab 8."}</div>`}
+        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">${activeScope === "practice" ? "No practice drills logged yet. Select a subject above and run a Chapter Drill (20M) or Subject Sprint (40M)." : "No Comprehensive Board Mocks or PYQs logged yet. Select a subject above and complete an 80M/70M Board Mock or Past Paper to correlate with Tab 8."}</div>`}
       </div>
     `;
   };
