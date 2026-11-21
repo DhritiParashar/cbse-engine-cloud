@@ -67,36 +67,45 @@
     saveTargetStore(st);
   }
 
-  // Hook submitMockTest so every completed exam in Tab 6 logs a Serial ID & auto-syncs to Tab 7
-  if (typeof window.submitMockTest === "function" && !window.submitMockTest._v25Hooked) {
-    const origSubmit = window.submitMockTest;
-    window.submitMockTest = async function (e) {
-      await origSubmit.apply(this, arguments);
-      if (window.lastEvaluationResults) {
-        const res = window.lastEvaluationResults;
-        const cls = getActiveClassNum();
-        const subj = (typeof currentSubject !== "undefined" ? currentSubject : "MATH") || "MATH";
-        const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-        const seq = String(getMockHistory().length + 1).padStart(2, "0");
-        const serialId = `CBSE-${cls}-${subj}-${dStr}-#${seq}`;
-        appendMockHistory({
-          serialId,
-          classLevel: cls,
-          subject: subj,
-          mode: res.mode,
-          score: res.score,
-          maxMarks: res.maxMarks,
-          percentage: Number(res.percentage),
-          timeString: res.timeString,
-          date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
-        });
-        window.renderCbseMockLedger();
-      }
+  function recordLastEvaluationIfMissing() {
+    if (typeof lastEvaluationResults === "undefined" || !lastEvaluationResults) return null;
+    const res = lastEvaluationResults;
+    if (res._loggedSerialId) {
+      return getMockHistory().find(h => h.serialId === res._loggedSerialId) || null;
+    }
+    const cls = getActiveClassNum();
+    const subj = (typeof currentSubject !== "undefined" ? currentSubject : "MATH") || "MATH";
+    const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const seq = String(getMockHistory().length + 1).padStart(2, "0");
+    const serialId = `CBSE-${cls}-${subj}-${dStr}-#${seq}`;
+    res._loggedSerialId = serialId;
+    const rec = {
+      serialId,
+      classLevel: cls,
+      subject: subj,
+      mode: res.mode || "quick",
+      score: Number(res.score || 0),
+      maxMarks: Number(res.maxMarks || 40),
+      percentage: Number(res.percentage || 0),
+      timeString: res.timeString || "0m 0s",
+      date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
     };
-    window.submitMockTest._v25Hooked = true;
+    appendMockHistory(rec);
+    window.renderCbseMockLedger();
+    return rec;
   }
 
+  // Capture Tab 6 form submission reliably (even for 0-mark submissions)
+  document.addEventListener("submit", function (ev) {
+    if (ev.target && ev.target.id === "mockTestForm") {
+      setTimeout(() => {
+        recordLastEvaluationIfMissing();
+      }, 60);
+    }
+  }, true);
+
   window.syncCbseMockToTab7 = function (serialId) {
+    recordLastEvaluationIfMissing();
     const hist = getMockHistory();
     const match = serialId ? (hist.find(h => h.serialId === serialId) || hist[hist.length - 1]) : hist[hist.length - 1];
     const st = loadTargetStore();
@@ -107,7 +116,9 @@
       return;
     }
     st.syncedRecord = match;
-    st.toast = `Synced Board Mock ${match.serialId} (${match.score}/${match.maxMarks} • ${match.percentage}%) against Locked Targets.`;
+    st.toast = Number(match.score) <= 0
+      ? `Synced ${match.serialId} (0/${match.maxMarks} • 0%): 0-Score Mock — complete a valid scored attempt in Tab 6.`
+      : `Synced Board Mock ${match.serialId} (${match.score}/${match.maxMarks} • ${match.percentage}%) against Locked Targets.`;
     saveTargetStore(st);
     if (typeof currentMainTab !== "undefined" && currentMainTab !== 7 && typeof switchMainTab === "function") {
       switchMainTab(7);
@@ -386,7 +397,13 @@
                       <td class="py-2.5 px-2 font-mono text-indigo-300 whitespace-nowrap">${r.target} / 100</td>
                       <td class="py-2.5 px-2 font-mono font-bold text-white whitespace-nowrap">${r.achieved !== null ? r.achieved + " / 100" : "&mdash;"}</td>
                       <td class="py-2.5 px-2 font-bold whitespace-nowrap ${r.diff === null ? "text-slate-400" : r.diff >= 0 ? "text-emerald-400" : "text-rose-400"}">
-                        ${r.diff === null ? "Pending Mock" : r.diff >= 0 ? `+${r.diff} Surplus` : `${r.diff} Deficit`}
+                        ${r.diff === null
+                          ? "Pending Mock"
+                          : (synced && Number(synced.score) <= 0)
+                            ? "0-Score Mock (Needs Valid Attempt)"
+                            : r.diff >= 0
+                              ? `+${r.diff} Surplus`
+                              : `${r.diff} Deficit`}
                       </td>
                       <td class="py-2.5 pl-2">
                         <div class="flex items-center gap-2">
