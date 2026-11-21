@@ -57,7 +57,7 @@
     return CLASS_SUBJECT_SCHEMAS[cls] || CLASS_SUBJECT_SCHEMAS[10];
   }
 
-  // Host the shared mock engine inside whichever tab is active: Tab 6 (Chapter Practice) or Tab 7 (Subject Board Mock)
+  // Move the shared mock engine cleanly into either Tab 6 (Practice Drills) or Tab 7 (Board Mock & PYQs)
   function mountMockEngineInto(targetWorkspaceId) {
     const ws6 = document.getElementById("workspace-6");
     const ws7 = document.getElementById("workspace-7");
@@ -72,32 +72,50 @@
     });
   }
 
+  // TAB 6: Practice Drills ONLY (Chapter-Wise 20M Drill + Subject-Wise 40M/35M Quick Sprint; NO PYQs)
   window.openCbseChapterPracticeTab = function () {
     mountMockEngineInto("workspace-6");
+    const cls = getActiveClassNum();
+    const subj = getActiveSubjectCode();
+    const sMeta = getSchemaForClass(cls).find(x => x.key === subj) || getSchemaForClass(cls)[0];
     const ws6 = document.getElementById("workspace-6");
     if (ws6) {
       const h2 = ws6.querySelector("h2");
       const badge = ws6.querySelector("span.rounded");
       const modeTag = document.getElementById("tab6ChapterTag");
-      if (badge) badge.textContent = "Chapter-Wise Practice Drill";
-      if (h2) h2.textContent = "Chapter-Wise Practice Mocks & Topic Sprints";
-      if (modeTag) modeTag.textContent = "Practice Mode: Active Sidebar Chapter (20M)";
+      if (badge) badge.textContent = `${sMeta.label} • Practice Drills`;
+      if (h2) h2.textContent = "Practice Drills: Chapter-Wise & Subject-Wise Sprints";
+      if (modeTag) modeTag.textContent = "Practice Mode: Chapter (20M) & Subject Sprint (40M)";
     }
-    // Show ONLY Chapter Practice card in Tab 6, hiding Full Subject Board cards
+
+    // Force Blueprint mode and hide PYQ switcher & PYQ dropdown in Tab 6
+    if (typeof setExamSource === "function") setExamSource("blueprint");
+    const bpBtn = document.getElementById("sourceBlueprintBtn");
+    const pyqBtn = document.getElementById("sourcePyqBtn");
+    const pyqBox = document.getElementById("pastPaperContainer");
+    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.classList.add("hidden");
+    if (pyqBox) pyqBox.classList.add("hidden");
+
+    // Show Chapter-Wise Drill (20M) + Subject-Wise Sprint (40M); hide Comprehensive 80M Board Mock
     const chBtn = document.getElementById("mockModeChapterBtn");
     const qBtn = document.getElementById("mockModeQuickBtn");
     const fBtn = document.getElementById("mockModeFull80Btn");
     if (chBtn) {
       chBtn.classList.remove("hidden");
-      chBtn.parentElement.className = "grid grid-cols-1 gap-3 text-left max-w-md mx-auto";
+      chBtn.parentElement.className = "grid grid-cols-1 md:grid-cols-2 gap-3 text-left";
     }
-    if (qBtn) qBtn.classList.add("hidden");
+    if (qBtn) {
+      qBtn.classList.remove("hidden");
+      const titleEl = qBtn.querySelector(".font-bold");
+      if (titleEl) titleEl.textContent = `${sMeta.label.split("(")[0].trim()} Subject Practice Sprint`;
+    }
     if (fBtn) fBtn.classList.add("hidden");
 
     if (typeof setMockMode === "function") setMockMode("chapter");
     window.renderCbseMockLedger("practice");
   };
 
+  // TAB 7: Comprehensive Full-Subject Board Mock (80M/70M) + Official Past Board Papers (2019–2026 PYQs)
   window.openCbseSubjectMockTab = function () {
     mountMockEngineInto("workspace-7");
     const cls = getActiveClassNum();
@@ -108,21 +126,29 @@
       const h2 = ws7.querySelector("h2");
       const badge = ws7.querySelector("span.rounded");
       const modeTag = document.getElementById("tab6ChapterTag");
-      if (badge) badge.textContent = `${sMeta.label} • Board Simulation`;
-      if (h2) h2.textContent = `${sMeta.label} — Full-Subject Board Mock Examination`;
-      if (modeTag) modeTag.textContent = `Full Subject Board Mock (${sMeta.maxTheory}M)`;
+      if (badge) badge.textContent = `${sMeta.label} • Official Board Simulation`;
+      if (h2) h2.textContent = `${sMeta.label} — Comprehensive Board Mock & PYQs`;
+      if (modeTag) modeTag.textContent = `Board Simulation (${sMeta.maxTheory}M) + 2019–2026 PYQs`;
     }
-    // Show ONLY Full-Subject Board Mock cards (Half-Paper Sprint & Comprehensive Board Mock), hiding Chapter Drill
+
+    // Show Blueprint vs Official Past Board Papers switcher cleanly
+    const bpBtn = document.getElementById("sourceBlueprintBtn");
+    const pyqBtn = document.getElementById("sourcePyqBtn");
+    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.classList.remove("hidden");
+    if (pyqBtn) pyqBtn.classList.remove("hidden");
+
+    // Show ONLY Comprehensive Full-Subject Board Mock (80M/70M); hide Chapter Drill (20M) and Quick Sprint (40M)
     const chBtn = document.getElementById("mockModeChapterBtn");
     const qBtn = document.getElementById("mockModeQuickBtn");
     const fBtn = document.getElementById("mockModeFull80Btn");
     if (chBtn) chBtn.classList.add("hidden");
-    if (qBtn) {
-      qBtn.classList.remove("hidden");
-      qBtn.parentElement.className = "grid grid-cols-1 md:grid-cols-2 gap-3 text-left";
+    if (qBtn) qBtn.classList.add("hidden");
+    if (fBtn) {
+      fBtn.classList.remove("hidden");
+      fBtn.parentElement.className = "grid grid-cols-1 gap-3 text-left max-w-lg mx-auto";
     }
-    if (fBtn) fBtn.classList.remove("hidden");
 
+    if (typeof setExamSource === "function") setExamSource("blueprint");
     if (typeof setMockMode === "function") setMockMode("full_80");
     window.renderCbseMockLedger("subject");
   };
@@ -217,15 +243,16 @@
     const subj = getActiveSubjectCode();
     const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const seq = String(getMockHistory().length + 1).padStart(2, "0");
-    const isChapterDrill = res.mode === "chapter";
-    const serialId = `${isChapterDrill ? "PRAC" : "CBSE"}-${cls}-${subj}-${dStr}-#${seq}`;
+    // Anything executed in Tab 6 is a Practice Drill (PRAC-*); Tab 7 is an Official Board Mock / PYQ (CBSE-*)
+    const isPractice = (typeof currentMainTab !== "undefined" && currentMainTab === 6) || res.mode === "chapter" || res.mode === "quick";
+    const serialId = `${isPractice ? "PRAC" : "CBSE"}-${cls}-${subj}-${dStr}-#${seq}`;
     res._loggedSerialId = serialId;
     const rec = {
       serialId,
       classLevel: cls,
       subject: subj,
-      mode: res.mode || "full_80",
-      isPractice: isChapterDrill,
+      mode: res.mode || (isPractice ? "chapter" : "full_80"),
+      isPractice,
       score: Number(res.score || 0),
       maxMarks: Number(res.maxMarks || 80),
       percentage: Number(res.percentage || 0),
@@ -234,7 +261,7 @@
       date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
     };
     appendMockHistory(rec);
-    window.renderCbseMockLedger(isChapterDrill ? "practice" : "subject");
+    window.renderCbseMockLedger(isPractice ? "practice" : "subject");
     return rec;
   }
 
@@ -244,7 +271,7 @@
     }
   }, true);
 
-  if (typeof window.switchSubject === "function" && !window.switchSubject._v31Hooked) {
+  if (typeof window.switchSubject === "function" && !window.switchSubject._v33Hooked) {
     const origSubj = window.switchSubject;
     window.switchSubject = function () {
       origSubj.apply(this, arguments);
@@ -254,7 +281,7 @@
         else if (currentMainTab === 8) window.renderCbseBoardForecaster();
       }
     };
-    window.switchSubject._v31Hooked = true;
+    window.switchSubject._v33Hooked = true;
   }
 
   window.syncCbseMockToTab8 = function (serialId) {
@@ -269,7 +296,7 @@
       const schema = getSchemaForClass(cls);
       const sMeta = schema.find(x => x.key === getActiveSubjectCode()) || schema[0];
       const st = loadSubjectSectionStore(cls, sMeta.key, sMeta.maxTheory);
-      st.toast = `No Full-Subject Board Mocks logged yet for ${sMeta.label} — take a Subject Board Mock in Tab 7 first, then click Sync Mock.`;
+      st.toast = `No Full-Subject Board Mocks / PYQs logged yet for ${sMeta.label} — complete one in Tab 7 first, then click Sync Mock.`;
       saveSubjectSectionStore(cls, sMeta.key, st);
       window.renderCbseBoardForecaster();
       return;
@@ -364,12 +391,12 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 class="text-sm font-extrabold text-white">
-              ${activeScope === "practice" ? `Class ${cls} Chapter-Wise Practice Drill Ledger (${hist.length} Logged)` : `Class ${cls} Full-Subject Board Mock Ledger (${hist.length} Logged)`}
+              ${activeScope === "practice" ? `Class ${cls} Practice Drill Ledger — Chapter &amp; Subject Sprints (${hist.length} Logged)` : `Class ${cls} Official Board Mock &amp; PYQ Ledger (${hist.length} Logged)`}
             </h3>
             <p class="text-[11px] text-slate-400">
               ${activeScope === "practice"
-                ? "Chapter drills build topic mastery without affecting your Subject-Wise Board Forecast in Tab 8."
-                : "Click Forecast Tab 8 → on any Full-Subject Board Mock to evaluate Section A–E attainment & readiness."}
+                ? "Chapter (20M) and Subject (40M) practice drills track topic speed without altering your Tab 8 Board Forecast."
+                : "Click Forecast Tab 8 → on any Comprehensive Board Mock or PYQ attempt to evaluate Section A–E attainment & readiness."}
             </p>
           </div>
           <div class="flex items-center gap-2">
@@ -383,7 +410,7 @@
               <thead>
                 <tr class="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
                   <th class="py-2 pr-2">Serial ID</th>
-                  <th class="py-2 px-2">Date &amp; Time</th>
+                  <th class="py-2 px-2">Format</th>
                   <th class="py-2 px-2">Subject</th>
                   <th class="py-2 px-2">Score</th>
                   <th class="py-2 px-2">Attained %</th>
@@ -394,13 +421,13 @@
                 ${hist.map(h => `
                   <tr>
                     <td class="py-2.5 pr-2 font-mono font-bold ${h.isPractice ? "text-sky-400" : "text-indigo-400"} whitespace-nowrap">${h.serialId}</td>
-                    <td class="py-2.5 px-2 text-slate-400 whitespace-nowrap">${h.date}</td>
+                    <td class="py-2.5 px-2 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${h.isPractice ? "bg-sky-950 text-sky-300 border border-sky-800" : "bg-amber-950 text-amber-300 border border-amber-800"}">${h.isPractice ? (h.mode === "quick" ? "Subject Sprint (40M)" : "Chapter Drill (20M)") : "Board Mock / PYQ"}</span></td>
                     <td class="py-2.5 px-2 font-bold text-white">${h.subject}</td>
                     <td class="py-2.5 px-2 font-bold text-emerald-400 whitespace-nowrap">${h.score} / ${h.maxMarks}</td>
                     <td class="py-2.5 px-2 font-semibold text-slate-200">${h.percentage}%</td>
                     <td class="py-2.5 pl-2 text-right whitespace-nowrap">
                       ${h.isPractice
-                        ? `<span class="text-[11px] text-sky-300 font-semibold">Chapter Drill Logged</span>`
+                        ? `<span class="text-[11px] text-sky-300 font-semibold">Practice Logged</span>`
                         : `<button type="button" onclick="window.syncCbseMockToTab8('${h.serialId}')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">Forecast Tab 8 &rarr;</button>`}
                     </td>
                   </tr>
@@ -408,7 +435,7 @@
               </tbody>
             </table>
           </div>
-        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">${activeScope === "practice" ? "No chapter practice drills logged yet. Select a chapter on the left and start a 20M drill above." : "No Full-Subject Board Mocks logged yet. Complete an 80M/70M or 40M/35M Subject Mock above to sync with Tab 8."}</div>`}
+        ` : `<div class="p-3.5 rounded-xl bg-background border border-slate-800 text-slate-400">${activeScope === "practice" ? "No practice drills logged yet. Choose a Chapter Drill (20M) or Subject Sprint (40M) above." : "No Comprehensive Board Mocks or PYQs logged yet. Complete an 80M/70M Board Mock or Past Paper above to correlate with Tab 8."}</div>`}
       </div>
     `;
   };
@@ -490,7 +517,7 @@
           <span class="text-xs font-mono text-slate-400">Active Subject: <strong class="text-indigo-300">${sMeta.label} (${sMeta.maxTheory} Marks Theory)</strong></span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">${sMeta.label} — Section-by-Section Target &amp; Attainment</h2>
-        <p class="text-xs sm:text-sm text-slate-400 max-w-3xl">Evaluates strictly against Full-Subject Board Mocks from Tab 7 across CBSE Sections A–E. Chapter practice drills stay isolated in Tab 6.</p>
+        <p class="text-xs sm:text-sm text-slate-400 max-w-3xl">Correlated directly with Tab 7 Comprehensive Board Mocks &amp; Official Past Board Papers across CBSE Sections A–E. Practice drills stay isolated in Tab 6.</p>
       </div>
 
       ${st.toast ? `
@@ -563,7 +590,7 @@
               <div class="text-xl font-extrabold ${chosenMock && attainedSubjectTotal >= sMeta.cutoff ? "text-emerald-400" : "text-slate-300"} mt-1">
                 ${!chosenMock ? "Pending Mock" : attainedSubjectTotal >= sMeta.cutoff ? "Achieved (+" + (attainedSubjectTotal - sMeta.cutoff) + "M)" : `Short by ${sMeta.cutoff - attainedSubjectTotal}M`}
               </div>
-              <div class="text-[11px] text-emerald-200 mt-0.5">${subjFullMocks.length} Full Subject Mock(s) Logged</div>
+              <div class="text-[11px] text-emerald-200 mt-0.5">${subjFullMocks.length} Board Mock(s) / PYQ(s) Logged</div>
             </div>
 
             <div class="p-4 rounded-2xl bg-surface border border-slate-800">
@@ -577,14 +604,14 @@
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <div class="text-xs font-extrabold uppercase tracking-wider text-amber-400">${sMeta.label} — SECTION A–E ATTAINMENT &amp; DEFICIENCY MATRIX</div>
-                <div class="text-[11px] text-slate-400">${chosenMock ? `Synced: ${chosenMock.serialId} (${chosenMock.score}/${chosenMock.maxMarks} • ${chosenMock.percentage}%)` : `Complete a ${sMeta.label} Mock in Tab 7 or click Sync Mock`}</div>
+                <div class="text-[11px] text-slate-400">${chosenMock ? `Synced: ${chosenMock.serialId} (${chosenMock.score}/${chosenMock.maxMarks} • ${chosenMock.percentage}%)` : `Complete a ${sMeta.label} Board Mock or PYQ in Tab 7 or click Sync Mock`}</div>
               </div>
               ${subjFullMocks.length ? `
                 <select onchange="if(this.value) window.syncCbseMockToTab8(this.value)" class="px-2.5 py-1.5 rounded-xl bg-background border border-slate-700 text-xs font-mono font-bold text-amber-300">
-                  <option value="">Switch ${sMeta.key} Mock (${subjFullMocks.length})...</option>
+                  <option value="">Switch ${sMeta.key} Board Mock (${subjFullMocks.length})...</option>
                   ${subjFullMocks.map(h => `<option value="${h.serialId}" ${chosenMock && chosenMock.serialId === h.serialId ? "selected" : ""}>${h.serialId} (${h.score}/${h.maxMarks})</option>`).join("")}
                 </select>
-              ` : `<span class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-[11px] font-bold text-slate-400">0 ${sMeta.key} Mocks</span>`}
+              ` : `<span class="px-2.5 py-1 rounded-lg bg-surfaceLight border border-slate-700 text-[11px] font-bold text-slate-400">0 ${sMeta.key} Board Mocks</span>`}
             </div>
 
             <div class="overflow-x-auto">
