@@ -72,7 +72,7 @@
     });
   }
 
-  // TAB 6: Practice Drills ONLY (Chapter-Wise 20M Drill + Subject-Wise 40M/35M Quick Sprint; NO PYQs)
+  // TAB 6: Practice Drills ONLY (Chapter-Wise 20M Drill + Subject-Wise 40M/35M Sprint; NO PYQs, NO 80M Board Mock)
   window.openCbseChapterPracticeTab = function () {
     mountMockEngineInto("workspace-6");
     const cls = getActiveClassNum();
@@ -88,34 +88,33 @@
       if (modeTag) modeTag.textContent = "Practice Mode: Chapter (20M) & Subject Sprint (40M)";
     }
 
-    // Force Blueprint mode and hide PYQ switcher & PYQ dropdown in Tab 6
     if (typeof setExamSource === "function") setExamSource("blueprint");
-    const bpBtn = document.getElementById("sourceBlueprintBtn");
-    const pyqBtn = document.getElementById("sourcePyqBtn");
-    const pyqBox = document.getElementById("pastPaperContainer");
-    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.classList.add("hidden");
-    if (pyqBox) pyqBox.classList.add("hidden");
+    if (typeof setMockMode === "function") setMockMode("chapter");
 
-    // Show Chapter-Wise Drill (20M) + Subject-Wise Sprint (40M); hide Comprehensive 80M Board Mock
+    // Enforce visibility via style.display so setMockMode className resets cannot unhide wrong cards
+    const bpBtn = document.getElementById("sourceBlueprintBtn");
+    const pyqBox = document.getElementById("pastPaperContainer");
+    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.style.display = "none";
+    if (pyqBox) pyqBox.style.display = "none";
+
     const chBtn = document.getElementById("mockModeChapterBtn");
     const qBtn = document.getElementById("mockModeQuickBtn");
     const fBtn = document.getElementById("mockModeFull80Btn");
     if (chBtn) {
-      chBtn.classList.remove("hidden");
+      chBtn.style.display = "";
       chBtn.parentElement.className = "grid grid-cols-1 md:grid-cols-2 gap-3 text-left";
     }
     if (qBtn) {
-      qBtn.classList.remove("hidden");
+      qBtn.style.display = "";
       const titleEl = qBtn.querySelector(".font-bold");
       if (titleEl) titleEl.textContent = `${sMeta.label.split("(")[0].trim()} Subject Practice Sprint`;
     }
-    if (fBtn) fBtn.classList.add("hidden");
+    if (fBtn) fBtn.style.display = "none";
 
-    if (typeof setMockMode === "function") setMockMode("chapter");
     window.renderCbseMockLedger("practice");
   };
 
-  // TAB 7: Comprehensive Full-Subject Board Mock (80M/70M) + Official Past Board Papers (2019–2026 PYQs)
+  // TAB 7: Comprehensive Full-Subject Board Mock (80M/70M) + Official Past Board Papers (2019–2026 PYQs ONLY; NO 20M/40M Practice Cards)
   window.openCbseSubjectMockTab = function () {
     mountMockEngineInto("workspace-7");
     const cls = getActiveClassNum();
@@ -131,25 +130,27 @@
       if (modeTag) modeTag.textContent = `Board Simulation (${sMeta.maxTheory}M) + 2019–2026 PYQs`;
     }
 
-    // Show Blueprint vs Official Past Board Papers switcher cleanly
+    if (typeof setExamSource === "function") setExamSource("blueprint");
+    if (typeof setMockMode === "function") setMockMode("full_80");
+
+    // Enforce visibility via style.display so Chapter 20M & Quick 40M practice cards never appear in Tab 7
     const bpBtn = document.getElementById("sourceBlueprintBtn");
     const pyqBtn = document.getElementById("sourcePyqBtn");
-    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.classList.remove("hidden");
-    if (pyqBtn) pyqBtn.classList.remove("hidden");
+    const pyqBox = document.getElementById("pastPaperContainer");
+    if (bpBtn && bpBtn.parentElement) bpBtn.parentElement.style.display = "";
+    if (pyqBtn) pyqBtn.style.display = "";
+    if (pyqBox) pyqBox.style.display = "";
 
-    // Show ONLY Comprehensive Full-Subject Board Mock (80M/70M); hide Chapter Drill (20M) and Quick Sprint (40M)
     const chBtn = document.getElementById("mockModeChapterBtn");
     const qBtn = document.getElementById("mockModeQuickBtn");
     const fBtn = document.getElementById("mockModeFull80Btn");
-    if (chBtn) chBtn.classList.add("hidden");
-    if (qBtn) qBtn.classList.add("hidden");
+    if (chBtn) chBtn.style.display = "none";
+    if (qBtn) qBtn.style.display = "none";
     if (fBtn) {
-      fBtn.classList.remove("hidden");
+      fBtn.style.display = "";
       fBtn.parentElement.className = "grid grid-cols-1 gap-3 text-left max-w-lg mx-auto";
     }
 
-    if (typeof setExamSource === "function") setExamSource("blueprint");
-    if (typeof setMockMode === "function") setMockMode("full_80");
     window.renderCbseMockLedger("subject");
   };
 

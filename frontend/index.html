@@ -1370,6 +1370,10 @@
                 }
             }
 
+                        const sidebarAside = document.querySelector('aside');
+            if (sidebarAside) {
+                sidebarAside.style.display = [4, 7, 8].includes(tabIndex) ? 'none' : '';
+            }
             if (typeof renderSidebar === 'function') renderSidebar();
             if (tabIndex === 2) {
                 renderErrorFinder(currentChapterKey);
@@ -5275,6 +5279,6 @@ window.downloadDiagnosticMarksheet = function() {
 <script src="/js/core/auth.js?v=20261117cbse"></script>
     <script src="data/curriculumManifest.js"></script>
     <script src="js/classSwitcher.js"></script>
-    <script src="/js/modules/cbse_unified_v25.js?v=20261121v33"></script>
+    <script src="/js/modules/cbse_unified_v25.js?v=20261121v34"></script>
 </body>
 </html>
