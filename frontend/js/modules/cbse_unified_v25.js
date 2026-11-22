@@ -447,6 +447,17 @@
     return rec;
   }
 
+
+  if (typeof window.renderMockResultsView === "function" && !window.renderMockResultsView._v40Hooked) {
+    const origRenderRes = window.renderMockResultsView;
+    window.renderMockResultsView = function () {
+      recordLastEvaluationIfMissing();
+      origRenderRes.apply(this, arguments);
+      enhanceEvaluatedScoreCard();
+    };
+    window.renderMockResultsView._v40Hooked = true;
+  }
+
   // Hook generateMockTest & submitMockTest for active exam bar + scorecard Sync button
   if (typeof window.generateMockTest === "function" && !window.generateMockTest._v35Hooked) {
     const origGen = window.generateMockTest;
@@ -480,8 +491,16 @@
   }
 
   window.downloadLoggedMockMarksheet = function (serialId) {
-    const rec = getMockHistory().find(h => h.serialId === serialId);
+    const cls = getActiveClassNum();
+    const allHist = getMockHistory();
+    const rec = allHist.find(h => h.serialId === serialId);
     if (!rec) return;
+    if ((!Array.isArray(rec.breakdown) || rec.breakdown.length === 0) && typeof lastEvaluationResults !== "undefined" && lastEvaluationResults && Array.isArray(lastEvaluationResults.breakdown) && lastEvaluationResults.breakdown.length > 0) {
+      rec.breakdown = lastEvaluationResults.breakdown;
+      rec.pacePerMark = lastEvaluationResults.pacePerMark || rec.pacePerMark;
+      rec.paceVerdict = lastEvaluationResults.paceVerdict || rec.paceVerdict;
+      localStorage.setItem(`cbse_mock_ledger_c${cls}`, JSON.stringify(allHist));
+    }
 
     const win = window.open("", "_blank", "width=960,height=860");
     if (!win) {
