@@ -359,7 +359,7 @@ function syncPrescribedMarksAndExamUI(subjCode) {
     });
 
     // 3. Update Top Tab 6 Button Label cleanly (index.html uses id="mainTab6")
-    const tab6Btn = document.getElementById('mainTab6') || document.getElementById('tabBtn_6');
+    const tab6Btn = document.getElementById('tabBtn_6'); // mainTab6 is Practice Drills in v37
     if (tab6Btn && cls !== 10) {
         tab6Btn.innerHTML = `<span>📄</span> 6. ${bp.totalMarks}-Mark Timed Mock`;
     }
@@ -441,11 +441,14 @@ function syncPrescribedMarksAndExamUI(subjCode) {
         }
     }
 
-    // Sync Card 1 title with currently active sidebar chapter name
-    const activeChObj = window.curriculumBridge ? window.curriculumBridge.getActiveChapter(activeSubj) : null;
+    // Sync Card 1 title strictly with active subject's currentChapterKey
+    const activeSubjReg = (typeof subjectsRegistry !== 'undefined' && subjectsRegistry[activeSubj]) ? subjectsRegistry[activeSubj].chapters : {};
+    const curChObj = (typeof currentChapterKey !== 'undefined' && activeSubjReg[currentChapterKey])
+        ? activeSubjReg[currentChapterKey]
+        : (window.curriculumBridge ? window.curriculumBridge.getActiveChapter(activeSubj) : null);
     const chDrillTitle = document.getElementById('chapterMockBtnLabel');
-    if (chDrillTitle && activeChObj && activeChObj.name) {
-        chDrillTitle.textContent = `${activeChObj.name} Drill`;
+    if (chDrillTitle && curChObj && curChObj.name) {
+        chDrillTitle.textContent = `${curChObj.name} Drill`;
     }
 
     // 6. Update Section A–E Breakdown Grid dynamically for the active mode ('chapter' 20M, 'quick' 40M/35M, or 'full_80' 80M/70M)

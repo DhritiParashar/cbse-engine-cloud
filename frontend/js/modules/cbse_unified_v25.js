@@ -187,6 +187,41 @@
     });
   }
 
+
+  // Sync Tab 6 Chapter Drill card title & Subject Practice Sprint chapter count with active subject + sidebar chapter
+  window.syncTab6ActiveChapterAndSubject = function () {
+    const subj = getActiveSubjectCode();
+    const reg = (typeof subjectsRegistry !== "undefined" && subjectsRegistry[subj]) ? subjectsRegistry[subj] : null;
+    const chapters = (reg && reg.chapters) ? reg.chapters : {};
+    const chKeys = Object.keys(chapters);
+    const activeKey = (typeof currentChapterKey !== "undefined" && chapters[currentChapterKey])
+      ? currentChapterKey
+      : ((reg && reg.defaultChapter && chapters[reg.defaultChapter]) ? reg.defaultChapter : chKeys[0]);
+    const chObj = activeKey ? chapters[activeKey] : null;
+
+    const chLabel = document.getElementById("chapterMockBtnLabel");
+    if (chLabel && chObj && chObj.name) {
+      chLabel.textContent = `${chObj.name} Drill`;
+    }
+    const chSub = document.getElementById("chapterMockSubtitle");
+    if (chSub && chObj) {
+      chSub.textContent = `${chObj.code || "Selected Chapter"} • 45 Mins`;
+    }
+
+    const qBtn = document.getElementById("mockModeQuickBtn");
+    if (qBtn) {
+      const subLine = Array.from(qBtn.querySelectorAll("span")).find(sp => /All \d+ (Units|Chapters)/i.test(sp.textContent || ""));
+      if (subLine && chKeys.length) {
+        subLine.textContent = `All ${chKeys.length} Chapters • 90 Mins`;
+      }
+    }
+
+    const tab6Nav = document.getElementById("mainTab6");
+    if (tab6Nav && !/Practice Drills/i.test(tab6Nav.textContent || "")) {
+      tab6Nav.innerHTML = '<span>&#9889;</span> 6. Practice Drills (Ch &amp; Subj)';
+    }
+  };
+
   // TAB 6: Practice Drills ONLY (Chapter-Wise 20M Drill + Subject-Wise 40M/35M Sprint; NO PYQs, NO 80M Board Mock)
   window.openCbseChapterPracticeTab = function () {
     mountMockEngineInto("workspace-6");
@@ -227,6 +262,7 @@
     }
     if (fBtn) fBtn.style.display = "none";
 
+    window.syncTab6ActiveChapterAndSubject();
     window.renderCbseMockLedger("practice");
   };
 
@@ -829,7 +865,18 @@
     `;
   };
 
+
+  if (typeof window.selectChapter === "function" && !window.selectChapter._v37Hooked) {
+    const origSelCh = window.selectChapter;
+    window.selectChapter = function () {
+      origSelCh.apply(this, arguments);
+      window.syncTab6ActiveChapterAndSubject();
+    };
+    window.selectChapter._v37Hooked = true;
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
+    window.syncTab6ActiveChapterAndSubject();
     window.renderCbseMockLedger("practice");
     window.renderCbseBoardForecaster();
   });
