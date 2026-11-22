@@ -159,6 +159,15 @@
     const resDiv = document.getElementById("mockTestResults");
     if (!resDiv || resDiv.classList.contains("hidden")) return;
     const dlBtn = Array.from(resDiv.querySelectorAll("button")).find(b => /Download Marksheet/i.test(b.textContent || ""));
+    const serial = window.ensureCbseSerialId();
+    const h3 = resDiv.querySelector("h3");
+    if (h3 && !document.getElementById("cbse-scorecard-serial-pill")) {
+      const pill = document.createElement("span");
+      pill.id = "cbse-scorecard-serial-pill";
+      pill.className = "ml-2 px-2.5 py-0.5 rounded-lg bg-indigo-950 border border-indigo-600 text-indigo-300 font-mono text-xs align-middle";
+      pill.textContent = serial;
+      h3.appendChild(pill);
+    }
     if (dlBtn && dlBtn.parentElement && !document.getElementById("cbse-scorecard-sync-t8-btn")) {
       const syncBtn = document.createElement("button");
       syncBtn.id = "cbse-scorecard-sync-t8-btn";
@@ -390,6 +399,18 @@
     });
     return out;
   }
+
+
+  window.ensureCbseSerialId = function () {
+    const rec = recordLastEvaluationIfMissing();
+    if (rec && rec.serialId) return rec.serialId;
+    const cls = getActiveClassNum();
+    const subj = getActiveSubjectCode();
+    const dStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const seq = String(getMockHistory().length + 1).padStart(2, "0");
+    const isPractice = (typeof currentMainTab !== "undefined" && currentMainTab === 6);
+    return `${isPractice ? "PRAC" : "CBSE"}-${cls}-${subj}-${dStr}-#${seq}`;
+  };
 
   function recordLastEvaluationIfMissing() {
     if (typeof lastEvaluationResults === "undefined" || !lastEvaluationResults) return null;

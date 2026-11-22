@@ -3732,11 +3732,20 @@ if(document.getElementById(String.fromCharCode(115,101,99,65,76,97,98,101,108)))
                 }
             }
             
-            // Fallback if subject bank is sparse
-            if (all.length === 0) {
-                for (const chKey in bank) {
-                    if (Array.isArray(bank[chKey])) all = all.concat(bank[chKey]);
-                }
+            // Strict subject isolation: fall back to active subject's chapter registry items, never other subjects
+            if (all.length === 0 && typeof subjectsRegistry !== 'undefined' && subjectsRegistry[targetSubj]) {
+                const regChs = subjectsRegistry[targetSubj].chapters || {};
+                Object.keys(regChs).forEach(k => {
+                    const ch = regChs[k];
+                    (ch.diagnostics || []).forEach((d, idx) => {
+                        all.push({
+                            question_id: k + '_DIAG_' + (idx + 1),
+                            marks: 1,
+                            text: d.q,
+                            ideal_solution: d.solution || ''
+                        });
+                    });
+                });
             }
             return all;
         }
@@ -5182,36 +5191,12 @@ if (typeof window !== 'undefined' && window.dbQuestionBank) {
 
 <script>
 window.downloadDiagnosticMarksheet = function() {
-    // 1. Isolate ONLY the score card and question-wise breakdown container
-    var card = document.getElementById('mockResultsContainer') || 
-               document.getElementById('mockExamResults') || 
-               document.getElementById('mockExamResultsArea');
-
-    // If container ID was generic, narrow down strictly to the score card card element
-    if (card) {
-        var specificScoreCard = card.querySelector('.rounded-2xl.border-slate-800') || card.querySelector('.rounded-2xl');
-        if (specificScoreCard) {
-            // Include score card and its question list sibling
-            var parent = specificScoreCard.parentElement;
-            if (parent && parent.children.length <= 4) {
-                card = parent;
-            } else {
-                card = specificScoreCard;
-            }
-        }
-    } else {
-        var h3 = Array.from(document.querySelectorAll('h3')).find(el => el.textContent.includes('Official CBSE Diagnostic Score Card'));
-        if (h3) {
-            card = h3.closest('.rounded-2xl') ? h3.closest('.rounded-2xl').parentElement : h3.parentElement;
-        }
-    }
-
-    if (!card) {
+    var card = document.getElementById('mockTestResults') || document.getElementById('mockResultsContainer');
+    if (!card || card.classList.contains('hidden')) {
         alert('Please complete the mock drill and click Submit Exam to view your marksheet.');
         return;
     }
 
-    // 2. Candidate & Test ID
     var candidate = (function() {
         var fromInput = document.getElementById('candidateNameInput') ? document.getElementById('candidateNameInput').value.trim() : '';
         if (fromInput) return fromInput;
@@ -5222,21 +5207,39 @@ window.downloadDiagnosticMarksheet = function() {
             if (u.full_name) return u.full_name;
             if (u.name) return u.name;
         } catch(e) {}
-        return 'Sumit Sharma';
+        return 'Candidate';
     })();
-    var testId = (window.activeMockExam && window.activeMockExam.testId) ? 
-                 window.activeMockExam.testId : 
-                 ('CBSE-2026-MTH041-' + Math.floor(1000 + Math.random() * 9000));
 
-    // 3. Date & Timestamp formatting for Filename
+    var clsNum = (function() {
+        try {
+            var u = JSON.parse(localStorage.getItem('goalisb_user') || '{}');
+            if (u.student_class) return u.student_class;
+        } catch(e) {}
+        var b = document.getElementById('studentClassBadge');
+        var m = b ? (b.textContent || '').match(/\d+/) : null;
+        return m ? m[0] : '10';
+    })();
+
+    var subjCode = (typeof currentSubject !== 'undefined' && currentSubject) ? currentSubject : 'MATH';
+    var subjNames = {
+        MATH: 'Mathematics Standard (041)',
+        SCI: Number(clsNum) === 10 ? 'Science (086)' : 'Physics (042)',
+        SST: Number(clsNum) === 10 ? 'Social Science (087)' : 'Chemistry (043)',
+        BIO: 'Biology (044)'
+    };
+    var subjDisplay = subjNames[subjCode] || subjCode;
+
+    // Always use the canonical sequential Serial ID assigned by the ledger (never random!)
+    var testId = (typeof lastEvaluationResults !== 'undefined' && lastEvaluationResults && lastEvaluationResults._loggedSerialId)
+        ? lastEvaluationResults._loggedSerialId
+        : (typeof window.ensureCbseSerialId === 'function' ? window.ensureCbseSerialId() : ('CBSE-' + clsNum + '-' + subjCode + '-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-#01'));
+
     var d = new Date();
     var pad = function(n) { return n < 10 ? '0' + n : n; };
     var timestampStr = d.getFullYear() + '' + pad(d.getMonth() + 1) + '' + pad(d.getDate()) + '_' + pad(d.getHours()) + '' + pad(d.getMinutes()) + '' + pad(d.getSeconds());
     var displayDate = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    var filename = 'CBSE_Marksheet_' + testId.replace(/#/g, '') + '_' + timestampStr + '_' + candidate.replace(/\s+/g, '_');
 
-    var filename = 'CBSE_Marksheet_' + testId + '_' + timestampStr + '_' + candidate.replace(/\s+/g, '_');
-
-    // 4. Open Print Window
     var win = window.open('', '_blank', 'width=950,height=850');
     if (!win) {
         alert('Please allow popups to download the marksheet PDF.');
@@ -5244,6 +5247,7 @@ window.downloadDiagnosticMarksheet = function() {
     }
 
     var doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + filename + '</title>';
+    doc += '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">';
     doc += '<style>';
     doc += '@page { size: A4 portrait; margin: 12mm 14mm; }';
     doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 12px; font-size: 13px; line-height: 1.5; background: #fff; }';
@@ -5252,6 +5256,7 @@ window.downloadDiagnosticMarksheet = function() {
     doc += '.subtitle { font-size: 11px; color: #475569; margin-top: 4px; font-weight: 500; }';
     doc += '.footer { margin-top: 25px; text-align: center; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; }';
     doc += 'button, .no-print, nav, header, aside, .modal { display: none !important; }';
+    doc += '.katex-mathml { display: none !important; }';
     doc += 'div { background-color: transparent !important; color: inherit !important; }';
     doc += '.border-slate-800, .border-slate-700 { border-color: #cbd5e1 !important; }';
     doc += '.text-white { color: #0f172a !important; }';
@@ -5263,12 +5268,12 @@ window.downloadDiagnosticMarksheet = function() {
     doc += '</style></head><body>';
     doc += '<div class="header">';
     doc += '  <h1 class="title">GOALisB CBSE EVALUATION ENGINE</h1>';
-    doc += '  <p class="subtitle">Official CBSE Diagnostic Marksheet | Candidate: <strong>' + candidate + '</strong> | Test ID: <strong>' + testId + '</strong> | Class 10 | Subject: Mathematics Standard (041) | Date: ' + displayDate + '</p>';
+    doc += '  <p class="subtitle">Official CBSE Diagnostic Marksheet | Candidate: <strong>' + candidate + '</strong> | Test ID: <strong>' + testId + '</strong> | Class ' + clsNum + ' | Subject: ' + subjDisplay + ' | Date: ' + displayDate + '</p>';
     doc += '</div>';
     doc += card.innerHTML;
-    doc += '<div class="footer">Generated by CBSE AI Micro-Evaluator Platform &bull; Official NCERT/CBSE Marking Scheme Verified</div>';
-        doc += '<script>window.onload = function() { setTimeout(function(){ window.print(); }, 400); };<\/script>';
-        doc += '<\/body><\/html>';
+    doc += '<div class="footer">Generated by CBSE AI Micro-Evaluator Platform &bull; Serial ID: ' + testId + ' &bull; Official NCERT/CBSE Marking Scheme Verified</div>';
+    doc += '<script>window.onload = function() { setTimeout(function(){ window.print(); }, 400); };<\/script>';
+    doc += '<\/body><\/html>';
 
     win.document.open();
     win.document.write(doc);
@@ -5279,6 +5284,6 @@ window.downloadDiagnosticMarksheet = function() {
 <script src="/js/core/auth.js?v=20261117cbse"></script>
     <script src="data/curriculumManifest.js"></script>
     <script src="js/classSwitcher.js?v=20261122v37"></script>
-    <script src="/js/modules/cbse_unified_v25.js?v=20261122v37"></script>
+    <script src="/js/modules/cbse_unified_v25.js?v=20261122v38"></script>
 </body>
 </html>
