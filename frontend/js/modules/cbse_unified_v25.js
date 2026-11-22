@@ -429,6 +429,7 @@
       serialId,
       classLevel: cls,
       subject: subj,
+      candidate: res.candidate || ((document.getElementById("studentNameDisplay") && document.getElementById("studentNameDisplay").innerText.trim()) || "Candidate"),
       mode: res.mode || (isPractice ? "chapter" : "full_80"),
       isPractice,
       score: Number(res.score || 0),
@@ -436,6 +437,9 @@
       percentage: Number(res.percentage || 0),
       secRatios: computeSectionBreakdownFromEval(res),
       timeString: res.timeString || "0m 0s",
+      pacePerMark: res.pacePerMark || "0.0",
+      paceVerdict: res.paceVerdict || "Standard Pacing",
+      breakdown: Array.isArray(res.breakdown) ? res.breakdown : [],
       date: new Date().toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
     };
     appendMockHistory(rec);
@@ -478,22 +482,173 @@
   window.downloadLoggedMockMarksheet = function (serialId) {
     const rec = getMockHistory().find(h => h.serialId === serialId);
     if (!rec) return;
-    const win = window.open("", "_blank", "width=850,height=700");
-    if (!win) return;
-    const candidate = (document.getElementById("studentNameDisplay") && document.getElementById("studentNameDisplay").innerText.trim()) || "Candidate";
-    win.document.write(`<!DOCTYPE html><html><head><title>CBSE_Marksheet_${rec.serialId}</title>
-      <style>body{font-family:system-ui,sans-serif;padding:28px;color:#0f172a} .box{border:2px solid #0f172a;border-radius:10px;padding:20px} h1{margin:0 0 6px} table{width:100%;border-collapse:collapse;margin-top:16px} td,th{border:1px solid #cbd5e1;padding:10px;text-align:left}</style>
-      </head><body><div class="box">
-      <h1>GOALisB CBSE EVALUATION ENGINE</h1>
-      <p><strong>Official Serialized Board Marksheet</strong> &bull; Candidate: <strong>${candidate}</strong> &bull; Class ${rec.classLevel}</p>
-      <table>
-        <tr><th>Serial Mock ID</th><td>${rec.serialId}</td></tr>
-        <tr><th>Subject</th><td>${rec.subject}</td></tr>
-        <tr><th>Date &amp; Time</th><td>${rec.date}</td></tr>
-        <tr><th>Marks Obtained</th><td><strong>${rec.score} / ${rec.maxMarks} (${rec.percentage}%)</strong></td></tr>
-        <tr><th>Time Taken</th><td>${rec.timeString}</td></tr>
-      </table>
-      </div><script>window.onload=function(){setTimeout(function(){window.print()},300)};<\/script></body></html>`);
+
+    const win = window.open("", "_blank", "width=960,height=860");
+    if (!win) {
+      alert("Please allow popups to download the complete marksheet & answer script PDF.");
+      return;
+    }
+
+    const candidate = rec.candidate || (document.getElementById("studentNameDisplay") && document.getElementById("studentNameDisplay").innerText.trim()) || "Candidate";
+    const schema = getSchemaForClass(rec.classLevel || 10);
+    const sMeta = schema.find(x => x.key === rec.subject) || schema[0];
+    const subjDisplay = sMeta ? sMeta.label : rec.subject;
+    const modeLabel = rec.isPractice
+      ? (rec.mode === "quick" ? `Subject Practice Sprint (${rec.maxMarks}M)` : `Chapter Focus Drill (${rec.maxMarks}M)`)
+      : `Comprehensive Board Mock / PYQ (${rec.maxMarks}M)`;
+
+    const d = new Date();
+    const pad = n => (n < 10 ? "0" + n : n);
+    const ts = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    const filename = `CBSE_Marksheet_AnswerScript_${rec.serialId.replace(/#/g, "")}_${ts}_${candidate.replace(/\s+/g, "_")}`;
+
+    function renderPrintableRubric(rawModel, rawRubric) {
+      let out = "";
+      const bodyStr = (typeof rawModel === "string" ? rawModel : JSON.stringify(rawModel || "")).trim();
+      if (bodyStr && bodyStr !== '""') {
+        out += bodyStr.split("\n").map(l => l.trim()).filter(Boolean)
+          .map(l => `<div class="rubric-line">${l}</div>`).join("");
+      }
+      let rItems = [];
+      if (Array.isArray(rawRubric)) rItems = rawRubric;
+      else if (rawRubric && typeof rawRubric === "object") {
+        rItems = Object.entries(rawRubric).map(([k, v]) => ({ step: `${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`, marks: "" }));
+      }
+      if (rItems.length) {
+        out += `<div class="step-alloc-title">Official CBSE Step Allocation:</div>`;
+        out += rItems.map((r, i) => {
+          const stTxt = r.step || r.description || (typeof r === "string" ? r : JSON.stringify(r));
+          const mTxt = r.marks ? ` <strong>(${r.marks}M)</strong>` : "";
+          return `<div class="step-alloc-row"><strong>Step ${i + 1}:</strong> ${stTxt}${mTxt}</div>`;
+        }).join("");
+      }
+      return out || `<div class="rubric-line">Refer to official CBSE marking criteria.</div>`;
+    }
+
+    const items = Array.isArray(rec.breakdown) ? rec.breakdown : [];
+    const questionsHtml = items.length ? items.map(item => {
+      const isFull = Number(item.loss || 0) === 0;
+      const escStudent = String(item.studentAns || "(No response submitted)")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      return `
+        <div class="q-card ${isFull ? "q-full" : "q-deduct"}">
+          <div class="q-head">
+            <div>
+              <strong>Question ${item.qNo}</strong>
+              <span class="sec-pill">${item.section || "Section"}</span>
+              <span class="status-pill ${isFull ? "st-ok" : "st-warn"}">${isFull ? "✓ Full Credit" : "⚠ Mark Deduction"}</span>
+            </div>
+            <div class="q-marks">
+              <strong>${item.earned} / ${item.totalMarks} Marks</strong>
+              ${Number(item.loss || 0) > 0 ? `<span class="loss-txt">(-${Number(item.loss).toFixed(1)}M)</span>` : ""}
+            </div>
+          </div>
+          <div class="q-prompt">${item.text || ""}</div>
+          <div class="two-col">
+            <div class="col-student">
+              <div class="box-lbl">YOUR SUBMITTED ANSWER SCRIPT:</div>
+              <pre class="student-pre">${escStudent}</pre>
+            </div>
+            <div class="col-rubric">
+              <div class="box-lbl">OFFICIAL CBSE STEP-BY-STEP RUBRIC (NCERT VERIFIED):</div>
+              ${renderPrintableRubric(item.model, item.rubric)}
+            </div>
+          </div>
+          ${Number(item.loss || 0) > 0 ? `
+            <div class="leak-bar">
+              <span><strong>Mark Leakage Reason:</strong> ${item.lossReason || "Step / unit omission"}</span>
+              <span><strong>Recommended:</strong> ${item.remedy || "Revise chapter in Tab 1"}</span>
+            </div>
+          ` : ""}
+        </div>
+      `;
+    }).join("") : `<div class="q-card"><p>Detailed question breakdown was not captured for this legacy entry. Attempt a fresh mock in Tab 6 or Tab 7 to include the full evaluated answer script.</p></div>`;
+
+    const doc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${filename}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"><\/script>
+  <style>
+    @page { size: A4 portrait; margin: 12mm 14mm; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #0f172a; margin: 0; padding: 14px; font-size: 12.5px; line-height: 1.5; background: #fff; }
+    .header { border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 14px; }
+    .title { font-size: 18px; font-weight: 900; margin: 0; letter-spacing: 0.3px; }
+    .subtitle { font-size: 11px; color: #475569; margin-top: 4px; }
+    .score-card { border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; background: #f8fafc; }
+    .score-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .score-big { font-size: 28px; font-weight: 900; color: #059669; text-align: right; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 11px; }
+    .kpi-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; }
+    .kpi-lbl { display: block; font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .sec-heading { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #334155; margin: 14px 0 8px; }
+    .q-card { border: 1px solid #cbd5e1; border-radius: 9px; padding: 11px 13px; margin-bottom: 11px; page-break-inside: avoid; }
+    .q-full { border-left: 4px solid #059669; }
+    .q-deduct { border-left: 4px solid #e11d48; }
+    .q-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px; font-size: 11.5px; }
+    .sec-pill, .status-pill { display: inline-block; padding: 1px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+    .sec-pill { background: #e2e8f0; color: #334155; }
+    .st-ok { background: #d1fae5; color: #065f46; }
+    .st-warn { background: #ffe4e6; color: #9f1239; }
+    .loss-txt { color: #e11d48; font-weight: 700; margin-left: 4px; }
+    .q-prompt { font-weight: 600; color: #0f172a; margin-bottom: 8px; }
+    .two-col { display: grid; grid-template-columns: 4fr 8fr; gap: 10px; }
+    .col-student, .col-rubric { border: 1px solid #e2e8f0; border-radius: 7px; padding: 8px 10px; background: #f8fafc; font-size: 11px; }
+    .box-lbl { font-size: 9.5px; font-weight: 800; color: #475569; margin-bottom: 4px; }
+    .student-pre { margin: 0; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: #1e293b; }
+    .rubric-line { margin-bottom: 3px; }
+    .step-alloc-title { font-size: 9.5px; font-weight: 800; color: #3730a3; margin-top: 6px; text-transform: uppercase; }
+    .step-alloc-row { font-size: 10.5px; color: #1e1b4b; margin-top: 2px; }
+    .leak-bar { margin-top: 8px; padding: 6px 9px; border-radius: 6px; background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; font-size: 10.5px; display: flex; justify-content: space-between; gap: 8px; }
+    .footer { margin-top: 18px; text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; }
+    .katex-mathml { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">GOALisB CBSE EVALUATION ENGINE</h1>
+    <p class="subtitle">Official CBSE Diagnostic Marksheet &amp; Evaluated Answer Script | Candidate: <strong>${candidate}</strong> | Test ID: <strong>${rec.serialId}</strong> | Class ${rec.classLevel} | Subject: ${subjDisplay} | Date: ${rec.date}</p>
+  </div>
+
+  <div class="score-card">
+    <div class="score-top">
+      <div>
+        <div style="font-size:10px;font-weight:800;color:#059669;text-transform:uppercase;">Exam Evaluated Successfully</div>
+        <div style="font-size:17px;font-weight:900;margin-top:2px;">Official CBSE Diagnostic Score Card &amp; Answer Script</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px;">Candidate: <strong>${candidate}</strong> &bull; Format: <strong>${modeLabel}</strong></div>
+      </div>
+      <div class="score-big">${rec.score} <span style="font-size:16px;color:#475569;">/ ${rec.maxMarks}</span><div style="font-size:11px;color:#334155;">${rec.percentage}% Aggregate</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><span class="kpi-lbl">Time Taken</span><strong>${rec.timeString}</strong></div>
+      <div class="kpi-box"><span class="kpi-lbl">Pace Per Mark</span><strong>${rec.pacePerMark || "0.0"} secs / mark</strong></div>
+      <div class="kpi-box"><span class="kpi-lbl">Pacing Verdict</span><strong>${rec.paceVerdict || "Standard Pacing"}</strong></div>
+    </div>
+  </div>
+
+  <div class="sec-heading">Question-Wise Answer Script, Step Evaluation &amp; Official CBSE Solutions (${items.length} Questions)</div>
+  ${questionsHtml}
+
+  <div class="footer">Generated by CBSE AI Micro-Evaluator Platform &bull; Serial ID: ${rec.serialId} &bull; Official NCERT/CBSE Marking Scheme Verified</div>
+  <script>
+    window.onload = function() {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+          throwOnError: false
+        });
+      }
+      setTimeout(function() { window.print(); }, 450);
+    };
+  <\/script>
+</body>
+</html>`;
+
+    win.document.open();
+    win.document.write(doc);
     win.document.close();
   };
 
@@ -639,7 +794,7 @@
                     <td class="py-2.5 px-2 font-bold text-emerald-400 whitespace-nowrap">${h.score} / ${h.maxMarks}</td>
                     <td class="py-2.5 px-2 font-semibold text-slate-200">${h.percentage}%</td>
                     <td class="py-2.5 pl-2 text-right whitespace-nowrap space-x-1.5">
-                      <button type="button" onclick="window.downloadLoggedMockMarksheet('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-[10px] font-bold cursor-pointer">&#11015; Marksheet</button>
+                      <button type="button" onclick="window.downloadLoggedMockMarksheet('${h.serialId}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-[10px] font-bold cursor-pointer">&#11015; Marksheet &amp; Script</button>
                       ${h.isPractice
                         ? `<span class="text-[11px] text-sky-300 font-semibold">Logged</span>`
                         : `<button type="button" onclick="window.syncCbseMockToTab8('${h.serialId}')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-extrabold shadow cursor-pointer">Sync Tab 8 &rarr;</button>`}
