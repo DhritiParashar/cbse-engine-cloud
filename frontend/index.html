@@ -5285,5 +5285,96 @@ window.downloadDiagnosticMarksheet = function() {
     <script src="data/curriculumManifest.js"></script>
     <script src="js/classSwitcher.js?v=20261122v37"></script>
     <script src="/js/modules/cbse_unified_v25.js?v=20261122v40"></script>
+
+<!-- UNIVERSAL FLOATING GO-TO-TOP BUTTON (ALL 7 PORTALS) -->
+<style>
+  #goalisbGoToTopBtn {
+    position: fixed;
+    right: 22px;
+    bottom: 76px;
+    z-index: 9990;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(199, 210, 254, 0.45);
+    box-shadow: 0 8px 22px rgba(79, 70, 229, 0.38);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.22s ease, transform 0.22s ease, background 0.2s ease;
+  }
+  #goalisbGoToTopBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  #goalisbGoToTopBtn:hover {
+    background: linear-gradient(135deg, #4338ca, #4f46e5);
+    transform: translateY(-2px);
+  }
+  @media print {
+    #goalisbGoToTopBtn { display: none !important; }
+  }
+</style>
+<button type="button" id="goalisbGoToTopBtn" title="Scroll back to top" aria-label="Go to top">
+  <span>&#8593;</span><span>Top</span>
+</button>
+<script>
+(function () {
+  var btn = document.getElementById("goalisbGoToTopBtn");
+  if (!btn) return;
+  var activeScroller = null;
+
+  function getScrollables() {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("[id^='workspace-'], main, .overflow-y-auto"));
+    return nodes.filter(function (el) {
+      return el && el.offsetParent !== null && el.scrollHeight > el.clientHeight + 40;
+    });
+  }
+
+  function refreshVisibility(sourceEl) {
+    if (sourceEl && sourceEl !== window && sourceEl !== document && sourceEl.scrollTop > 220) {
+      activeScroller = sourceEl;
+    }
+    var winY = window.scrollY || document.documentElement.scrollTop || 0;
+    var maxInnerY = 0;
+    getScrollables().forEach(function (el) {
+      if (el.scrollTop > maxInnerY) {
+        maxInnerY = el.scrollTop;
+        activeScroller = el;
+      }
+    });
+    if (winY > 220 || maxInnerY > 220) {
+      btn.classList.add("visible");
+    } else {
+      btn.classList.remove("visible");
+    }
+  }
+
+  window.addEventListener("scroll", function () { refreshVisibility(window); }, { passive: true });
+  document.addEventListener("scroll", function (ev) { refreshVisibility(ev.target); }, { capture: true, passive: true });
+  setInterval(function () { refreshVisibility(null); }, 900);
+
+  btn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (activeScroller && typeof activeScroller.scrollTo === "function") {
+      activeScroller.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    getScrollables().forEach(function (el) {
+      if (el.scrollTop > 0) el.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
